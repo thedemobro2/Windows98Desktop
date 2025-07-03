@@ -14,6 +14,14 @@
             padding: 0;
             overflow: hidden;
             user-select: none;
+            /* ✅ Added for fade-out transition */
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+        }
+
+        /* ✅ Added for fade-out transition */
+        body.fade-out {
+            opacity: 0;
         }
 
         /* --- Desktop --- */
@@ -61,6 +69,7 @@
         #recycle-bin-icon { top: 100px; left: 20px; }
         #minesweeper-icon { top: 180px; left: 20px; }
         #bsod-icon { top: 260px; left: 20px; }
+        #rebel-library-icon { top: 340px; left: 20px; }
 
 
         /* --- Windows --- */
@@ -351,15 +360,11 @@
         #bsod p {
             margin-top: 2em;
         }
-
-
     </style>
 </head>
 <body>
 
-    <!-- Desktop Area -->
     <div id="desktop">
-        <!-- Desktop Icons -->
         <div class="desktop-icon" id="my-computer-icon" data-window-id="my-computer-window">
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="My Computer">
             <span>My Computer</span>
@@ -382,7 +387,6 @@
         </div>
 
 
-        <!-- Windows -->
         <div class="window" id="my-computer-window" style="top: 50px; left: 150px; width: 350px;">
             <div class="title-bar">
                 <span class="title-bar-text"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg=="> My Computer</span>
@@ -419,10 +423,9 @@
         
     </div>
 
-    <!-- Taskbar -->
     <div id="taskbar">
         <button id="start-button">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB30lEQVR42mL8//8/AyUYwEBAAEYyMjL+gYp34uPjFzI5OTlPVoApzM/PZzIyMh4owI9ycnKOd3Z2RoHqBFGgOAAECBAARfD4+LgMDAw8AUV+MjIyLqACfUFBwf8jIyP3z58/fwIK/AcCBAgQoAJuZ2dnZ2RkdAJKzIqKiv4HAgQIEKACvZycnBMMDQ39nZqa+g8ECBAgQAXYu7u7H8PDw4+jY98zMjL+BwIECBCgAqwoKMjAwMCQz8nJ+d/Z2fkfCBAgQIAKcGRk5IOoqKj/QcT8yMjI/wABAoQBKzAw8D8qKup/ZGTkYwYGBoYDBAgQIAIsKSn5nxQk/B8eHv4PBAgQIANs2tvbO4FFvgoKCv4HAgQIEAG2aGho+A+O/f+oqOh/QEAAHCAAAAAAAAAAAAAAAAIECBAgAAgQIECAACBAgAABAgQIECBAAAEChAErLCz8Pygo6H+cI8b/oqKi/wECBAgQARaZmVn+R4z5f3h4+D8QIECAALCIjIx8jIyM/A/8//8/AAMECAACLCAg4D8hQfg/MjLyPwYGBsYDBAgQARaQkJD/ISEh/y+uLP8/KioKKEAAAQIECBCgACBAgAABAgQIAAIECBCgACCAAwQYAGuTz/wXfJcCAAAAAElFTkSuQmCC" alt="Start">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB30lEQVR42mL8//8/AyUYwEBAAEYyMjL+gYp34uPjFzI5OTlPVoApzM/PZzIyMh4owI9ycnKOd3Z2RoHqBFGgOAAECBAARfD4+LgMDAw8AUV+MjIyLqACfUFBwf8jIyP3z58/fwIK/AcCBAgQoAJuZ2dnZ2RkdAJKzIqKiv4HAgQIEKACvZycnBMMDQ39nZqa+g8ECBAgQAXYu7u7H8PDw4+jY98zMjL+BwIECBCgAqwoKMjAwMCQz8nJ+d/Z2fkfCBAgQIAKcGRk5IOoqKj/QcT8yMjI/wABAoQBKzAw8D8qKup/ZGTkYwYGBoYDBAgQIAIsKSn5nxQk/B8eHv4PBAgQIANs2tvbO4FFvgoKCv4HAgQIEAG2aGho+A+O/f+oqOh/QEAAHCAAAAAAAAAAAAAAAAIECBAgAAgQIECAACBAgAABAgQIECBAAAEChAErLCz8Pygo6H+cI8b/oqKi/wECBAgQARaZmVn+R4z5f3h4+D8QIECAALCIjIx8jIyM/A/8//8/AAMECAACLCAg4D8hQfg/MjLyPwYGBsYDBAgQARaQkJD/ISEh/y+uLP8/KioKKEAAAQIECBCgACBAgAABAgQIAAIECBCgACCAAwQYAGuTz/XfJcCAAAAAElFTkSuQmCC" alt="Start">
             <span>Start</span>
         </button>
         <div id="system-tray">
@@ -430,7 +433,6 @@
         </div>
     </div>
     
-    <!-- Start Menu -->
     <div id="start-menu">
         <div class="start-menu-sidebar"><span>Windows</span><span>98</span></div>
         <ul>
@@ -446,7 +448,6 @@
         </ul>
     </div>
     
-    <!-- Blue Screen of Death -->
     <div id="bsod">
         <h1>Windows</h1>
         <p>A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
@@ -470,11 +471,6 @@
             const clockElement = document.getElementById('clock');
             function updateClock() {
                 const now = new Date();
-                // Override with user-provided date/time
-                const userDate = new Date('2025-06-18T10:55:00');
-                now.setFullYear(userDate.getFullYear(), userDate.getMonth(), userDate.getDate());
-                now.setHours(userDate.getHours(), userDate.getMinutes(), userDate.getSeconds() + (Date.now() / 1000) % 60);
-
                 let hours = now.getHours();
                 const minutes = now.getMinutes().toString().padStart(2, '0');
                 const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -529,6 +525,7 @@
 
             // --- ICON & WINDOW HANDLING ---
             document.querySelectorAll('.desktop-icon').forEach(icon => {
+                // Generic listener to open windows
                 icon.addEventListener('dblclick', () => {
                     const windowId = icon.dataset.windowId;
                     if (windowId) {
@@ -552,8 +549,8 @@
             // Deactivate icon on desktop click
             desktop.addEventListener('click', () => {
                  if(activeIcon) {
-                    activeIcon.classList.remove('active');
-                    activeIcon = null;
+                     activeIcon.classList.remove('active');
+                     activeIcon = null;
                  }
             });
 
@@ -590,6 +587,20 @@
                 minesweeperWindow.style.zIndex = ++highestZIndex;
             });
             
+            // --- The Rebel Library Icon Logic ---
+            const rebelLibraryIcon = document.getElementById('rebel-library-icon');
+            if (rebelLibraryIcon) {
+                rebelLibraryIcon.addEventListener('dblclick', () => {
+                    // 1. Add the fade-out class to the body
+                    document.body.classList.add('fade-out');
+                    
+                    // 2. Wait for the fade animation to finish, then redirect
+                    setTimeout(() => {
+                        window.location.href = 'https://homarr.the-rebel-library.com';
+                    }, 800); // This duration should match your CSS transition time
+                });
+            }
+            
             // --- BSOD ---
             const bsod = document.getElementById('bsod');
             const showBsod = () => {
@@ -616,10 +627,18 @@
                 gameOver = false;
                 time = 0;
                 board = [];
-                minefield.innerHTML = '';
-                mineCounter.textContent = MINES.toString().padStart(3, '0');
-                timerDisplay.textContent = '000';
-                smiley.textContent = '🙂';
+                if(minefield) {
+                    minefield.innerHTML = '';
+                }
+                if (mineCounter) {
+                    mineCounter.textContent = MINES.toString().padStart(3, '0');
+                }
+                if (timerDisplay) {
+                    timerDisplay.textContent = '000';
+                }
+                if(smiley) {
+                    smiley.textContent = '🙂';
+                }
                 clearInterval(timerInterval);
 
                 // Create board state
@@ -665,15 +684,17 @@
                 }
 
                 // Create DOM elements
-                for (let r = 0; r < ROWS; r++) {
-                    for (let c = 0; c < COLS; c++) {
-                        const cell = document.createElement('div');
-                        cell.classList.add('cell');
-                        cell.dataset.r = r;
-                        cell.dataset.c = c;
-                        cell.addEventListener('click', handleCellClick);
-                        cell.addEventListener('contextmenu', handleCellRightClick);
-                        minefield.appendChild(cell);
+                if (minefield) {
+                    for (let r = 0; r < ROWS; r++) {
+                        for (let c = 0; c < COLS; c++) {
+                            const cell = document.createElement('div');
+                            cell.classList.add('cell');
+                            cell.dataset.r = r;
+                            cell.dataset.c = c;
+                            cell.addEventListener('click', handleCellClick);
+                            cell.addEventListener('contextmenu', handleCellRightClick);
+                            minefield.appendChild(cell);
+                        }
                     }
                 }
             }
@@ -682,7 +703,9 @@
                 if (timerInterval) return;
                 timerInterval = setInterval(() => {
                     time++;
-                    timerDisplay.textContent = time.toString().padStart(3, '0');
+                    if(timerDisplay) {
+                        timerDisplay.textContent = time.toString().padStart(3, '0');
+                    }
                 }, 1000);
             }
 
@@ -698,7 +721,7 @@
 
                 if (cellData.isMine) {
                     revealAllMines(r, c);
-                    smiley.textContent = '😵';
+                    if (smiley) smiley.textContent = '😵';
                     gameOver = true;
                     clearInterval(timerInterval);
                     return;
@@ -709,8 +732,9 @@
             }
 
             function revealCell(r, c) {
+                if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
                 const cellData = board[r][c];
-                if (r < 0 || r >= ROWS || c < 0 || c >= COLS || cellData.isRevealed) return;
+                if (cellData.isRevealed) return;
                 
                 const cellElement = minefield.children[r * COLS + c];
                 cellData.isRevealed = true;
@@ -749,7 +773,9 @@
                 
                 let flags = 0;
                 board.flat().forEach(cell => { if(cell.isFlagged) flags++; });
-                mineCounter.textContent = (MINES - flags).toString().padStart(3, '0');
+                if (mineCounter) {
+                    mineCounter.textContent = (MINES - flags).toString().padStart(3, '0');
+                }
             }
 
             function revealAllMines(hitRow, hitCol) {
@@ -770,16 +796,21 @@
             function checkWinCondition() {
                 const revealedCount = board.flat().filter(c => c.isRevealed).length;
                 if(revealedCount === ROWS * COLS - MINES) {
-                    smiley.textContent = '😎';
+                    if (smiley) smiley.textContent = '😎';
                     gameOver = true;
                     clearInterval(timerInterval);
-                    mineCounter.textContent = '000';
+                    if (mineCounter) mineCounter.textContent = '000';
                 }
             }
 
-            smiley.addEventListener('click', initMinesweeper);
-
-            initMinesweeper();
+            if (smiley) {
+                smiley.addEventListener('click', initMinesweeper);
+            }
+            
+            // Only initialize Minesweeper if the elements exist
+            if (document.getElementById('minesweeper-window')) {
+                initMinesweeper();
+            }
         });
     </script>
 </body>

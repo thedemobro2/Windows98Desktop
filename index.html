@@ -1,817 +1,811 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows 98 Desktop</title>
-    <style>
-        /* --- Global Styles & Font --- */
-        body {
-            font-family: "Tahoma", "MS Sans Serif", sans-serif;
-            font-size: 12px;
-            background-color: #008080;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            user-select: none;
-            /* ✅ Added for fade-out transition */
-            opacity: 1;
-            transition: opacity 0.8s ease-out;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows 98 Desktop</title>
+<style>
+/* --- Global Styles & Font --- /
+body {
+font-family: "Tahoma", "MS Sans Serif", sans-serif;
+font-size: 12px;
+background-color: #008080;
+margin: 0;
+padding: 0;
+overflow: hidden;
+user-select: none;
+/ ✅ Added for fade-out transition */
+opacity: 1;
+transition: opacity 0.8s ease-out;
+}
 
-        /* ✅ Added for fade-out transition */
-        body.fade-out {
-            opacity: 0;
-        }
+    /* ✅ Added for fade-out transition */
+    body.fade-out {
+        opacity: 0;
+    }
 
-        /* --- Desktop --- */
-        #desktop {
-            position: absolute;
-            width: 100%;
-            height: calc(100% - 28px);
-            top: 0;
-            left: 0;
-        }
+    /* --- Desktop --- */
+    #desktop {
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 28px);
+        top: 0;
+        left: 0;
+    }
 
-        /* --- Desktop Icons --- */
-        .desktop-icon {
-            position: absolute;
-            width: 75px;
-            height: 70px;
-            text-align: center;
-            padding: 4px;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
+    /* --- Desktop Icons --- */
+    .desktop-icon {
+        position: absolute;
+        width: 75px;
+        height: 70px;
+        text-align: center;
+        padding: 4px;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
 
-        .desktop-icon:hover {
-            border: 1px dotted #ffffff;
-        }
-        
-        .desktop-icon.active {
-            background: rgba(0, 0, 128, 0.5);
-            border: 1px dotted #ffffff;
-        }
+    .desktop-icon:hover {
+        border: 1px dotted #ffffff;
+    }
 
-        .desktop-icon img {
-            width: 32px;
-            height: 32px;
-        }
+    .desktop-icon.active {
+        background: rgba(0, 0, 128, 0.5);
+        border: 1px dotted #ffffff;
+    }
 
-        .desktop-icon span {
-            display: block;
-            color: white;
-            margin-top: 5px;
-            text-shadow: 1px 1px 2px black;
-        }
-        
-        #my-computer-icon { top: 20px; left: 20px; }
-        #recycle-bin-icon { top: 100px; left: 20px; }
-        #minesweeper-icon { top: 180px; left: 20px; }
-        #bsod-icon { top: 260px; left: 20px; }
-        #rebel-library-icon { top: 340px; left: 20px; }
+    .desktop-icon img {
+        width: 32px;
+        height: 32px;
+    }
 
+    .desktop-icon span {
+        display: block;
+        color: white;
+        margin-top: 5px;
+        text-shadow: 1px 1px 2px black;
+    }
 
-        /* --- Windows --- */
-        .window {
-            position: absolute;
-            background: #c0c0c0;
-            border-top: 2px solid #ffffff;
-            border-left: 2px solid #ffffff;
-            border-right: 2px solid #000000;
-            border-bottom: 2px solid #000000;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            min-width: 200px;
-            min-height: 150px;
-            display: none; /* Hidden by default */
-        }
+    #my-computer-icon { top: 20px; left: 20px; }
+    #recycle-bin-icon { top: 100px; left: 20px; }
+    #minesweeper-icon { top: 180px; left: 20px; }
+    #bsod-icon { top: 260px; left: 20px; }
+    #rebel-library-icon { top: 340px; left: 20px; }
 
-        .title-bar {
-            background: linear-gradient(to right, #000080, #1084d0);
-            color: white;
-            padding: 3px 5px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-        }
-        
-        .title-bar-text {
-            display: flex;
-            align-items: center;
-        }
+    /* --- Windows --- */
+    .window {
+        position: absolute;
+        background: #c0c0c0;
+        border-top: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-right: 2px solid #000000;
+        border-bottom: 2px solid #000000;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        min-width: 200px;
+        min-height: 150px;
+        display: none; /* Hidden by default */
+    }
 
-        .title-bar-text img {
-            width: 16px;
-            height: 16px;
-            margin-right: 5px;
-        }
+    .title-bar {
+        background: linear-gradient(to right, #000080, #1084d0);
+        color: white;
+        padding: 3px 5px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: move;
+    }
 
-        .title-bar-controls {
-            display: flex;
-        }
+    .title-bar-text {
+        display: flex;
+        align-items: center;
+    }
 
-        .title-bar-controls button {
-            width: 16px;
-            height: 14px;
-            margin-left: 2px;
-            background: #c0c0c0;
-            border-top: 1px solid #ffffff;
-            border-left: 1px solid #ffffff;
-            border-right: 1px solid #000000;
-            border-bottom: 1px solid #000000;
-            font-family: "Marlett", "Times New Roman";
-            font-size: 10px;
-            line-height: 10px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
+    .title-bar-text img {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+    }
 
-        .window-body {
-            padding: 10px;
-            background: #c0c0c0;
-        }
+    .title-bar-controls {
+        display: flex;
+    }
 
-        /* --- Taskbar --- */
-        #taskbar {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 28px;
-            background: #c0c0c0;
-            border-top: 2px solid #ffffff;
-            display: flex;
-            align-items: center;
-            z-index: 10000;
-        }
+    .title-bar-controls button {
+        width: 16px;
+        height: 14px;
+        margin-left: 2px;
+        background: #c0c0c0;
+        border-top: 1px solid #ffffff;
+        border-left: 1px solid #ffffff;
+        border-right: 1px solid #000000;
+        border-bottom: 1px solid #000000;
+        font-family: "Marlett", "Times New Roman";
+        font-size: 10px;
+        line-height: 10px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
 
-        #start-button {
-            background: #c0c0c0;
-            border-top: 1px solid #ffffff;
-            border-left: 1px solid #ffffff;
-            border-right: 1px solid #000000;
-            border-bottom: 1px solid #000000;
-            font-weight: bold;
-            padding: 2px 8px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
+    .window-body {
+        padding: 10px;
+        background: #c0c0c0;
+    }
 
-        #start-button img {
-            width: 20px;
-            height: 20px;
-            margin-right: 4px;
-        }
-        
-        #start-button.active {
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
-            border-right: 1px solid #ffffff;
-            border-bottom: 1px solid #ffffff;
-        }
+    /* --- Taskbar --- */
+    #taskbar {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 28px;
+        background: #c0c0c0;
+        border-top: 2px solid #ffffff;
+        display: flex;
+        align-items: center;
+        z-index: 10000;
+    }
 
-        #system-tray {
-            position: absolute;
-            right: 0;
-            height: 100%;
-            border-left: 2px solid #808080;
-            padding: 2px 8px;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-        }
+    #start-button {
+        background: #c0c0c0;
+        border-top: 1px solid #ffffff;
+        border-left: 1px solid #ffffff;
+        border-right: 1px solid #000000;
+        border-bottom: 1px solid #000000;
+        font-weight: bold;
+        padding: 2px 8px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
 
-        /* --- Start Menu --- */
-        #start-menu {
-            position: absolute;
-            bottom: 28px;
-            left: 0;
-            width: 170px;
-            background: #c0c0c0;
-            border-top: 2px solid #ffffff;
-            border-left: 2px solid #ffffff;
-            border-right: 2px solid #000000;
-            border-bottom: 2px solid #000000;
-            display: none; /* Hidden by default */
-            z-index: 9999;
-        }
+    #start-button img {
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+    }
 
-        #start-menu .start-menu-sidebar {
-            background: #808080;
-            width: 25px;
-            height: 100%;
-            position: absolute;
-            color: #c0c0c0;
-            writing-mode: vertical-lr;
-            transform: rotate(180deg);
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            padding: 10px 0;
-        }
-        
-        #start-menu .start-menu-sidebar span {
-             display: inline-block;
-             transform: rotate(180deg);
-        }
+    #start-button.active {
+        border-top: 1px solid #000000;
+        border-left: 1px solid #000000;
+        border-right: 1px solid #ffffff;
+        border-bottom: 1px solid #ffffff;
+    }
 
-        #start-menu ul {
-            list-style: none;
-            margin: 0;
-            padding: 5px 0 5px 28px;
-        }
+    #system-tray {
+        position: absolute;
+        right: 0;
+        height: 100%;
+        border-left: 2px solid #808080;
+        padding: 2px 8px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+    }
 
-        #start-menu li {
-            padding: 5px 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        
-        #start-menu li:hover {
-            background: #000080;
-            color: white;
-        }
-        
-        #start-menu li img {
-            width: 22px;
-            height: 22px;
-            margin-right: 8px;
-        }
+    /* --- Start Menu --- */
+    #start-menu {
+        position: absolute;
+        bottom: 28px;
+        left: 0;
+        width: 170px;
+        background: #c0c0c0;
+        border-top: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-right: 2px solid #000000;
+        border-bottom: 2px solid #000000;
+        display: none; /* Hidden by default */
+        z-index: 9999;
+    }
 
-        #start-menu .separator {
-            height: 1px;
-            background: #808080;
-            border-bottom: 1px solid white;
-            margin: 4px 0;
-        }
+    #start-menu .start-menu-sidebar {
+        background: #808080;
+        width: 25px;
+        height: 100%;
+        position: absolute;
+        color: #c0c0c0;
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px 0;
+    }
 
-        /* --- Minesweeper App --- */
-        #minesweeper-body {
-            background: #c0c0c0;
-            padding: 5px;
-        }
+    #start-menu .start-menu-sidebar span {
+         display: inline-block;
+         transform: rotate(180deg);
+    }
 
-        #minesweeper-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px;
-            border-top: 2px solid #808080;
-            border-left: 2px solid #808080;
-            border-right: 2px solid #ffffff;
-            border-bottom: 2px solid #ffffff;
-            margin-bottom: 5px;
-        }
+    #start-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 5px 0 5px 28px;
+    }
 
-        .mine-counter, .timer, .smiley {
-            background: black;
-            color: red;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 2px 4px;
-            border: 1px inset #808080;
-            width: 50px;
-            text-align: center;
-            font-size: 16px;
-        }
+    #start-menu li {
+        padding: 5px 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
 
-        .smiley {
-            width: 26px;
-            height: 26px;
-            padding: 0;
-            font-size: 20px;
-            line-height: 26px;
-            border: 2px outset #ffffff;
-            cursor: pointer;
-        }
-        .smiley:active {
-            border-style: inset;
-        }
-        
-        #minefield {
-            display: grid;
-            grid-template-columns: repeat(10, 20px);
-            grid-template-rows: repeat(10, 20px);
-            border-top: 2px solid #808080;
-            border-left: 2px solid #808080;
-            border-right: 2px solid #ffffff;
-            border-bottom: 2px solid #ffffff;
-        }
+    #start-menu li:hover {
+        background: #000080;
+        color: white;
+    }
 
-        .cell {
-            width: 20px;
-            height: 20px;
-            background: #c0c0c0;
-            border-top: 2px solid #ffffff;
-            border-left: 2px solid #ffffff;
-            border-right: 2px solid #808080;
-            border-bottom: 2px solid #808080;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .cell.revealed {
-            border: 1px solid #808080;
-        }
+    #start-menu li img {
+        width: 22px;
+        height: 22px;
+        margin-right: 8px;
+    }
 
-        .cell.c1 { color: #0000ff; }
-        .cell.c2 { color: #008000; }
-        .cell.c3 { color: #ff0000; }
-        .cell.c4 { color: #000080; }
-        .cell.c5 { color: #800000; }
-        .cell.c6 { color: #008080; }
-        .cell.c7 { color: #000000; }
-        .cell.c8 { color: #808080; }
-        
-        .cell.mine-hit {
-            background-color: red;
-        }
-        
-        /* --- BSOD --- */
-        #bsod {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #0000AA;
-            color: #FFFFFF;
-            font-family: 'Lucida Console', 'Courier New', monospace;
-            z-index: 99999;
-            padding: 20px;
-            box-sizing: border-box;
-            display: none;
-        }
-        #bsod h1 {
-            background-color: #AAAAAA;
-            color: #0000AA;
-            display: inline-block;
-            padding: 0 10px;
-            margin: 0;
-        }
-        #bsod p {
-            margin-top: 2em;
-        }
-    </style>
+    #start-menu .separator {
+        height: 1px;
+        background: #808080;
+        border-bottom: 1px solid white;
+        margin: 4px 0;
+    }
+
+    /* --- Minesweeper App --- */
+    #minesweeper-body {
+        background: #c0c0c0;
+        padding: 5px;
+    }
+
+    #minesweeper-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        border-top: 2px solid #808080;
+        border-left: 2px solid #808080;
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+        margin-bottom: 5px;
+    }
+
+    .mine-counter, .timer, .smiley {
+        background: black;
+        color: red;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 2px 4px;
+        border: 1px inset #808080;
+        width: 50px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .smiley {
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        font-size: 20px;
+        line-height: 26px;
+        border: 2px outset #ffffff;
+        cursor: pointer;
+    }
+    .smiley:active {
+        border-style: inset;
+    }
+
+    #minefield {
+        display: grid;
+        grid-template-columns: repeat(10, 20px);
+        grid-template-rows: repeat(10, 20px);
+        border-top: 2px solid #808080;
+        border-left: 2px solid #808080;
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    .cell {
+        width: 20px;
+        height: 20px;
+        background: #c0c0c0;
+        border-top: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-right: 2px solid #808080;
+        border-bottom: 2px solid #808080;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .cell.revealed {
+        border: 1px solid #808080;
+    }
+
+    .cell.c1 { color: #0000ff; }
+    .cell.c2 { color: #008000; }
+    .cell.c3 { color: #ff0000; }
+    .cell.c4 { color: #000080; }
+    .cell.c5 { color: #800000; }
+    .cell.c6 { color: #008080; }
+    .cell.c7 { color: #000000; }
+    .cell.c8 { color: #808080; }
+
+    .cell.mine-hit {
+        background-color: red;
+    }
+
+    /* --- BSOD --- */
+    #bsod {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0000AA;
+        color: #FFFFFF;
+        font-family: 'Lucida Console', 'Courier New', monospace;
+        z-index: 99999;
+        padding: 20px;
+        box-sizing: border-box;
+        display: none;
+    }
+    #bsod h1 {
+        background-color: #AAAAAA;
+        color: #0000AA;
+        display: inline-block;
+        padding: 0 10px;
+        margin: 0;
+    }
+    #bsod p {
+        margin-top: 2em;
+    }
+</style>
 </head>
 <body>
 
-    <div id="desktop">
-        <div class="desktop-icon" id="my-computer-icon" data-window-id="my-computer-window">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="My Computer">
-            <span>My Computer</span>
-        </div>
-        <div class="desktop-icon" id="recycle-bin-icon" data-window-id="recycle-bin-window">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACbklEQVRYR+2WTW/TQBCG/x0EQtjGvYcKCv4TqKgVLhUqBSs8aIeIeoQKlR6ohV6gKljRkFjZhg0dGztxYsdJPM25ds7dCStlZWy9L97s/O/MfM/sbI7+1f868X4DeG/bNjGbzbfj8djw+fO/KGr793VwuVwAgNVq9Xw2mw/HcTwsFovT6RSKx+O12+2N27bX1tYGgL9PABKJBJlMppdKpbNarWq12uFwmCRJpmmy3++LxWK5XC6dTocsyzAMw+VyQRAEt9uN4zjLsgyHQ7ZtU6lUANjtdofDYTqdlkqlPM9DEAQAXLfbRVE0Go3RaFSv12OxGEVRuN3uXC6Xoijb7TaKojgcDrquW63W4XDYdDodDoeiKEIIi8WiUqnweDzZbBbd93Ecj8cjTdM4jsuybLPZxHEsTdNarRbHcay5uRkAHDc2PoIgGI3GNE1BEARBEARB0HWdMAzLss7n80gkEgiCfr8fy7I8zwvDMIoiu90Oh8MAABqNhmVZjuMsy1qtFkVRdF0nCALbtmEYGIbx+/1839e2zXQ6jWEYx3EqlYo4jpPJJF3XxXGcpun3+3EcR9d1TdOI4/h8Pu/3+/V6Ha7r9XpdLpdRFMXzPJfLpdPpMAzzfD7neT5JEgRBjB/3EwD0ej2KoiRJgm3bNE17vd4kSYZhWJZlgiCopmlZlsPhEGzbruuezyelUiGKojgcDrquW61WjuPgcBimadZutzRNsyyz3W7xeBxFUYRQr9ebzcYwDPt8/vP79+vvf2yEw8Nf7z9/fv/+AwD4/f7xeBxFUbZtE4ZhmuYA0Ol0Wq0WAIqirFarSqXCYrEAACklSRJFUVEUVavVeDxOSkkcx0wmk0gkQggRBAFWq5VpmqSUruvdbvdut4vjmM/nQwhxXScIwul0ymQyOI6j6/rs7Ozw3+c/p371+N+M/wA+sVbQp9/gEAAAAABJRU5ErkJggg==" alt="Recycle Bin">
-            <span>Recycle Bin</span>
-        </div>
-        <div class="desktop-icon" id="minesweeper-icon" data-window-id="minesweeper-window">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWklEQVRYR+3WW0/TQBgH8P+1UikUoIe1vYgHWJtYk+fMvEfxChrQKy8Cg0YjMS4Yw0w0TkyMycaYmMQYfA0Gg8Fw8SgYjR6j0fhQoxFjfOjESjw4L6m02h5aC5R+nZNkM/+T/2QnOan81/8z/3oB+A0h3Nzc/O7s7Bw+fvxrRtO+fz9lFosBAMYY5XJ5OplMnlqtZjabGY1GnU4n5XA41mq1oihmZ2dfAPw1AIAgyOFw+HK5HBYLBdM0wzDFcZxCoYDrukEQBAiCPI9pmkwmk0QiAa5rwzC8Xq9pmhFCURSRJAkAYRh2OBwqlUqlUsFyudoX53K5YrGYoihCCMdxhmHyPA/X9e7u7lwu5/P5vNlsOp0OAMYYx3GKoohpmgzDwDAMjuMQQsPh0LKsUqkkSRLbtnmedzgcLpdLgiDI5XIURUIIQRD0ej3HcdM0Tdd1GIZhGKaZphFCURSGYaZpkiQJhuE4jgBAuVy+uLj4Ynl5+eXFxa8fP/6z99vT0xPbtkIIiqKAIAgQBEEQRNE0zbIsTdNc1yVJgiAINpsNEAT5vp+mKV3XWZZFUQS2bfM8j2EYpmnbtkIIgiAIQpIkURQBAE3TGIY5nU6aplEUJZVKWZbFcRxFUcIwTKfTmKaB6/q9vT0Mw+fzeTQagWkax3GKoiiKoizLBEHYbDaCIAxD0+l0HMdd13u93kaj0el0HMdFUYQQ4vP59Hp9tVrtdDq9Xm+z2YQQpmmO4zRNE4Yhv9+P4zgAQBRFkiSRJAghxHGcMAxyuRyWZVmWGYax3+/Pzs4AQKvVstvt4XAY1u12h4cHAKQoipZlEUKKoohpmsdxkiTZbrcBILvdfgFg23ZZlr+cOeC/P/+9BHz25Qfhv18w/gf4xU+uI7Q1VwAAAABJRU5ErkJggg==" alt="Minesweeper">
-            <span>Minesweeper</span>
-        </div>
-        <div class="desktop-icon" id="bsod-icon">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACHElEQVRYR+2WvWvUUBDHX4sgKILgYhexi0iwsbCwEBu7iC6ySGz+H2hlJ7G1sBMhAUEs1IoggoiNjdJCEGz8FE2zF/suuUnu8r3w3ss5M+/dO3fnDoH/6r8Pjk8AHggh/Hz+/PGFYfhhxDDG/h/R3188wHEcdgDgnHOx2exz13XxPM95nsdxbNu27/u+7yGEyWQygiBIJJJerxe9Xu92uxFCGIYBAFzXdbtd13XbtiGEpmkxxv1+H4bhcrm8vLxcLpeapr3ebjKZxHEcTdNBEKSUSqU6juO67rquz+eTJAkAsNlsNE2L43i5XNbr9SRJwjCMcVyWZZIkURSpVCoIIcuyz+djWdbtdgsh9Ho9TdNBEPzfz5lMJtd1Xdf5vp9SinMuwzCM44wxRVE0DMN2ux3HcV3XpmkIIdu2IYTjOMMwtm1jjKSUlFKUUoohxBhjjFlrjDEppZTSfr9/enrqezAYvP/t/cPDw3f/h/8OAIwxxhjbtgghzvl+vyGEyWQyHA5zXeeceZ4D4JxzxhiapgkhzrnzPAshJJfLQRCkUqk4jnMcx3Vdj8djjDFJkhBCGIY5nU4IIU3TgCzLMpksl8scx8VxPJfLhRDCMMwwDKSUMcZardZisZgkyXw+zzRNURRFUZRSCcdxvu8/PT29vLycSqWUSqUoijRNUywWQ0ohzjlJkhzHkZJSSts2xhjjwzDcbjcIgrAsC8MwfN8/Ho/X6/VyuRxj3Ol0gghBEKRp2jRNIYQsyzAMY5xOp/e/Pc+TUr799Yfx68fT4f+G/wChgVdK9hY2SAAAAABJRU5ErkJggg==" alt="Error">
-            <span>Critical Error</span>
-        </div>
-        <div class="desktop-icon" id="rebel-library-icon">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="The Rebel Library">
-            <span>The Rebel Library</span>
-        </div>
-
-
-        <div class="window" id="my-computer-window" style="top: 50px; left: 150px; width: 350px;">
-            <div class="title-bar">
-                <span class="title-bar-text"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg=="> My Computer</span>
-                <div class="title-bar-controls">
-                    <button>_</button>
-                    <button>&#10065;</button>
-                    <button class="close-button">X</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <p>This is a simulated 'My Computer' window.</p>
-                <p>It doesn't do much, but it looks the part!</p>
-            </div>
-        </div>
-
-        <div class="window" id="minesweeper-window" style="top: 120px; left: 250px;">
-            <div class="title-bar">
-                 <span class="title-bar-text"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWklEQVRYR+3WW0/TQBgH8P+1UikUoIe1vYgHWJtYk+fMvEfxChrQKy8Cg0YjMS4Yw0w0TkyMycaYmMQYfA0Gg8Fw8SgYjR6j0fhQoxFjfOjESjw4L6m02h5aC5R+nZNkM/+T/2QnOan81/8z/3oB+A0h3Nzc/O7s7Bw+fvxrRtO+fz9lFosBAMYY5XJ5OplMnlqtZjabGY1GnU4n5XA41mq1oihmZ2dfAPw1AIAgyOFw+HK5HBYLBdM0wzDFcZxCoYDrukEQBAiCPI9pmkwmk0QiAa5rwzC8Xq9pmhFCURSRJAkAYRh2OBwqlUqlUsFyudoX53K5YrGYoihCCMdxhmHyPA/X9e7u7lwu5/P5vNlsOp0OAMYYx3GKoohpmgzDwDAMjuMQQsPh0LKsUqkkSRLbtnmedzgcLpdLgiDI5XIURUIIQRD0ej3HcdM0Tdd1GIZhGKaZphFCURSGYaZpkiQJhuE4jgBAuVy+uLj4Ynl5+eXFxa8fP/6z99vT0xPbtkIIiqKAIAgQBEEQRNE0zbIsTdNc1yVJgiAINpsNEAT5vp+mKV3XWZZFUQS2bfM8j2EYpmnbtkIIgiAIQpIkURQBAE3TGIY5nU6aplEUJZVKWZbFcRxFUcIwTKfTmKaB6/q9vT0Mw+fzeTQagWkax3GKoiiKoizLBEHYbDaCIAxD0+l0HMdd13u93kaj0el0HMdFUYQQ4vP59Hp9tVrtdDq9Xm+z2YQQpmmO4zRNE4Yhv9+P4zgAQBRFkiSRJAghxHGcMAxyuRyWZVmWGYax3+/Pzs4AQKvVstvt4XAY1u12h4cHAKQoipZlEUKKoohpmsdxkiTZbrcBILvdfgFg23ZZlr+cOeC/P/+9BHz25Qfhv18w/gf4xU+uI7Q1VwAAAABJRU5ErkJggg=="> Minesweeper</span>
-                <div class="title-bar-controls">
-                    <button>_</button>
-                    <button>&#10065;</button>
-                    <button class="close-button">X</button>
-                </div>
-            </div>
-            <div class="window-body" id="minesweeper-body">
-                <div id="minesweeper-header">
-                    <div class="mine-counter">010</div>
-                    <div class="smiley">🙂</div>
-                    <div class="timer">000</div>
-                </div>
-                <div id="minefield"></div>
-            </div>
-        </div>
-        
+<div id="desktop">
+    <div class="desktop-icon" id="my-computer-icon" data-window-id="my-computer-window">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="My Computer">
+        <span>My Computer</span>
+    </div>
+    <div class="desktop-icon" id="recycle-bin-icon" data-window-id="recycle-bin-window">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACbklEQVRYR+2WTW/TQBCG/x0EQtjGvYcKCv4TqKgVLhUqBSs8aIeIeoQKlR6ohV6gKljRkFjZhg0dGztxYsdJPM25ds7dCStlZWy9L97s/O/MfM/sbI7+1f868X4DeG/bNjGbzbfj8djw+fO/KGr793VwuVwAgNVq9Xw2mw/HcTwsFovT6RSKx+O12+2N27bX1tYGgL9PABKJBJlMppdKpbNarWq12uFwmCRJpmmy3++LxWK5XC6dTocsyzAMw+VyQRAEt9uN4zjLsgyHQ7ZtU6lUANjtdofDYTqdlkqlPM9DEAQAXLfbRVE0Go3RaFSv12OxGEVRuN3uXC6Xoijb7TaKojgcDrquW63W4XDYdDodDoeiKEIIi8WiUqnweDzZbBbd93Ecj8cjTdM4jsuybLPZxHEsTdNarRbHcay5uRkAHDc2PoIgGI3GNE1BEARBEARB0HWdMAzLss7n80gkEgiCfr8fy7I8zwvDMIoiu90Oh8MAABqNhmVZjuMsy1qtFkVRdF0nCALbtmEYGIbx+/1839e2zXQ6jWEYx3EqlYo4jpPJJF3XxXGcpun3+3EcR9d1TdOI4/h8Pu/3+/V6Ha7r9XpdLpdRFMXzPJfLpdPpMAzzfD7neT5JEgRBjB/3EwD0ej2KoiRJgm3bNE17vd4kSYZhWJZlgiCopmlZlsPhEGzbruuezyelUiGKojgcDrquW61WjuPgcBimadZutzRNsyyz3W7xeBxFUYRQr9ebzcYwDPt8/vP79+vvf2yEw8Nf7z9/fv/+AwD4/f7xeBxFUbZtE4ZhmuYA0Ol0Wq0WAIqirFarSqXCYrEAACklSRJFUVEUVavVeDxOSkkcx0wmk0gkQggRBAFWq5VpmqSUruvdbvdut4vjmM/nQwhxXScIwul0ymQyOI6j6/rs7Ozw3+c/p371+N+M/wA+sVbQp9/gEAAAAABJRU5ErkJggg==" alt="Recycle Bin">
+        <span>Recycle Bin</span>
+    </div>
+    <div class="desktop-icon" id="minesweeper-icon" data-window-id="minesweeper-window">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWklEQVRYR+3WW0/TQBgH8P+1UikUoIe1vYgHWJtYk+fMvEfxChrQKy8Cg0YjMS4Yw0w0TkyMycaYmMQYfA0Gg8Fw8SgYjR6j0fhQoxFjfOjESjw4L6m02h5aC5R+nZNkM/+T/2QnOan81/8z/3oB+A0h3Nzc/O7s7Bw+fvxrRtO+fz9lFosBAMYY5XJ5OplMnlqtZjabGY1GnU4n5XA41mq1oihmZ2dfAPw1AIAgyOFw+HK5HBYLBdM0wzDFcZxCoYDrukEQBAiCPI9pmkwmk0QiAa5rwzC8Xq9pmhFCURSRJAkAYRh2OBwqlUqlUsFyudoX53K5YrGYoihCCMdxhmHyPA/X9e7u7lwu5/P5vNlsOp0OAMYYx3GKoohpmgzDwDAMjuMQQsPh0LKsUqkkSRLbtnmedzgcLpdLgiDI5XIURUIIQRD0ej3HcdM0Tdd1GIZhGKaZphFCURSGYaZpkiQJhuE4jgBAuVy+uLj4Ynl5+eXFxa8fP/6z99vT0xPbtkIIiqKAIAgQBEEQRNE0zbIsTdNc1yVJgiAINpsNEAT5vp+mKV3XWZZFUQS2bfM8j2EYpmnbtkIIgiAIQpIkURQBAE3TGIY5nU6aplEUJZVKWZbFcRxFUcIwTKfTmKaB6/q9vT0Mw+fzeTQagWkax3GKoiiKoizLBEHYbDaCIAxD0+l0HMdd13u93kaj0el0HMdFUYQQ4vP59Hp9tVrtdDq9Xm+z2YQQpmmO4zRNE4Yhv9+P4zgAQBRFkiSRJAghxHGcMAxyuRyWZVmWGYax3+/Pzs4AQKvVstvt4XAY1u12h4cHAKQoipZlEUKKoohpmsdxkiTZbrcBILvdfgFg23ZZlr+cOeC/P/+9BHz25Qfhv18w/gf4xU+uI7Q1VwAAAABJRU5ErkJggg==" alt="Minesweeper">
+        <span>Minesweeper</span>
+    </div>
+    <div class="desktop-icon" id="bsod-icon">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACHElEQVRYR+2WvWvUUBDHX4sgKILgYhexi0iwsbCwEBu7iC6ySGz+H2hlJ7G1sBMhAUEs1IoggoiNjdJCEGz8FE2zF/suuUnu8r3w3ss5M+/dO3fnDoH/6r8Pjk8AHggh/Hz+/PGFYfhhxDDG/h/R3188wHEcdgDgnHOx2exz13XxPM95nsdxbNu27/u+7yGEyWQygiBIJJJerxe9Xu92uxFCGIYBAFzXdbtd13XbtiGEpmkxxv1+H4bhcrm8vLxcLpeapr3ebjKZxHEcTdNBEKSUSqU6juO67rquz+eTJAkAsNlsNE2L43i5XNbr9SRJwjCMcVyWZZIkURSpVCoIIcuyz+djWdbtdgsh9Ho9TdNBEPzfz5lMJtd1Xdf5vp9SinMuwzCM44wxRVE0DMN2ux3HcV3XpmkIIdu2IYTjOMMwtm1jjKSUlFKUUoohxBhjjFlrjDEppZTSfr9/enrqezAYvP/t/cPDw3f/h/8OAIwxxhjbtgghzvl+vyGEyWQyHA5zXeeceZ4D4JxzxhiapgkhzvlzPAshJJfLQRCkUqk4jnMcx3Vdj8djjDFJkhBCGIY5nU4IIU3TgCzLMpksl8scx8VxPJfLhRDCMMwwDKSUMcZardZisZgkyXw+zzRNURRFUZRSCcdxvu8/PT29vLycSqWUSqVUSqUoijRNUywWQ0ohzjlJkhzHkZJSSts2xhjjwzDcbjcIgrAsC8MwfN8/Ho/X6/VyuRxj3Ol0gghBEKRp2jRNIYQsyzAMY5xOp/e/Pc+TUr799Yfx68fT4f+G/wChgVdK9hY2SAAAAABJRU5ErkJggg==" alt="Error">
+        <span>Critical Error</span>
+    </div>
+    <div class="desktop-icon" id="rebel-library-icon">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="The Rebel Library">
+        <span>The Rebel Library</span>
     </div>
 
-    <div id="taskbar">
-        <button id="start-button">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB30lEQVR42mL8//8/AyUYwEBAAEYyMjL+gYp34uPjFzI5OTlPVoApzM/PZzIyMh4owI9ycnKOd3Z2RoHqBFGgOAAECBAARfD4+LgMDAw8AUV+MjIyLqACfUFBwf8jIyP3z58/fwIK/AcCBAgQoAJuZ2dnZ2RkdAJKzIqKiv4HAgQIEKACvZycnBMMDQ39nZqa+g8ECBAgQAXYu7u7H8PDw4+jY98zMjL+BwIECBCgAqwoKMjAwMCQz8nJ+d/Z2fkfCBAgQIAKcGRk5IOoqKj/QcT8yMjI/wABAoQBKzAw8D8qKup/ZGTkYwYGBoYDBAgQIAIsKSn5nxQk/B8eHv4PBAgQIANs2tvbO4FFvgoKCv4HAgQIEAG2aGho+A+O/f+oqOh/QEAAHCAAAAAAAAAAAAAAAAIECBAgAAgQIECAACBAgAABAgQIECBAAAEChAErLCz8Pygo6H+cI8b/oqKi/wECBAgQARaZmVn+R4z5f3h4+D8QIECAALCIjIx8jIyM/A/8//8/AAMECAACLCAg4D8hQfg/MjLyPwYGBsYDBAgQARaQkJD/ISEh/y+uLP8/KioKKEAAAQIECBCgACBAgAABAgQIAAIECBCgACCAAwQYAGuTz/XfJcCAAAAAElFTkSuQmCC" alt="Start">
-            <span>Start</span>
-        </button>
-        <div id="system-tray">
-            <span id="clock">10:55 AM</span>
+    <div class="window" id="my-computer-window" style="top: 50px; left: 150px; width: 350px;">
+        <div class="title-bar">
+            <span class="title-bar-text"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg=="> My Computer</span>
+            <div class="title-bar-controls">
+                <button>_</button>
+                <button>&#10065;</button>
+                <button class="close-button">X</button>
+            </div>
+        </div>
+        <div class="window-body">
+            <p>This is a simulated 'My Computer' window.</p>
+            <p>It doesn't do much, but it looks the part!</p>
         </div>
     </div>
-    
-    <div id="start-menu">
-        <div class="start-menu-sidebar"><span>Windows</span><span>98</span></div>
-        <ul>
-            <li id="start-menu-minesweeper">
-                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABaUlEQVR42mNgoBAwMjAwMDAw/j8iQgZkYICSzMzM/4zMzP8ZGBgYGSAx/j8i6mFkZASjgDj9//+fI57//x8EMjAwMDyA9GdgYAgE5PD/P4MwjCHy//8vQxADoYFhQJz//z8DNgAzgPj///+MoZ6BgQEIxM3AwBCsAOKG/yAE+P//hzyiAeIBTQC2YRgGEcDAwPD/9w8D6xQDYwYYQH///w9IYCgoSBCsAOKG+P//f7CRIaiFYQB2/P//PwO/gPj///8hJzAwMNwH4gZM/v//f1Yx3f//zyAkAQOIMiAGaGggV4AZgPj///9DJgYY/f//vwMTA/8B8f//HxMTA5KBAQgC/P//k+uAOLAA8f//H6gQxP///2dAAbD+//9/hnm+vj4E3AGxIAYQcDcI+P//J3eB+H8QYwA2AwPz/yAmAPG/IAwAAwMDrwHk/h+EAAIYMzAwhAMzAwQYAB70P2d+yM3JAAAAAElFTkSuQmCC" alt="Minesweeper">
-                Minesweeper
-            </li>
-            <li class="separator"></li>
-            <li id="start-menu-bsod">
-                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAdUlEQVR42mNgGAWjYBSMglEwCkYBGUB8/v//PxMDAwPDf5CGAWQBsYAY/v//LwMIA8gCYgEx/P//X4YQBkAGxAMy/P//n0FYBswCYgEy/P//n8EIID4gBvAYkAUxAcYBMQEGkAUxAYcBMQDjGVD+CgAADEe1qRh5+uEAAAAASUVORK5CYII=" alt="Shutdown">
-                Shut Down...
-            </li>
-        </ul>
-    </div>
-    
-    <div id="bsod">
-        <h1>Windows</h1>
-        <p>A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
-        <p>The current application will be terminated.</p>
-        <p>* Press any key to terminate the current application.<br>
-           * Press CTRL+ALT+DEL again to restart your computer. You will lose any unsaved information in all applications.
-        </p>
-        <p style="text-align: center; margin-top: 4em;">Press any key to continue_</p>
+
+    <div class="window" id="minesweeper-window" style="top: 120px; left: 250px;">
+        <div class="title-bar">
+             <span class="title-bar-text"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWklEQVRYR+3WW0/TQBgH8P+1UikUoIe1vYgHWJtYk+fMvEfxChrQKy8Cg0YjMS4Yw0w0TkyMycaYmMQYfA0Gg8Fw8SgYjR6j0fhQoxFjfOjESjw4L6m02h5aC5R+nZNkM/+T/2QnOan81/8z/3oB+A0h3Nzc/O7s7Bw+fvxrRtO+fz9lFosBAMYY5XJ5OplMnlqtZjabGY1GnU4n5XA41mq1oihmZ2dfAPw1AIAgyOFw+HK5HBYLBdM0wzDFcZxCoYDrukEQBAiCPI9pmkwmk0QiAa5rwzC8Xq9pmhFCURSRJAkAYRh2OBwqlUqlUsFyudoX53K5YrGYoihCCMdxhmHyPA/X9e7u7lwu5/P5vNlsOp0OAMYYx3GKoohpmgzDwDAMjuMQQsPh0LKsUqkkSRLbtnmedzgcLpdLgiDI5XIURUIIQRD0ej3HcdM0Tdd1GIZhGKaZphFCURSGYaZpkiQJhuE4jgBAuVy+uLj4Ynl5+eXFxa8fP/6z99vT0xPbtkIIiqKAIAgQBEEQRNE0zbIsTdNc1yVJgiAINpsNEAT5vp+mKV3XWZZFUQS2bfM8j2EYpmnbtkIIgiAIQpIkURQBAE3TGIY5nU6aplEUJZVKWZbFcRxFUcIwTKfTmKaB6/q9vT0Mw+fzeTQagWkax3GKoiiKoizLBEHYbDaCIAxD0+l0HMdd13u93kaj0el0HMdFUYQQ4vP59Hp9tVrtdDq9Xm+z2YQQpmmO4zRNE4Yhv9+P4zgAQBRFkiSRJAghxHGcMAxyuRyWZVmWGYax3+/Pzs4AQKvVstvt4XAY1u12h4cHAKQoipZlEUKKoohpmsdxkiTZbrcBILvdfgFg23ZZlr+cOeC/P/+9BHz25Qfhv18w/gf4xU+uI7Q1VwAAAABJRU5ErkJggg=="> Minesweeper</span>
+            <div class="title-bar-controls">
+                <button>_</button>
+                <button>&#10065;</button>
+                <button class="close-button">X</button>
+            </div>
+        </div>
+        <div class="window-body" id="minesweeper-body">
+            <div id="minesweeper-header">
+                <div class="mine-counter">010</div>
+                <div class="smiley">🙂</div>
+                <div class="timer">000</div>
+            </div>
+            <div id="minefield"></div>
+        </div>
     </div>
 
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+<div id="taskbar">
+    <button id="start-button">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB30lEQVR42mL8//8/AyUYwEBAAEYyMjL+gYp34uPjFzI5OTlPVoApzM/PZzIyMh4owI9ycnKOd3Z2RoHqBFGgOAAECBAARfD4+LgMDAw8AUV+MjIyLqACfUFBwf8jIyP3z58/fwIK/AcCBAgQoAJuZ2dnZ2RkdAJKzIqKiv4HAgQIEKACvZycnBMMDQ39nZqa+g8ECBAgQAXYu7u7H8PDw4+jY98zMjL+BwIECBCgAqwoKMjAwMCQz8nJ+d/Z2fkfCBAgQIAKcGRk5IOoqKj/QcT8yMjI/wABAoQBKzAw8D8qKup/ZGTkYwYGBoYDBAgQIAIsKSn5nxQk/B8eHv4PBAgQIANs2tvbO4FFvgoKCv4HAgQIEAG2aGho+A+O/f+oqOh/QEAAHCAAAAAAAAAAAAAAAAIECBAgAAgQIECAACBAgAABAgQIECBAAAEChAErLCz8Pygo6H+cI8b/oqKi/wECBAgQARaZmVn+R4z5f3h4+D8QIECAALCIjIx8jIyM/A/8//8/AAMECAACLCAg4D8hQfg/MjLyPwYGBsYDBAgQARaQkJD/ISEh/y+uLP8/KioKKEAAAQIECBCgACBAgAABAgQIAAIECBCgACCAAwQYAGuTz/XfJcCAAAAAElFTkSuQmCC" alt="Start">
+        <span>Start</span>
+    </button>
+    <div id="system-tray">
+        <span id="clock">10:55 AM</span>
+    </div>
+</div>
 
-            // --- CORE SYSTEM VARIABLES ---
-            const desktop = document.getElementById('desktop');
-            let highestZIndex = 100;
-            let activeIcon = null;
+<div id="start-menu">
+    <div class="start-menu-sidebar"><span>Windows</span><span>98</span></div>
+    <ul>
+        <li id="start-menu-minesweeper">
+             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABaUlEQVR42mNgoBAwMjAwMDAw/j8iQgZkYICSzMzM/4zMzP8ZGBgYGSAx/j8i6mFkZASjgDj9//+fI57//x8EMjAwMDyA9GdgYAgE5PD/P4MwjCHy//8vQxADoYFhQJz//z8DNgAzgPj///+MoZ6BgQEIxM3AwBCsAOKG/yAE+P//hzyiAeIBTQC2YRgGEcDAwPD/9w8D6xQDYwYYQH///w9IYCgoSBCsAOKG+P//f7CRIaiFYQB2/P//PwO/gPj///8hJzAwMNwH4gZM/v//f1Yx3f//zyAkAQOIMiAGaGggV4AZgPj///9DJgYY/f//vwMTA/8B8f//HxMTA5KBAQgC/P//k+uAOLAA8f//H6gQxP///2dAAbD+//9/hnm+vj4E3AGxIAYQcDcI+P//J3eB+H8QYwA2AwPz/yAmAPG/IAwAAwMDrwHk/h+EAAIYMzAwhAMzAwQYAB70P2d+yM3JAAAAAElFTkSuQmCC" alt="Minesweeper">
+            Minesweeper
+        </li>
+        <li class="separator"></li>
+        <li id="start-menu-bsod">
+             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAdUlEQVR42mNgGAWjYBSMglEwCkYBGUB8/v//PxMDAwPDf5CGAWQBsYAY/v//LwMIA8gCYgEx/P//X4YQBkAGxAMy/P//n0FYBswCYgEy/P//n8EIID4gBvAYkAUxAcYBMQEGkAUxAYcBMQDjGVD+CgAADEe1qRh5+uEAAAAASUVORK5CYII=" alt="Shutdown">
+            Shut Down...
+        </li>
+    </ul>
+</div>
 
-            // --- CLOCK ---
-            const clockElement = document.getElementById('clock');
-            function updateClock() {
-                const now = new Date();
-                let hours = now.getHours();
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // the hour '0' should be '12'
-                clockElement.textContent = `${hours}:${minutes} ${ampm}`;
+<div id="bsod">
+    <h1>Windows</h1>
+    <p>A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
+    <p>The current application will be terminated.</p>
+    <p>* Press any key to terminate the current application.<br>
+       * Press CTRL+ALT+DEL again to restart your computer. You will lose any unsaved information in all applications.
+    </p>
+    <p style="text-align: center; margin-top: 4em;">Press any key to continue_</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- CORE SYSTEM VARIABLES ---
+        const desktop = document.getElementById('desktop');
+        let highestZIndex = 100;
+        let activeIcon = null;
+
+        // --- CLOCK ---
+        const clockElement = document.getElementById('clock');
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            clockElement.textContent = `${hours}:${minutes} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- WINDOW DRAGGING ---
+        function makeDraggable(windowElement) {
+            const titleBar = windowElement.querySelector('.title-bar');
+            let offsetX, offsetY, isDragging = false;
+
+            titleBar.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                isDragging = true;
+
+                // Bring window to front
+                windowElement.style.zIndex = ++highestZIndex;
+
+                offsetX = e.clientX - windowElement.offsetLeft;
+                offsetY = e.clientY - windowElement.offsetTop;
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+
+            function onMouseMove(e) {
+                if (!isDragging) return;
+                windowElement.style.left = `${e.clientX - offsetX}px`;
+                windowElement.style.top = `${e.clientY - offsetY}px`;
             }
-            setInterval(updateClock, 1000);
-            updateClock();
 
-            // --- WINDOW DRAGGING ---
-            function makeDraggable(windowElement) {
-                const titleBar = windowElement.querySelector('.title-bar');
-                let offsetX, offsetY, isDragging = false;
+            function onMouseUp() {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        }
 
-                titleBar.addEventListener('mousedown', (e) => {
-                    if (e.target.tagName === 'BUTTON') return;
-                    isDragging = true;
-                    
-                    // Bring window to front
+        // Initialize all windows
+        document.querySelectorAll('.window').forEach(win => {
+             makeDraggable(win);
+             // Bring to front on any click inside the window
+             win.addEventListener('mousedown', () => {
+                 win.style.zIndex = ++highestZIndex;
+             }, true);
+        });
+
+        // --- ICON & WINDOW HANDLING ---
+        document.querySelectorAll('.desktop-icon').forEach(icon => {
+            // Generic listener to open windows
+            icon.addEventListener('dblclick', () => {
+                const windowId = icon.dataset.windowId;
+                if (windowId) {
+                    const windowElement = document.getElementById(windowId);
+                    windowElement.style.display = 'block';
                     windowElement.style.zIndex = ++highestZIndex;
-                    
-                    offsetX = e.clientX - windowElement.offsetLeft;
-                    offsetY = e.clientY - windowElement.offsetTop;
-                    
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
-                });
-
-                function onMouseMove(e) {
-                    if (!isDragging) return;
-                    windowElement.style.left = `${e.clientX - offsetX}px`;
-                    windowElement.style.top = `${e.clientY - offsetY}px`;
-                }
-
-                function onMouseUp() {
-                    isDragging = false;
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                }
-            }
-            
-            // Initialize all windows
-            document.querySelectorAll('.window').forEach(win => {
-                 makeDraggable(win);
-                 // Bring to front on any click inside the window
-                 win.addEventListener('mousedown', () => {
-                     win.style.zIndex = ++highestZIndex;
-                 }, true);
-            });
-
-
-            // --- ICON & WINDOW HANDLING ---
-            document.querySelectorAll('.desktop-icon').forEach(icon => {
-                // Generic listener to open windows
-                icon.addEventListener('dblclick', () => {
-                    const windowId = icon.dataset.windowId;
-                    if (windowId) {
-                        const windowElement = document.getElementById(windowId);
-                        windowElement.style.display = 'block';
-                        windowElement.style.zIndex = ++highestZIndex;
-                    }
-                });
-                
-                // Single click to activate
-                icon.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent desktop click from firing
-                    if (activeIcon) {
-                        activeIcon.classList.remove('active');
-                    }
-                    activeIcon = icon;
-                    activeIcon.classList.add('active');
-                });
-            });
-
-            // Deactivate icon on desktop click
-            desktop.addEventListener('click', () => {
-                 if(activeIcon) {
-                     activeIcon.classList.remove('active');
-                     activeIcon = null;
-                 }
-            });
-
-
-            // --- WINDOW CONTROLS (CLOSE BUTTON) ---
-            document.querySelectorAll('.close-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.target.closest('.window').style.display = 'none';
-                });
-            });
-
-            // --- START MENU ---
-            const startButton = document.getElementById('start-button');
-            const startMenu = document.getElementById('start-menu');
-            
-            startButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isVisible = startMenu.style.display === 'block';
-                startMenu.style.display = isVisible ? 'none' : 'block';
-                startButton.classList.toggle('active', !isVisible);
-            });
-            
-            document.addEventListener('click', () => {
-                if(startMenu.style.display === 'block') {
-                    startMenu.style.display = 'none';
-                    startButton.classList.remove('active');
                 }
             });
 
-            // Start Menu functionality
-            document.getElementById('start-menu-minesweeper').addEventListener('click', () => {
-                const minesweeperWindow = document.getElementById('minesweeper-window');
-                minesweeperWindow.style.display = 'block';
-                minesweeperWindow.style.zIndex = ++highestZIndex;
+            // Single click to activate
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent desktop click from firing
+                if (activeIcon) {
+                    activeIcon.classList.remove('active');
+                }
+                activeIcon = icon;
+                activeIcon.classList.add('active');
             });
-            
-            // --- The Rebel Library Icon Logic ---
-            const rebelLibraryIcon = document.getElementById('rebel-library-icon');
-            if (rebelLibraryIcon) {
-                rebelLibraryIcon.addEventListener('dblclick', () => {
-                    // 1. Add the fade-out class to the body
-                    document.body.classList.add('fade-out');
-                    
-                    // 2. Wait for the fade animation to finish, then redirect
-                    setTimeout(() => {
-                        window.location.href = 'https://jellyfin.the-rebel-library.com';
-                    }, 800); // This duration should match your CSS transition time
-                });
-            }
-            
-            // --- BSOD ---
-            const bsod = document.getElementById('bsod');
-            const showBsod = () => {
-                bsod.style.display = 'block';
-                // Allow user to "reboot" by pressing any key
-                window.addEventListener('keydown', () => {
-                   window.location.reload();
-                }, { once: true });
-            };
-            
-            document.getElementById('bsod-icon').addEventListener('dblclick', showBsod);
-            document.getElementById('start-menu-bsod').addEventListener('click', showBsod);
-            
+        });
 
-            // --- MINESWEEPER LOGIC ---
-            const minefield = document.getElementById('minefield');
-            const mineCounter = document.querySelector('.mine-counter');
-            const timerDisplay = document.querySelector('.timer');
-            const smiley = document.querySelector('.smiley');
-            const ROWS = 10, COLS = 10, MINES = 10;
-            let board = [], timerInterval, time, gameOver;
+        // Deactivate icon on desktop click
+        desktop.addEventListener('click', () => {
+             if(activeIcon) {
+                 activeIcon.classList.remove('active');
+                 activeIcon = null;
+             }
+        });
 
-            function initMinesweeper() {
-                gameOver = false;
-                time = 0;
-                board = [];
-                if(minefield) {
-                    minefield.innerHTML = '';
-                }
-                if (mineCounter) {
-                    mineCounter.textContent = MINES.toString().padStart(3, '0');
-                }
-                if (timerDisplay) {
-                    timerDisplay.textContent = '000';
-                }
-                if(smiley) {
-                    smiley.textContent = '🙂';
-                }
-                clearInterval(timerInterval);
+        // --- WINDOW CONTROLS (CLOSE BUTTON) ---
+        document.querySelectorAll('.close-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.target.closest('.window').style.display = 'none';
+            });
+        });
 
-                // Create board state
-                for (let r = 0; r < ROWS; r++) {
-                    board[r] = [];
-                    for (let c = 0; c < COLS; c++) {
-                        board[r][c] = {
-                            isMine: false,
-                            isRevealed: false,
-                            isFlagged: false,
-                            adjacentMines: 0
-                        };
-                    }
-                }
+        // --- START MENU ---
+        const startButton = document.getElementById('start-button');
+        const startMenu = document.getElementById('start-menu');
 
-                // Place mines
-                let minesPlaced = 0;
-                while (minesPlaced < MINES) {
-                    const r = Math.floor(Math.random() * ROWS);
-                    const c = Math.floor(Math.random() * COLS);
-                    if (!board[r][c].isMine) {
-                        board[r][c].isMine = true;
-                        minesPlaced++;
-                    }
-                }
+        startButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isVisible = startMenu.style.display === 'block';
+            startMenu.style.display = isVisible ? 'none' : 'block';
+            startButton.classList.toggle('active', !isVisible);
+        });
 
-                // Calculate adjacent mines
-                for (let r = 0; r < ROWS; r++) {
-                    for (let c = 0; c < COLS; c++) {
-                        if (board[r][c].isMine) continue;
-                        let count = 0;
-                        for (let dr = -1; dr <= 1; dr++) {
-                            for (let dc = -1; dc <= 1; dc++) {
-                                const nr = r + dr;
-                                const nc = c + dc;
-                                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc].isMine) {
-                                    count++;
-                                }
-                            }
-                        }
-                        board[r][c].adjacentMines = count;
-                    }
-                }
-
-                // Create DOM elements
-                if (minefield) {
-                    for (let r = 0; r < ROWS; r++) {
-                        for (let c = 0; c < COLS; c++) {
-                            const cell = document.createElement('div');
-                            cell.classList.add('cell');
-                            cell.dataset.r = r;
-                            cell.dataset.c = c;
-                            cell.addEventListener('click', handleCellClick);
-                            cell.addEventListener('contextmenu', handleCellRightClick);
-                            minefield.appendChild(cell);
-                        }
-                    }
-                }
-            }
-            
-            function startTimer() {
-                if (timerInterval) return;
-                timerInterval = setInterval(() => {
-                    time++;
-                    if(timerDisplay) {
-                        timerDisplay.textContent = time.toString().padStart(3, '0');
-                    }
-                }, 1000);
-            }
-
-            function handleCellClick(e) {
-                if (gameOver) return;
-                startTimer();
-                const cellElement = e.target;
-                const r = parseInt(cellElement.dataset.r);
-                const c = parseInt(cellElement.dataset.c);
-                const cellData = board[r][c];
-                
-                if(cellData.isRevealed || cellData.isFlagged) return;
-
-                if (cellData.isMine) {
-                    revealAllMines(r, c);
-                    if (smiley) smiley.textContent = '😵';
-                    gameOver = true;
-                    clearInterval(timerInterval);
-                    return;
-                }
-                
-                revealCell(r, c);
-                checkWinCondition();
-            }
-
-            function revealCell(r, c) {
-                if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
-                const cellData = board[r][c];
-                if (cellData.isRevealed) return;
-                
-                const cellElement = minefield.children[r * COLS + c];
-                cellData.isRevealed = true;
-                cellElement.classList.add('revealed');
-                
-                if(cellData.isFlagged) {
-                    cellData.isFlagged = false;
-                    cellElement.textContent = '';
-                }
-
-                if (cellData.adjacentMines > 0) {
-                    cellElement.textContent = cellData.adjacentMines;
-                    cellElement.classList.add(`c${cellData.adjacentMines}`);
-                } else {
-                    // Flood fill for empty cells
-                    for (let dr = -1; dr <= 1; dr++) {
-                        for (let dc = -1; dc <= 1; dc++) {
-                            revealCell(r + dr, c + dc);
-                        }
-                    }
-                }
-            }
-
-            function handleCellRightClick(e) {
-                e.preventDefault();
-                if (gameOver) return;
-                const cellElement = e.target;
-                const r = parseInt(cellElement.dataset.r);
-                const c = parseInt(cellElement.dataset.c);
-                const cellData = board[r][c];
-                
-                if (cellData.isRevealed) return;
-
-                cellData.isFlagged = !cellData.isFlagged;
-                cellElement.textContent = cellData.isFlagged ? '🚩' : '';
-                
-                let flags = 0;
-                board.flat().forEach(cell => { if(cell.isFlagged) flags++; });
-                if (mineCounter) {
-                    mineCounter.textContent = (MINES - flags).toString().padStart(3, '0');
-                }
-            }
-
-            function revealAllMines(hitRow, hitCol) {
-                for (let r = 0; r < ROWS; r++) {
-                    for (let c = 0; c < COLS; c++) {
-                        if (board[r][c].isMine) {
-                           const cellEl = minefield.children[r * COLS + c];
-                           cellEl.classList.add('revealed');
-                           cellEl.textContent = '💣';
-                           if(r === hitRow && c === hitCol) {
-                               cellEl.classList.add('mine-hit');
-                           }
-                        }
-                    }
-                }
-            }
-            
-            function checkWinCondition() {
-                const revealedCount = board.flat().filter(c => c.isRevealed).length;
-                if(revealedCount === ROWS * COLS - MINES) {
-                    if (smiley) smiley.textContent = '😎';
-                    gameOver = true;
-                    clearInterval(timerInterval);
-                    if (mineCounter) mineCounter.textContent = '000';
-                }
-            }
-
-            if (smiley) {
-                smiley.addEventListener('click', initMinesweeper);
-            }
-            
-            // Only initialize Minesweeper if the elements exist
-            if (document.getElementById('minesweeper-window')) {
-                initMinesweeper();
+        document.addEventListener('click', () => {
+            if(startMenu.style.display === 'block') {
+                startMenu.style.display = 'none';
+                startButton.classList.remove('active');
             }
         });
-    </script>
+
+        // Start Menu functionality
+        document.getElementById('start-menu-minesweeper').addEventListener('click', () => {
+            const minesweeperWindow = document.getElementById('minesweeper-window');
+            minesweeperWindow.style.display = 'block';
+            minesweeperWindow.style.zIndex = ++highestZIndex;
+        });
+
+        // --- The Rebel Library Icon Logic ---
+        const rebelLibraryIcon = document.getElementById('rebel-library-icon');
+        if (rebelLibraryIcon) {
+            rebelLibraryIcon.addEventListener('dblclick', () => {
+                // 1. Add the fade-out class to the body
+                document.body.classList.add('fade-out');
+
+                // 2. Wait for the fade animation to finish, then redirect
+                setTimeout(() => {
+                    window.location.href = '<https://jellyfin.the-rebel-library.com>';
+                }, 800); // This duration should match your CSS transition time
+            });
+        }
+
+        // --- BSOD ---
+        const bsod = document.getElementById('bsod');
+        const showBsod = () => {
+            bsod.style.display = 'block';
+            // Allow user to "reboot" by pressing any key
+            window.addEventListener('keydown', () => {
+               window.location.reload();
+            }, { once: true });
+        };
+
+        document.getElementById('bsod-icon').addEventListener('dblclick', showBsod);
+        document.getElementById('start-menu-bsod').addEventListener('click', showBsod);
+
+        // --- MINESWEEPER LOGIC ---
+        const minefield = document.getElementById('minefield');
+        const mineCounter = document.querySelector('.mine-counter');
+        const timerDisplay = document.querySelector('.timer');
+        const smiley = document.querySelector('.smiley');
+        const ROWS = 10, COLS = 10, MINES = 10;
+        let board = [], timerInterval, time, gameOver;
+
+        function initMinesweeper() {
+            gameOver = false;
+            time = 0;
+            board = [];
+            if(minefield) {
+                minefield.innerHTML = '';
+            }
+            if (mineCounter) {
+                mineCounter.textContent = MINES.toString().padStart(3, '0');
+            }
+            if (timerDisplay) {
+                timerDisplay.textContent = '000';
+            }
+            if(smiley) {
+                smiley.textContent = '🙂';
+            }
+            clearInterval(timerInterval);
+
+            // Create board state
+            for (let r = 0; r < ROWS; r++) {
+                board[r] = [];
+                for (let c = 0; c < COLS; c++) {
+                    board[r][c] = {
+                        isMine: false,
+                        isRevealed: false,
+                        isFlagged: false,
+                        adjacentMines: 0
+                    };
+                }
+            }
+
+            // Place mines
+            let minesPlaced = 0;
+            while (minesPlaced < MINES) {
+                const r = Math.floor(Math.random() * ROWS);
+                const c = Math.floor(Math.random() * COLS);
+                if (!board[r][c].isMine) {
+                    board[r][c].isMine = true;
+                    minesPlaced++;
+                }
+            }
+
+            // Calculate adjacent mines
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c].isMine) continue;
+                    let count = 0;
+                    for (let dr = -1; dr <= 1; dr++) {
+                        for (let dc = -1; dc <= 1; dc++) {
+                            const nr = r + dr;
+                            const nc = c + dc;
+                            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc].isMine) {
+                                count++;
+                            }
+                        }
+                    }
+                    board[r][c].adjacentMines = count;
+                }
+            }
+
+            // Create DOM elements
+            if (minefield) {
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        cell.dataset.r = r;
+                        cell.dataset.c = c;
+                        cell.addEventListener('click', handleCellClick);
+                        cell.addEventListener('contextmenu', handleCellRightClick);
+                        minefield.appendChild(cell);
+                    }
+                }
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                time++;
+                if(timerDisplay) {
+                    timerDisplay.textContent = time.toString().padStart(3, '0');
+                }
+            }, 1000);
+        }
+
+        function handleCellClick(e) {
+            if (gameOver) return;
+            startTimer();
+            const cellElement = e.target;
+            const r = parseInt(cellElement.dataset.r);
+            const c = parseInt(cellElement.dataset.c);
+            const cellData = board[r][c];
+
+            if(cellData.isRevealed || cellData.isFlagged) return;
+
+            if (cellData.isMine) {
+                revealAllMines(r, c);
+                if (smiley) smiley.textContent = '😵';
+                gameOver = true;
+                clearInterval(timerInterval);
+                return;
+            }
+
+            revealCell(r, c);
+            checkWinCondition();
+        }
+
+        function revealCell(r, c) {
+            if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
+            const cellData = board[r][c];
+            if (cellData.isRevealed) return;
+
+            const cellElement = minefield.children[r * COLS + c];
+            cellData.isRevealed = true;
+            cellElement.classList.add('revealed');
+
+            if(cellData.isFlagged) {
+                cellData.isFlagged = false;
+                cellElement.textContent = '';
+            }
+
+            if (cellData.adjacentMines > 0) {
+                cellElement.textContent = cellData.adjacentMines;
+                cellElement.classList.add(`c${cellData.adjacentMines}`);
+            } else {
+                // Flood fill for empty cells
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        revealCell(r + dr, c + dc);
+                    }
+                }
+            }
+        }
+
+        function handleCellRightClick(e) {
+            e.preventDefault();
+            if (gameOver) return;
+            const cellElement = e.target;
+            const r = parseInt(cellElement.dataset.r);
+            const c = parseInt(cellElement.dataset.c);
+            const cellData = board[r][c];
+
+            if (cellData.isRevealed) return;
+
+            cellData.isFlagged = !cellData.isFlagged;
+            cellElement.textContent = cellData.isFlagged ? '🚩' : '';
+
+            let flags = 0;
+            board.flat().forEach(cell => { if(cell.isFlagged) flags++; });
+            if (mineCounter) {
+                mineCounter.textContent = (MINES - flags).toString().padStart(3, '0');
+            }
+        }
+
+        function revealAllMines(hitRow, hitCol) {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c].isMine) {
+                       const cellEl = minefield.children[r * COLS + c];
+                       cellEl.classList.add('revealed');
+                       cellEl.textContent = '💣';
+                       if(r === hitRow && c === hitCol) {
+                           cellEl.classList.add('mine-hit');
+                       }
+                    }
+                }
+            }
+        }
+
+        function checkWinCondition() {
+            const revealedCount = board.flat().filter(c => c.isRevealed).length;
+            if(revealedCount === ROWS * COLS - MINES) {
+                if (smiley) smiley.textContent = '😎';
+                gameOver = true;
+                clearInterval(timerInterval);
+                if (mineCounter) mineCounter.textContent = '000';
+            }
+        }
+
+        if (smiley) {
+            smiley.addEventListener('click', initMinesweeper);
+        }
+
+        // Only initialize Minesweeper if the elements exist
+        if (document.getElementById('minesweeper-window')) {
+            initMinesweeper();
+        }
+    });
+</script>
 </body>
 </html>

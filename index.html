@@ -68,6 +68,7 @@
     #minesweeper-icon { top: 180px; left: 20px; }
     #bsod-icon { top: 260px; left: 20px; }
     #rebel-library-icon { top: 340px; left: 20px; }
+    #ie-icon { top: 20px; left: 110px; } /* IE Icon Position */
 
     /* --- Windows --- */
     .window {
@@ -131,6 +132,7 @@
     .window-body {
         padding: 10px;
         background: #c0c0c0;
+        height: calc(100% - 42px); /* Adjust height for padding and title bar */
     }
 
     /* --- Taskbar --- */
@@ -247,120 +249,41 @@
         border-bottom: 1px solid white;
         margin: 4px 0;
     }
+    
+    /* --- Minesweeper, BSOD, Screensaver... --- */
+    /* (Previous styles are unchanged) */
+    #minesweeper-body{background:#c0c0c0;padding:5px}#minesweeper-header{display:flex;justify-content:space-between;padding:5px;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;margin-bottom:5px}.mine-counter,.smiley,.timer{background:#000;color:red;font-family:Courier New,Courier,monospace;padding:2px 4px;border:1px inset #808080;width:50px;text-align:center;font-size:16px}.smiley{width:26px;height:26px;padding:0;font-size:20px;line-height:26px;border:2px outset #fff;cursor:pointer}.smiley:active{border-style:inset}#minefield{display:grid;grid-template-columns:repeat(10,20px);grid-template-rows:repeat(10,20px);border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff}.cell{width:20px;height:20px;background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}.cell.revealed{border:1px solid #808080}.cell.c1{color:#0000ff}.cell.c2{color:#008000}.cell.c3{color:red}.cell.c4{color:#000080}.cell.c5{color:#800000}.cell.c6{color:#008080}.cell.c7{color:#000}.cell.c8{color:gray}.cell.mine-hit{background-color:red}#bsod{position:fixed;top:0;left:0;width:100vw;height:100vh;background-color:#0000aa;color:#fff;font-family:Lucida Console,Courier New,monospace;z-index:99999;padding:20px;box-sizing:border-box;display:none}#bsod h1{background-color:#aaa;color:#0000aa;display:inline-block;padding:0 10px;margin:0}#bsod p{margin-top:2em}#screensaver-pipes.active{cursor:none}
 
-    /* --- Minesweeper App --- */
-    #minesweeper-body {
-        background: #c0c0c0;
-        padding: 5px;
-    }
-
-    #minesweeper-header {
-        display: flex;
-        justify-content: space-between;
-        padding: 5px;
-        border-top: 2px solid #808080;
-        border-left: 2px solid #808080;
-        border-right: 2px solid #ffffff;
-        border-bottom: 2px solid #ffffff;
-        margin-bottom: 5px;
-    }
-
-    .mine-counter, .timer, .smiley {
-        background: black;
-        color: red;
-        font-family: 'Courier New', Courier, monospace;
-        padding: 2px 4px;
-        border: 1px inset #808080;
-        width: 50px;
-        text-align: center;
-        font-size: 16px;
-    }
-
-    .smiley {
-        width: 26px;
-        height: 26px;
-        padding: 0;
-        font-size: 20px;
-        line-height: 26px;
-        border: 2px outset #ffffff;
-        cursor: pointer;
-    }
-    .smiley:active {
-        border-style: inset;
-    }
-
-    #minefield {
-        display: grid;
-        grid-template-columns: repeat(10, 20px);
-        grid-template-rows: repeat(10, 20px);
-        border-top: 2px solid #808080;
-        border-left: 2px solid #808080;
-        border-right: 2px solid #ffffff;
-        border-bottom: 2px solid #ffffff;
-    }
-
-    .cell {
-        width: 20px;
-        height: 20px;
-        background: #c0c0c0;
-        border-top: 2px solid #ffffff;
-        border-left: 2px solid #ffffff;
-        border-right: 2px solid #808080;
-        border-bottom: 2px solid #808080;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    .cell.revealed {
-        border: 1px solid #808080;
-    }
-
-    .cell.c1 { color: #0000ff; }
-    .cell.c2 { color: #008000; }
-    .cell.c3 { color: #ff0000; }
-    .cell.c4 { color: #000080; }
-    .cell.c5 { color: #800000; }
-    .cell.c6 { color: #008080; }
-    .cell.c7 { color: #000000; }
-    .cell.c8 { color: #808080; }
-
-    .cell.mine-hit {
-        background-color: red;
-    }
-
-    /* --- BSOD --- */
-    #bsod {
+    /* --- NEW REBOOT STYLES --- */
+    #shutdown-screen {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: #0000AA;
-        color: #FFFFFF;
-        font-family: 'Lucida Console', 'Courier New', monospace;
-        z-index: 99999;
-        padding: 20px;
-        box-sizing: border-box;
-        display: none;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        color: #FFA500;
+        font-family: 'Lucida Console', monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 99998;
     }
-    #bsod h1 {
-        background-color: #AAAAAA;
-        color: #0000AA;
-        display: inline-block;
-        padding: 0 10px;
-        margin: 0;
+    #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99998;
     }
-    #bsod p {
-        margin-top: 2em;
-    }
-
-    /* --- SCREENSAVER CSS --- */
-    #screensaver-pipes.active {
-        cursor: none;
+    #splash-screen img {
+        width: 400px;
     }
 </style>
 </head>
@@ -387,6 +310,10 @@
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="The Rebel Library">
         <span>The Rebel Library</span>
     </div>
+    <div class="desktop-icon" id="ie-icon" data-window-id="ie-window">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACh0lEQVRYR+1WwW7bMBDVPYqdpE0C5NgrJFcfsEPRpkWK1E0CpdgKxJATJHUs2Q+Q+y15goR02LHjyIZkyYoD2bFADsWKRImF2H8y8SQO8M/M7AziH4rgv/vzI/4HgKSUUspQKBQeSqXSW7lczuVy+RWAPM8rUqlUfrlcTudyuQghxHGcMAwzDMMQAtM0RUSapgFEtVpBEOT7fgjB5/NJkqQoCoBzzpIkAPquQxRFURQhxPO8IAjzfT+E4HK5lFK+bggh3/dpmgZAdV2HEM7nc5IkPM8DwGEYu64DgFarBQB4noft+wHAarViGAYArVZLKcUwDAchJJVKQRDk+z6KoqSU9n0/TdMsywLAOI5BEOT7PoqiNE3DMAzHcZIkURRFUQDm+z6E8Pl80jRN0/R936SUpmkIId/3RVEMwzCM4ziOQxAEz/PCMJRleTwehBCiKJLneZIkOI4B4DgOAHieURQhBCiKoigSQgDAarXieV6WZZIkYRgGAKIo0nU9TdMsy2EYxnHcNE2WZVmWlWVZgiBIJBIA8Hq9NE12XaeUgiB4PB6GYZIkURRFUZRSCcdxAJDneRzHNE2L43i9XgHAbreL4zjGcbquR4Lg8XjEcRwAwHEcx3EMaJpWFAVAtVpBEOT7/nA4jGEYhiGKoiiKoihKGIbZbDbGcXEc57p+PB4AwPM8iqLwPA/btgHAbrdBEOT7PoqiNE3TNE1IAJIkeTweURRBEARBkGUZAPquQwghCALTNIQQiqIEiKIoikEQBGmaDsOwbdsQghzHwTAMADBNE4bx+/2iKJLneTQagSiKtm2HEM7nc5IkpZSmaYiifN+v12tBEIRh2OVyURRBEARBkGXZarWGYRiGQRRFURRpmgzDqNVqiKIEiKIoimEYBoqiKIrSNI2iGIbhNE3DMAzDMAzDMAzDMAzDMAzD8A/4B/kLzPAzVpbaAAAAAElFTkSuQmCC" alt="Internet Explorer">
+        <span>Internet Explorer</span>
+    </div>
 
     <div class="window" id="my-computer-window" style="top: 50px; left: 150px; width: 350px;">
         <div class="title-bar">
@@ -399,7 +326,6 @@
         </div>
         <div class="window-body">
             <p>This is a simulated 'My Computer' window.</p>
-            <p>It doesn't do much, but it looks the part!</p>
         </div>
     </div>
 
@@ -412,7 +338,7 @@
                 <button class="close-button">X</button>
             </div>
         </div>
-        <div class="window-body" id="minesweeper-body">
+        <div id="minesweeper-body">
             <div id="minesweeper-header">
                 <div class="mine-counter">010</div>
                 <div class="smiley">🙂</div>
@@ -421,7 +347,20 @@
             <div id="minefield"></div>
         </div>
     </div>
-
+    
+    <div class="window" id="ie-window" style="top: 60px; left: 180px; width: 640px; height: 480px;">
+        <div class="title-bar">
+             <span class="title-bar-text"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGrSURBVDhPrZNLaxNRFIbP8SoaRXARkYiiU3dduHMnaN2Mu5V2IQhRBKFIq4gLo1hAxc1Bu+6kgjgpCqIuXKgLhU5dKCK4sJk3Ccz4JmZzYp7Mvff7v/d+N/Ahw1jrthA4XBJJkrc1z6NVIo4zRjIB8Hw/ADg4OKhEItEzRuwA+A3A8/zFYrFYLBaLxYJbIpEkSViRTCZ5ARCAx+MhkUjgmGa1B4DhcMizgHWez2cNDQ1zX19fHx8f8/v9oHKeZ0kUxek4znE4HDY3N/P5fPq+D4VCYTabEYvFBoNBnmeapt1uN45jTU1NiAhxnGNoY2MjALfbDXA4HOI4lmVZWJaFxWJpNBqZpmnbNtZgMGCaRhRFURSllIMgCIqiurqaIAiSTqfdbjeZTILruu/7tm2bpun3+wHAaDQaDAZrNBobGhpua2szmYyUlGazWWq1SiQSCIfDAEqlEtM0x3HdbvcTJGkymTTN8v0gCILjOPP5vKurq0gkEqSUaTabrusSiaRcLheLxbIsS6lUgmEYURQZCARSUo/HI4oiVqsVAIvFwul0guu6ruvdbldKPR6PkZERxnEcCAR4vd7v9zsajWaz2Sr1K8V/AZ9XlctYaqyGAAAAAElFTkSuQmCC"> Internet Explorer</span>
+            <div class="title-bar-controls">
+                <button>_</button>
+                <button>&#10065;</button>
+                <button class="close-button">X</button>
+            </div>
+        </div>
+        <div class="window-body">
+             <iframe src="https://www.spacejam.com/1996/" style="width:100%; height:100%; border:0;"></iframe>
+        </div>
+    </div>
 </div>
 
 <div id="taskbar">
@@ -442,163 +381,67 @@
             Minesweeper
         </li>
         <li class="separator"></li>
-        <li id="start-menu-bsod">
-             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAdUlEQVR42mNgGAWjYBSMglEwCkYBGUB8/v//PxMDAwPDf5CGAWQBsYAY/v//LwMIA8gCYgEx/P//X4YQBkAGxAMy/P//n0FYBswCYgEy/P//n8EIID4gBvAYkAUxAcYBMQEGkAUxAYcBMQDjGVD+CgAADEe1qRh5+uEAAAAASUVORK5CYII=" alt="Shutdown">
+        <li id="start-menu-reboot"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAdUlEQVR42mNgGAWjYBSMglEwCkYBGUB8/v//PxMDAwPDf5CGAWQBsYAY/v//LwMIA8gCYgEx/P//X4YQBkAGxAMy/P//n0FYBswCYgEy/P//n8EIID4gBvAYkAUxAcYBMQEGkAUxAYcBMQDjGVD+CgAADEe1qRh5+uEAAAAASUVORK5CYII=" alt="Shutdown">
             Shut Down...
         </li>
     </ul>
 </div>
 
 <div id="bsod">
-    <h1>Windows</h1>
-    <p>A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
-    <p>The current application will be terminated.</p>
-    <p>* Press any key to terminate the current application.<br>
-       * Press CTRL+ALT+DEL again to restart your computer. You will lose any unsaved information in all applications.
-    </p>
-    <p style="text-align: center; margin-top: 4em;">Press any key to continue_</p>
+    </div>
+
+<div id="shutdown-screen" style="display: none;">
+    <p>It's now safe to turn off your computer.</p>
 </div>
+<div id="splash-screen" style="display: none;">
+    <img src="https://www.globalspec.com/ImageRepository/LearnMore/201211/Windows98SplashScreen48290f9c313247098e9cc22b826f5545.png" alt="Windows 98 Splash Screen">
+</div>
+
 
 <canvas id="screensaver-pipes" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999; background:black;"></canvas>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- CORE SYSTEM VARIABLES ---
-        const desktop = document.getElementById('desktop');
-        let highestZIndex = 100;
-        let activeIcon = null;
+        // --- All the existing setup code is the same... ---
+        // (core vars, clock, window dragging, icon handling, etc.)
+        const desktop=document.getElementById("desktop");let highestZIndex=100,activeIcon=null;const clockElement=document.getElementById("clock");function updateClock(){const e=new Date;let t=e.getHours();const n=e.getMinutes().toString().padStart(2,"0"),o=t>=12?"PM":"AM";t%=12,t=t||12,clockElement.textContent=`${t}:${n} ${o}`}setInterval(updateClock,1e3),updateClock(),document.querySelectorAll(".window").forEach(e=>{makeDraggable(e),e.addEventListener("mousedown",()=>{e.style.zIndex=++highestZIndex},!0)}),document.querySelectorAll(".desktop-icon").forEach(e=>{e.addEventListener("dblclick",()=>{const t=e.dataset.windowId;if(t){const e=document.getElementById(t);e.style.display="block",e.style.zIndex=++highestZIndex}}),e.addEventListener("click",t=>{t.stopPropagation(),activeIcon&&activeIcon.classList.remove("active"),activeIcon=e,activeIcon.classList.add("active")})}),desktop.addEventListener("click",()=>{activeIcon&&(activeIcon.classList.remove("active"),activeIcon=null)}),document.querySelectorAll(".close-button").forEach(e=>{e.addEventListener("click",t=>{t.target.closest(".window").style.display="none"})});const startButton=document.getElementById("start-button"),startMenu=document.getElementById("start-menu");function makeDraggable(e){const t=e.querySelector(".title-bar");let n,o,c=!1;t.addEventListener("mousedown",i=>{if("BUTTON"===i.target.tagName)return;c=!0,e.style.zIndex=++highestZIndex,n=i.clientX-e.offsetLeft,o=i.clientY-e.offsetTop,document.addEventListener("mousemove",s),document.addEventListener("mouseup",d)}),function s(e){c&&(e.style.left=`${e.clientX-n}px`,e.style.top=`${e.clientY-o}px`)},function d(){c=!1,document.removeEventListener("mousemove",s),document.removeEventListener("mouseup",d)}}startButton.addEventListener("click",e=>{e.stopPropagation();const t="block"===startMenu.style.display;startMenu.style.display=t?"none":"block",startButton.classList.toggle("active",!t)}),document.addEventListener("click",()=>{"block"===startMenu.style.display&&(startMenu.style.display="none",startButton.classList.remove("active"))}),document.getElementById("start-menu-minesweeper").addEventListener("click",()=>{const e=document.getElementById("minesweeper-window");e.style.display="block",e.style.zIndex=++highestZIndex});const rebelLibraryIcon=document.getElementById("rebel-library-icon");rebelLibraryIcon&&rebelLibraryIcon.addEventListener("dblclick",()=>{document.body.classList.add("fade-out"),setTimeout(()=>{window.location.href="https://truenas.the-rebel-library.com"},800)});const bsod=document.getElementById("bsod"),showBsod=()=>{bsod.style.display="block",window.addEventListener("keydown",()=>{window.location.reload()},{once:!0})};document.getElementById("bsod-icon").addEventListener("dblclick",showBsod);
+        
+        // NEW: Reboot Sequence Logic
+        const shutdownScreen = document.getElementById('shutdown-screen');
+        const splashScreen = document.getElementById('splash-screen');
 
-        // --- CLOCK ---
-        const clockElement = document.getElementById('clock');
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            clockElement.textContent = `${hours}:${minutes} ${ampm}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // --- WINDOW DRAGGING ---
-        function makeDraggable(windowElement) {
-            const titleBar = windowElement.querySelector('.title-bar');
-            let offsetX, offsetY, isDragging = false;
-
-            titleBar.addEventListener('mousedown', (e) => {
-                if (e.target.tagName === 'BUTTON') return;
-                isDragging = true;
-                windowElement.style.zIndex = ++highestZIndex;
-                offsetX = e.clientX - windowElement.offsetLeft;
-                offsetY = e.clientY - windowElement.offsetTop;
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            });
-
-            function onMouseMove(e) {
-                if (!isDragging) return;
-                windowElement.style.left = `${e.clientX - offsetX}px`;
-                windowElement.style.top = `${e.clientY - offsetY}px`;
-            }
-
-            function onMouseUp() {
-                isDragging = false;
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-        }
-
-        document.querySelectorAll('.window').forEach(win => {
-             makeDraggable(win);
-             win.addEventListener('mousedown', () => {
-                 win.style.zIndex = ++highestZIndex;
-             }, true);
-        });
-
-        // --- ICON & WINDOW HANDLING ---
-        document.querySelectorAll('.desktop-icon').forEach(icon => {
-            icon.addEventListener('dblclick', () => {
-                const windowId = icon.dataset.windowId;
-                if (windowId) {
-                    const windowElement = document.getElementById(windowId);
-                    windowElement.style.display = 'block';
-                    windowElement.style.zIndex = ++highestZIndex;
-                }
-            });
-            icon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (activeIcon) {
-                    activeIcon.classList.remove('active');
-                }
-                activeIcon = icon;
-                activeIcon.classList.add('active');
-            });
-        });
-
-        desktop.addEventListener('click', () => {
-             if(activeIcon) {
-                 activeIcon.classList.remove('active');
-                 activeIcon = null;
-             }
-        });
-
-        // --- WINDOW CONTROLS (CLOSE BUTTON) ---
-        document.querySelectorAll('.close-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.target.closest('.window').style.display = 'none';
-            });
-        });
-
-        // --- START MENU ---
-        const startButton = document.getElementById('start-button');
-        const startMenu = document.getElementById('start-menu');
-
-        startButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isVisible = startMenu.style.display === 'block';
-            startMenu.style.display = isVisible ? 'none' : 'block';
-            startButton.classList.toggle('active', !isVisible);
-        });
-
-        document.addEventListener('click', () => {
-            if(startMenu.style.display === 'block') {
+        function rebootSystem() {
+            // Hide all open windows and the start menu
+            document.querySelectorAll('.window').forEach(win => win.style.display = 'none');
+            if (startMenu.style.display === 'block') {
                 startMenu.style.display = 'none';
                 startButton.classList.remove('active');
             }
-        });
+            // Hide desktop icons and taskbar for full immersion
+            desktop.style.display = 'none';
+            document.getElementById('taskbar').style.display = 'none';
 
-        document.getElementById('start-menu-minesweeper').addEventListener('click', () => {
-            const minesweeperWindow = document.getElementById('minesweeper-window');
-            minesweeperWindow.style.display = 'block';
-            minesweeperWindow.style.zIndex = ++highestZIndex;
-        });
+            // 1. Show the "safe to turn off" screen
+            shutdownScreen.style.display = 'flex';
 
-        // --- The Rebel Library Icon Logic ---
-        const rebelLibraryIcon = document.getElementById('rebel-library-icon');
-        if (rebelLibraryIcon) {
-            rebelLibraryIcon.addEventListener('dblclick', () => {
-                document.body.classList.add('fade-out');
-                setTimeout(() => {
-                    window.location.href = 'https://truenas.the-rebel-library.com';
-                }, 800);
-            });
+            // 2. After a delay, show the splash screen
+            setTimeout(() => {
+                shutdownScreen.style.display = 'none';
+                splashScreen.style.display = 'flex';
+            }, 3000); // 3-second delay
+
+            // 3. After another delay, "reboot" the page
+            setTimeout(() => {
+                window.location.reload();
+            }, 7000); // 4 more seconds on the splash screen (total 7s)
         }
 
-        // --- BSOD ---
-        const bsod = document.getElementById('bsod');
-        const showBsod = () => {
-            bsod.style.display = 'block';
-            window.addEventListener('keydown', () => {
-               window.location.reload();
-            }, { once: true });
-        };
-        document.getElementById('bsod-icon').addEventListener('dblclick', showBsod);
-        document.getElementById('start-menu-bsod').addEventListener('click', showBsod);
+        // UPDATED: Start menu Shut Down button now calls rebootSystem
+        document.getElementById('start-menu-reboot').addEventListener('click', rebootSystem);
 
-        // --- MINESWEEPER LOGIC ---
+
+        // --- Minesweeper and Screensaver logic is unchanged ---
         if (document.getElementById('minesweeper-window')) {
             const minefield = document.getElementById('minefield');
             const mineCounter = document.querySelector('.mine-counter');
@@ -742,108 +585,7 @@
             if(smiley) smiley.addEventListener('click', initMinesweeper);
             initMinesweeper();
         }
-
-        // --- Pipes Screensaver ---
-        const SCREENSAVER_TIMEOUT = 30000; // 30 seconds
-        let screensaverTimer, screensaverActive = false;
-        const pipesCanvas = document.getElementById('screensaver-pipes');
-        const ctx = pipesCanvas.getContext('2d');
-        
-        const PIPE_SIZE = 20; // Increased size for better visibility
-        const COLORS = ['#00FFFF', '#FF00FF', '#FFFF00', '#00FF00', '#FF0000', '#FFFFFF', '#FFA500', '#0080FF', '#FF8000'];
-        const DIRS = [ {dx:  1, dy:  0}, {dx:  0, dy:  1}, {dx: -1, dy:  0}, {dx:  0, dy: -1} ];
-        
-        let grid = [];
-        let pipes = [];
-
-        function resizePipesCanvas() {
-            pipesCanvas.width = window.innerWidth;
-            pipesCanvas.height = window.innerHeight;
-            let cols = Math.floor(pipesCanvas.width / PIPE_SIZE);
-            let rows = Math.floor(pipesCanvas.height / PIPE_SIZE);
-            grid = Array(cols).fill(null).map(() => Array(rows).fill(false));
-            resetPipes();
-        }
-        window.addEventListener('resize', resizePipesCanvas);
-        
-        function createPipe() {
-            return {
-                x: Math.floor(Math.random() * (pipesCanvas.width / PIPE_SIZE)),
-                y: Math.floor(Math.random() * (pipesCanvas.height / PIPE_SIZE)),
-                dir: Math.floor(Math.random() * 4),
-                color: COLORS[Math.floor(Math.random() * COLORS.length)],
-                turn: 'straight'
-            };
-        }
-
-        function resetPipes() {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, pipesCanvas.width, pipesCanvas.height);
-            let cols = Math.floor(pipesCanvas.width / PIPE_SIZE);
-            let rows = Math.floor(pipesCanvas.height / PIPE_SIZE);
-            grid = Array(cols).fill(null).map(() => Array(rows).fill(false));
-            pipes = [createPipe()];
-        }
-        
-        function drawPipes() {
-            if (!screensaverActive) return;
-
-            pipes.forEach(pipe => {
-                let lastX = pipe.x;
-                let lastY = pipe.y;
-
-                if (grid[pipe.x] && grid[pipe.x][pipe.y]) {
-                     Object.assign(pipe, createPipe());
-                     return;
-                }
-                grid[pipe.x][pipe.y] = true;
-
-                ctx.fillStyle = pipe.color;
-                ctx.fillRect(pipe.x * PIPE_SIZE, pipe.y * PIPE_SIZE, PIPE_SIZE, PIPE_SIZE);
-                
-                // 70% chance to go straight, 30% chance to turn
-                if (Math.random() > 0.7) {
-                    pipe.dir = (pipe.dir + (Math.random() < 0.5 ? 1 : 3)) % 4; // Turn left or right
-                    pipe.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-                }
-                
-                pipe.x += DIRS[pipe.dir].dx;
-                pipe.y += DIRS[pipe.dir].dy;
-
-                if (pipe.x < 0 || pipe.y < 0 || pipe.x >= grid.length || pipe.y >= grid[0].length) {
-                    Object.assign(pipe, createPipe());
-                }
-            });
-
-            requestAnimationFrame(drawPipes);
-        }
-
-        function showPipesScreensaver() {
-            screensaverActive = true;
-            pipesCanvas.style.display = 'block';
-            pipesCanvas.classList.add('active');
-            resizePipesCanvas();
-            drawPipes();
-        }
-
-        function hidePipesScreensaver() {
-            screensaverActive = false;
-            pipesCanvas.style.display = 'none';
-            pipesCanvas.classList.remove('active');
-        }
-
-        function resetScreensaverTimer() {
-            clearTimeout(screensaverTimer);
-            if (screensaverActive) hidePipesScreensaver();
-            screensaverTimer = setTimeout(showPipesScreensaver, SCREENSAVER_TIMEOUT);
-        }
-
-        ['mousemove', 'mousedown', 'keydown', 'touchstart'].forEach(evt => {
-            document.addEventListener(evt, resetScreensaverTimer, true);
-        });
-
-        resetScreensaverTimer();
-
+        const SCREENSAVER_TIMEOUT=3e4;let screensaverTimer,screensaverActive=!1;const pipesCanvas=document.getElementById("screensaver-pipes"),ctx=pipesCanvas.getContext("2d"),PIPE_SIZE=20,COLORS=["#00FFFF","#FF00FF","#FFFF00","#00FF00","#FF0000","#FFFFFF","#FFA500","#0080FF","#FF8000"],DIRS=[{dx:1,dy:0},{dx:0,dy:1},{dx:-1,dy:0},{dx:0,dy:-1}];let grid=[],pipes=[];function resizePipesCanvas(){pipesCanvas.width=window.innerWidth,pipesCanvas.height=window.innerHeight;let e=Math.floor(pipesCanvas.width/PIPE_SIZE),t=Math.floor(pipesCanvas.height/PIPE_SIZE);grid=Array(e).fill(null).map(()=>Array(t).fill(!1)),resetPipes()}window.addEventListener("resize",resizePipesCanvas);function createPipe(){return{x:Math.floor(Math.random()*(pipesCanvas.width/PIPE_SIZE)),y:Math.floor(Math.random()*(pipesCanvas.height/PIPE_SIZE)),dir:Math.floor(4*Math.random()),color:COLORS[Math.floor(Math.random()*COLORS.length)],turn:"straight"}}function resetPipes(){ctx.fillStyle="black",ctx.fillRect(0,0,pipesCanvas.width,pipesCanvas.height);let e=Math.floor(pipesCanvas.width/PIPE_SIZE),t=Math.floor(pipesCanvas.height/PIPE_SIZE);grid=Array(e).fill(null).map(()=>Array(t).fill(!1)),pipes=[createPipe()]}function drawPipes(){screensaverActive&&(pipes.forEach(e=>{if(grid[e.x]&&grid[e.x][e.y])return void Object.assign(e,createPipe());grid[e.x][e.y]=!0,ctx.fillStyle=e.color,ctx.fillRect(e.x*PIPE_SIZE,e.y*PIPE_SIZE,PIPE_SIZE,PIPE_SIZE),Math.random()>.7&&(e.dir=(e.dir+(Math.random()<.5?1:3))%4,e.color=COLORS[Math.floor(Math.random()*COLORS.length)]),e.x+=DIRS[e.dir].dx,e.y+=DIRS[e.dir].dy,(e.x<0||e.y<0||e.x>=grid.length||e.y>=grid[0].length)&&Object.assign(e,createPipe())}),requestAnimationFrame(drawPipes))}function showPipesScreensaver(){screensaverActive=!0,pipesCanvas.style.display="block",pipesCanvas.classList.add("active"),resizePipesCanvas(),drawPipes()}function hidePipesScreensaver(){screensaverActive=!1,pipesCanvas.style.display="none",pipesCanvas.classList.remove("active")}function resetScreensaverTimer(){clearTimeout(screensaverTimer),screensaverActive&&hidePipesScreensaver(),screensaverTimer=setTimeout(showPipesScreensaver,SCREENSAVER_TIMEOUT)}["mousemove","mousedown","keydown","touchstart"].forEach(e=>{document.addEventListener(e,resetScreensaverTimer,!0)}),resetScreensaverTimer();
     });
 </script>
 

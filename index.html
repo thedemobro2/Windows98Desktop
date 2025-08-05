@@ -14,12 +14,10 @@
         padding: 0;
         overflow: hidden;
         user-select: none;
-        /* ✅ Added for fade-out transition */
         opacity: 1;
         transition: opacity 0.8s ease-out;
     }
 
-    /* ✅ Added for fade-out transition */
     body.fade-out {
         opacity: 0;
     }
@@ -359,6 +357,11 @@
     #bsod p {
         margin-top: 2em;
     }
+
+    /* --- SCREENSAVER CSS --- */
+    #screensaver-pipes.active {
+        cursor: none;
+    }
 </style>
 </head>
 <body>
@@ -456,6 +459,8 @@
     <p style="text-align: center; margin-top: 4em;">Press any key to continue_</p>
 </div>
 
+<canvas id="screensaver-pipes" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999; background:black;"></canvas>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -486,13 +491,9 @@
             titleBar.addEventListener('mousedown', (e) => {
                 if (e.target.tagName === 'BUTTON') return;
                 isDragging = true;
-
-                // Bring window to front
                 windowElement.style.zIndex = ++highestZIndex;
-
                 offsetX = e.clientX - windowElement.offsetLeft;
                 offsetY = e.clientY - windowElement.offsetTop;
-
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
             });
@@ -510,10 +511,8 @@
             }
         }
 
-        // Initialize all windows
         document.querySelectorAll('.window').forEach(win => {
              makeDraggable(win);
-             // Bring to front on any click inside the window
              win.addEventListener('mousedown', () => {
                  win.style.zIndex = ++highestZIndex;
              }, true);
@@ -521,7 +520,6 @@
 
         // --- ICON & WINDOW HANDLING ---
         document.querySelectorAll('.desktop-icon').forEach(icon => {
-            // Generic listener to open windows
             icon.addEventListener('dblclick', () => {
                 const windowId = icon.dataset.windowId;
                 if (windowId) {
@@ -530,10 +528,8 @@
                     windowElement.style.zIndex = ++highestZIndex;
                 }
             });
-
-            // Single click to activate
             icon.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent desktop click from firing
+                e.stopPropagation();
                 if (activeIcon) {
                     activeIcon.classList.remove('active');
                 }
@@ -542,7 +538,6 @@
             });
         });
 
-        // Deactivate icon on desktop click
         desktop.addEventListener('click', () => {
              if(activeIcon) {
                  activeIcon.classList.remove('active');
@@ -575,25 +570,20 @@
             }
         });
 
-        // Start Menu functionality
         document.getElementById('start-menu-minesweeper').addEventListener('click', () => {
             const minesweeperWindow = document.getElementById('minesweeper-window');
             minesweeperWindow.style.display = 'block';
             minesweeperWindow.style.zIndex = ++highestZIndex;
         });
 
-// --- The Rebel Library Icon Logic ---
+        // --- The Rebel Library Icon Logic ---
         const rebelLibraryIcon = document.getElementById('rebel-library-icon');
         if (rebelLibraryIcon) {
             rebelLibraryIcon.addEventListener('dblclick', () => {
-                // 1. Add the fade-out class to the body
                 document.body.classList.add('fade-out');
-
-                // 2. Wait for the fade animation to finish, then redirect
                 setTimeout(() => {
-                    // ✅ CORRECTED to be a full, absolute URL
                     window.location.href = 'https://truenas.the-rebel-library.com';
-                }, 800); // This duration should match your CSS transition time
+                }, 800);
             });
         }
 
@@ -601,211 +591,259 @@
         const bsod = document.getElementById('bsod');
         const showBsod = () => {
             bsod.style.display = 'block';
-            // Allow user to "reboot" by pressing any key
             window.addEventListener('keydown', () => {
                window.location.reload();
             }, { once: true });
         };
-
         document.getElementById('bsod-icon').addEventListener('dblclick', showBsod);
         document.getElementById('start-menu-bsod').addEventListener('click', showBsod);
 
         // --- MINESWEEPER LOGIC ---
-        const minefield = document.getElementById('minefield');
-        const mineCounter = document.querySelector('.mine-counter');
-        const timerDisplay = document.querySelector('.timer');
-        const smiley = document.querySelector('.smiley');
-        const ROWS = 10, COLS = 10, MINES = 10;
-        let board = [], timerInterval, time, gameOver;
+        if (document.getElementById('minesweeper-window')) {
+            const minefield = document.getElementById('minefield');
+            const mineCounter = document.querySelector('.mine-counter');
+            const timerDisplay = document.querySelector('.timer');
+            const smiley = document.querySelector('.smiley');
+            const ROWS = 10, COLS = 10, MINES = 10;
+            let board = [], timerInterval, time, gameOver;
 
-        function initMinesweeper() {
-            gameOver = false;
-            time = 0;
-            board = [];
-            if(minefield) {
-                minefield.innerHTML = '';
-            }
-            if (mineCounter) {
-                mineCounter.textContent = MINES.toString().padStart(3, '0');
-            }
-            if (timerDisplay) {
-                timerDisplay.textContent = '000';
-            }
-            if(smiley) {
-                smiley.textContent = '🙂';
-            }
-            clearInterval(timerInterval);
-
-            // Create board state
-            for (let r = 0; r < ROWS; r++) {
-                board[r] = [];
-                for (let c = 0; c < COLS; c++) {
-                    board[r][c] = {
-                        isMine: false,
-                        isRevealed: false,
-                        isFlagged: false,
-                        adjacentMines: 0
-                    };
-                }
-            }
-
-            // Place mines
-            let minesPlaced = 0;
-            while (minesPlaced < MINES) {
-                const r = Math.floor(Math.random() * ROWS);
-                const c = Math.floor(Math.random() * COLS);
-                if (!board[r][c].isMine) {
-                    board[r][c].isMine = true;
-                    minesPlaced++;
-                }
-            }
-
-            // Calculate adjacent mines
-            for (let r = 0; r < ROWS; r++) {
-                for (let c = 0; c < COLS; c++) {
-                    if (board[r][c].isMine) continue;
-                    let count = 0;
-                    for (let dr = -1; dr <= 1; dr++) {
-                        for (let dc = -1; dc <= 1; dc++) {
-                            const nr = r + dr;
-                            const nc = c + dc;
-                            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc].isMine) {
-                                count++;
-                            }
-                        }
+            function initMinesweeper() {
+                gameOver = false; time = 0; board = [];
+                if(minefield) minefield.innerHTML = '';
+                if(mineCounter) mineCounter.textContent = MINES.toString().padStart(3, '0');
+                if(timerDisplay) timerDisplay.textContent = '000';
+                if(smiley) smiley.textContent = '🙂';
+                clearInterval(timerInterval);
+                for (let r = 0; r < ROWS; r++) {
+                    board[r] = [];
+                    for (let c = 0; c < COLS; c++) {
+                        board[r][c] = { isMine: false, isRevealed: false, isFlagged: false, adjacentMines: 0 };
                     }
-                    board[r][c].adjacentMines = count;
                 }
-            }
-
-            // Create DOM elements
-            if (minefield) {
+                let minesPlaced = 0;
+                while (minesPlaced < MINES) {
+                    const r = Math.floor(Math.random() * ROWS);
+                    const c = Math.floor(Math.random() * COLS);
+                    if (!board[r][c].isMine) {
+                        board[r][c].isMine = true;
+                        minesPlaced++;
+                    }
+                }
                 for (let r = 0; r < ROWS; r++) {
                     for (let c = 0; c < COLS; c++) {
-                        const cell = document.createElement('div');
-                        cell.classList.add('cell');
-                        cell.dataset.r = r;
-                        cell.dataset.c = c;
-                        cell.addEventListener('click', handleCellClick);
-                        cell.addEventListener('contextmenu', handleCellRightClick);
-                        minefield.appendChild(cell);
+                        if (board[r][c].isMine) continue;
+                        let count = 0;
+                        for (let dr = -1; dr <= 1; dr++) {
+                            for (let dc = -1; dc <= 1; dc++) {
+                                const nr = r + dr;
+                                const nc = c + dc;
+                                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc].isMine) count++;
+                            }
+                        }
+                        board[r][c].adjacentMines = count;
+                    }
+                }
+                if (minefield) {
+                    for (let r = 0; r < ROWS; r++) {
+                        for (let c = 0; c < COLS; c++) {
+                            const cell = document.createElement('div');
+                            cell.classList.add('cell');
+                            cell.dataset.r = r;
+                            cell.dataset.c = c;
+                            cell.addEventListener('click', handleCellClick);
+                            cell.addEventListener('contextmenu', handleCellRightClick);
+                            minefield.appendChild(cell);
+                        }
                     }
                 }
             }
-        }
-
-        function startTimer() {
-            if (timerInterval) return;
-            timerInterval = setInterval(() => {
-                time++;
-                if(timerDisplay) {
-                    timerDisplay.textContent = time.toString().padStart(3, '0');
+            function startTimer() {
+                if (timerInterval) return;
+                timerInterval = setInterval(() => {
+                    time++;
+                    if(timerDisplay) timerDisplay.textContent = time.toString().padStart(3, '0');
+                }, 1000);
+            }
+            function handleCellClick(e) {
+                if (gameOver) return;
+                startTimer();
+                const cellElement = e.target;
+                const r = parseInt(cellElement.dataset.r);
+                const c = parseInt(cellElement.dataset.c);
+                const cellData = board[r][c];
+                if(cellData.isRevealed || cellData.isFlagged) return;
+                if (cellData.isMine) {
+                    revealAllMines(r, c);
+                    if (smiley) smiley.textContent = '😵';
+                    gameOver = true;
+                    clearInterval(timerInterval);
+                    return;
                 }
-            }, 1000);
-        }
-
-        function handleCellClick(e) {
-            if (gameOver) return;
-            startTimer();
-            const cellElement = e.target;
-            const r = parseInt(cellElement.dataset.r);
-            const c = parseInt(cellElement.dataset.c);
-            const cellData = board[r][c];
-
-            if(cellData.isRevealed || cellData.isFlagged) return;
-
-            if (cellData.isMine) {
-                revealAllMines(r, c);
-                if (smiley) smiley.textContent = '😵';
-                gameOver = true;
-                clearInterval(timerInterval);
-                return;
+                revealCell(r, c);
+                checkWinCondition();
             }
-
-            revealCell(r, c);
-            checkWinCondition();
-        }
-
-        function revealCell(r, c) {
-            if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
-            const cellData = board[r][c];
-            if (cellData.isRevealed) return;
-
-            const cellElement = minefield.children[r * COLS + c];
-            cellData.isRevealed = true;
-            cellElement.classList.add('revealed');
-
-            if(cellData.isFlagged) {
-                cellData.isFlagged = false;
-                cellElement.textContent = '';
-            }
-
-            if (cellData.adjacentMines > 0) {
-                cellElement.textContent = cellData.adjacentMines;
-                cellElement.classList.add(`c${cellData.adjacentMines}`);
-            } else {
-                // Flood fill for empty cells
-                for (let dr = -1; dr <= 1; dr++) {
-                    for (let dc = -1; dc <= 1; dc++) {
-                        revealCell(r + dr, c + dc);
+            function revealCell(r, c) {
+                if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
+                const cellData = board[r][c];
+                if (cellData.isRevealed) return;
+                const cellElement = minefield.children[r * COLS + c];
+                cellData.isRevealed = true;
+                cellElement.classList.add('revealed');
+                if(cellData.isFlagged) {
+                    cellData.isFlagged = false;
+                    cellElement.textContent = '';
+                }
+                if (cellData.adjacentMines > 0) {
+                    cellElement.textContent = cellData.adjacentMines;
+                    cellElement.classList.add(`c${cellData.adjacentMines}`);
+                } else {
+                    for (let dr = -1; dr <= 1; dr++) {
+                        for (let dc = -1; dc <= 1; dc++) {
+                            revealCell(r + dr, c + dc);
+                        }
                     }
                 }
             }
-        }
-
-        function handleCellRightClick(e) {
-            e.preventDefault();
-            if (gameOver) return;
-            const cellElement = e.target;
-            const r = parseInt(cellElement.dataset.r);
-            const c = parseInt(cellElement.dataset.c);
-            const cellData = board[r][c];
-
-            if (cellData.isRevealed) return;
-
-            cellData.isFlagged = !cellData.isFlagged;
-            cellElement.textContent = cellData.isFlagged ? '🚩' : '';
-
-            let flags = 0;
-            board.flat().forEach(cell => { if(cell.isFlagged) flags++; });
-            if (mineCounter) {
-                mineCounter.textContent = (MINES - flags).toString().padStart(3, '0');
+            function handleCellRightClick(e) {
+                e.preventDefault();
+                if (gameOver) return;
+                const cellElement = e.target;
+                const r = parseInt(cellElement.dataset.r);
+                const c = parseInt(cellElement.dataset.c);
+                const cellData = board[r][c];
+                if (cellData.isRevealed) return;
+                cellData.isFlagged = !cellData.isFlagged;
+                cellElement.textContent = cellData.isFlagged ? '🚩' : '';
+                let flags = 0;
+                board.flat().forEach(cell => { if(cell.isFlagged) flags++; });
+                if (mineCounter) mineCounter.textContent = (MINES - flags).toString().padStart(3, '0');
             }
-        }
-
-        function revealAllMines(hitRow, hitCol) {
-            for (let r = 0; r < ROWS; r++) {
-                for (let c = 0; c < COLS; c++) {
-                    if (board[r][c].isMine) {
-                       const cellEl = minefield.children[r * COLS + c];
-                       cellEl.classList.add('revealed');
-                       cellEl.textContent = '💣';
-                       if(r === hitRow && c === hitCol) {
-                           cellEl.classList.add('mine-hit');
-                       }
+            function revealAllMines(hitRow, hitCol) {
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        if (board[r][c].isMine) {
+                           const cellEl = minefield.children[r * COLS + c];
+                           cellEl.classList.add('revealed');
+                           cellEl.textContent = '💣';
+                           if(r === hitRow && c === hitCol) cellEl.classList.add('mine-hit');
+                        }
                     }
                 }
             }
-        }
-
-        function checkWinCondition() {
-            const revealedCount = board.flat().filter(c => c.isRevealed).length;
-            if(revealedCount === ROWS * COLS - MINES) {
-                if (smiley) smiley.textContent = '😎';
-                gameOver = true;
-                clearInterval(timerInterval);
-                if (mineCounter) mineCounter.textContent = '000';
+            function checkWinCondition() {
+                const revealedCount = board.flat().filter(c => c.isRevealed).length;
+                if(revealedCount === ROWS * COLS - MINES) {
+                    if (smiley) smiley.textContent = '😎';
+                    gameOver = true;
+                    clearInterval(timerInterval);
+                    if (mineCounter) mineCounter.textContent = '000';
+                }
             }
-        }
-
-        if (smiley) {
-            smiley.addEventListener('click', initMinesweeper);
-        }
-
-        // Only initialize Minesweeper if the elements exist
-        if (document.getElementById('minesweeper-window')) {
+            if(smiley) smiley.addEventListener('click', initMinesweeper);
             initMinesweeper();
         }
+
+        // --- Pipes Screensaver ---
+        const SCREENSAVER_TIMEOUT = 30000; // 30 seconds
+        let screensaverTimer, screensaverActive = false;
+        const pipesCanvas = document.getElementById('screensaver-pipes');
+        const ctx = pipesCanvas.getContext('2d');
+        
+        const PIPE_SIZE = 20; // Increased size for better visibility
+        const COLORS = ['#00FFFF', '#FF00FF', '#FFFF00', '#00FF00', '#FF0000', '#FFFFFF', '#FFA500', '#0080FF', '#FF8000'];
+        const DIRS = [ {dx:  1, dy:  0}, {dx:  0, dy:  1}, {dx: -1, dy:  0}, {dx:  0, dy: -1} ];
+        
+        let grid = [];
+        let pipes = [];
+
+        function resizePipesCanvas() {
+            pipesCanvas.width = window.innerWidth;
+            pipesCanvas.height = window.innerHeight;
+            let cols = Math.floor(pipesCanvas.width / PIPE_SIZE);
+            let rows = Math.floor(pipesCanvas.height / PIPE_SIZE);
+            grid = Array(cols).fill(null).map(() => Array(rows).fill(false));
+            resetPipes();
+        }
+        window.addEventListener('resize', resizePipesCanvas);
+        
+        function createPipe() {
+            return {
+                x: Math.floor(Math.random() * (pipesCanvas.width / PIPE_SIZE)),
+                y: Math.floor(Math.random() * (pipesCanvas.height / PIPE_SIZE)),
+                dir: Math.floor(Math.random() * 4),
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                turn: 'straight'
+            };
+        }
+
+        function resetPipes() {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, pipesCanvas.width, pipesCanvas.height);
+            let cols = Math.floor(pipesCanvas.width / PIPE_SIZE);
+            let rows = Math.floor(pipesCanvas.height / PIPE_SIZE);
+            grid = Array(cols).fill(null).map(() => Array(rows).fill(false));
+            pipes = [createPipe()];
+        }
+        
+        function drawPipes() {
+            if (!screensaverActive) return;
+
+            pipes.forEach(pipe => {
+                let lastX = pipe.x;
+                let lastY = pipe.y;
+
+                if (grid[pipe.x] && grid[pipe.x][pipe.y]) {
+                     Object.assign(pipe, createPipe());
+                     return;
+                }
+                grid[pipe.x][pipe.y] = true;
+
+                ctx.fillStyle = pipe.color;
+                ctx.fillRect(pipe.x * PIPE_SIZE, pipe.y * PIPE_SIZE, PIPE_SIZE, PIPE_SIZE);
+                
+                // 70% chance to go straight, 30% chance to turn
+                if (Math.random() > 0.7) {
+                    pipe.dir = (pipe.dir + (Math.random() < 0.5 ? 1 : 3)) % 4; // Turn left or right
+                    pipe.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                }
+                
+                pipe.x += DIRS[pipe.dir].dx;
+                pipe.y += DIRS[pipe.dir].dy;
+
+                if (pipe.x < 0 || pipe.y < 0 || pipe.x >= grid.length || pipe.y >= grid[0].length) {
+                    Object.assign(pipe, createPipe());
+                }
+            });
+
+            requestAnimationFrame(drawPipes);
+        }
+
+        function showPipesScreensaver() {
+            screensaverActive = true;
+            pipesCanvas.style.display = 'block';
+            pipesCanvas.classList.add('active');
+            resizePipesCanvas();
+            drawPipes();
+        }
+
+        function hidePipesScreensaver() {
+            screensaverActive = false;
+            pipesCanvas.style.display = 'none';
+            pipesCanvas.classList.remove('active');
+        }
+
+        function resetScreensaverTimer() {
+            clearTimeout(screensaverTimer);
+            if (screensaverActive) hidePipesScreensaver();
+            screensaverTimer = setTimeout(showPipesScreensaver, SCREENSAVER_TIMEOUT);
+        }
+
+        ['mousemove', 'mousedown', 'keydown', 'touchstart'].forEach(evt => {
+            document.addEventListener(evt, resetScreensaverTimer, true);
+        });
+
+        resetScreensaverTimer();
+
     });
 </script>
 

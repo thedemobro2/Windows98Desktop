@@ -582,7 +582,7 @@
             minesweeperWindow.style.zIndex = ++highestZIndex;
         });
 
-        // --- The Rebel Library Icon Logic ---
+// --- The Rebel Library Icon Logic ---
         const rebelLibraryIcon = document.getElementById('rebel-library-icon');
         if (rebelLibraryIcon) {
             rebelLibraryIcon.addEventListener('dblclick', () => {
@@ -591,8 +591,8 @@
 
                 // 2. Wait for the fade animation to finish, then redirect
                 setTimeout(() => {
-                    // ✅ CORRECTED URL HERE
-                    window.location.href = '[https://trunas.the-rebel-library.com](https://truenas.the-rebel-library.com)';
+                    // ✅ CORRECTED to be a full, absolute URL
+                    window.location.href = 'https://truenas.the-rebel-library.com';
                 }, 800); // This duration should match your CSS transition time
             });
         }

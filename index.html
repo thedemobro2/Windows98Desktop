@@ -464,6 +464,192 @@
     background:#fff;
   }
 
+
+  /* =============================
+     SHARPENED REBEL LIBRARY THEME
+     Pure CSS polish, no functionality removed.
+  ============================= */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1000000;
+    background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, rgba(0,0,0,.025) 1px 2px);
+    mix-blend-mode:soft-light;
+  }
+  #desktop{
+    background:
+      radial-gradient(circle at 84% 16%, rgba(255,255,255,.12), transparent 18%),
+      linear-gradient(135deg, #008080 0%, #006f75 48%, #005d66 100%);
+  }
+  #desktop::before{
+    content:"THE REBEL LIBRARY";
+    position:absolute;
+    right:22px;
+    bottom:26px;
+    color:rgba(255,255,255,.12);
+    font-size:42px;
+    font-weight:bold;
+    letter-spacing:2px;
+    text-shadow:1px 1px 0 rgba(0,0,0,.18);
+    pointer-events:none;
+  }
+  #desktop::after{
+    content:"Authorized Homelab Terminal  •  Win98 Edition";
+    position:absolute;
+    right:26px;
+    bottom:78px;
+    color:rgba(255,255,255,.18);
+    font-size:12px;
+    pointer-events:none;
+  }
+  .desktop-icon{
+    height:82px;
+    padding:6px 4px;
+  }
+  .desktop-icon img{
+    width:40px;
+    height:40px;
+    filter:drop-shadow(1px 1px 0 rgba(0,0,0,.45));
+  }
+  .desktop-icon:hover{
+    background:rgba(0,0,80,.18);
+    border:1px dotted rgba(255,255,255,.85);
+  }
+  .desktop-icon.active{
+    background:rgba(0,0,128,.68);
+  }
+  .desktop-icon span{
+    display:inline-block;
+    max-width:76px;
+    padding:1px 2px;
+  }
+  .desktop-icon.active span{
+    background:#000080;
+    outline:1px dotted #fff;
+  }
+  .window{
+    box-shadow:3px 3px 0 rgba(0,0,0,.35), 6px 6px 18px rgba(0,0,0,.25);
+  }
+  .window.focused .title-bar{
+    background:linear-gradient(to right,#000080,#1084d0 68%,#36b6ff);
+  }
+  .window-body{
+    border-top:1px solid #808080;
+  }
+  #taskbar{
+    box-shadow:0 -1px 0 #dfdfdf inset;
+  }
+  #start-button{
+    height:24px;
+    min-width:76px;
+  }
+  #system-tray::before{
+    content:"▣  🔊";
+    font-size:12px;
+  }
+  #system-tray{
+    border-top:1px solid #808080;
+    border-left:1px solid #808080;
+    border-right:1px solid #fff;
+    border-bottom:1px solid #fff;
+    margin-right:3px;
+    height:22px;
+    background:#bdbdbd;
+  }
+  #start-menu{
+    width:220px;
+    box-shadow:3px 3px 0 rgba(0,0,0,.35);
+  }
+  #start-menu li{
+    min-height:32px;
+  }
+  #start-menu li::after{
+    content:"";
+    margin-left:auto;
+  }
+  #start-menu li.has-arrow::after{
+    content:"▶";
+  }
+  .task-btn{
+    box-shadow:1px 1px 0 rgba(255,255,255,.35) inset;
+  }
+  .browser-toolbar{
+    background:#c0c0c0;
+  }
+  .browser-toolbar::before{
+    content:"";
+    width:6px;
+    align-self:stretch;
+    border-left:1px solid #fff;
+    border-right:1px solid #808080;
+  }
+  .browser-address{
+    font-family:"Lucida Console","Courier New",monospace;
+    font-size:11px;
+  }
+  .login-window{
+    position:relative;
+    box-shadow:6px 6px 0 rgba(0,0,0,.38), 0 0 0 1px rgba(255,255,255,.22) inset;
+  }
+  .login-window::after{
+    content:"The Rebel Library Network";
+    display:block;
+    padding:6px 10px;
+    border-top:1px solid #808080;
+    color:#404040;
+    background:#b8b8b8;
+    font-size:11px;
+  }
+  .login-avatar{
+    background:linear-gradient(135deg,#000080,#003399);
+    text-shadow:1px 1px #000;
+  }
+  .login-copy::before{
+    content:"🖥️ ";
+  }
+  #boot-screen{
+    background:linear-gradient(#050505,#000 50%,#050505);
+  }
+  #boot-screen .boot-text::after{
+    content:"_";
+  }
+  #minesweeper-window .window-body{
+    background:#c0c0c0;
+  }
+
+  .folder-view{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px 22px;
+    align-content:flex-start;
+    padding:12px;
+    height:calc(100% - 0px);
+    background:#fff;
+  }
+  .folder-shortcut{
+    width:82px;
+    text-align:center;
+    color:#000;
+    cursor:default;
+  }
+  .folder-shortcut img{
+    width:36px;
+    height:36px;
+    image-rendering:pixelated;
+    display:block;
+    margin:0 auto 6px;
+  }
+  .folder-shortcut:hover span{
+    background:#000080;
+    color:#fff;
+  }
+  .win98-note{
+    margin:8px 12px;
+    color:#404040;
+  }
+
 </style>
 </head>
 <body>
@@ -532,6 +718,14 @@
     <li id="start-menu-ie">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACh0lEQVRYR+1WwW7bMBDVPYqdpE0C5NgrJFcfsEPRpkWK1E0CpdgKxJATJHUs2Q+Q+y15goR02LHjyIZkyYoD2bFADsWKRImF2H8y8SQO8M/M7AziH4rgv/vzI/4HgKSUUspQKBQeSqXSW7lczuVy+RWAPM8rUqlUfrlcTudyuQghxHGcMAwzDMMQAtM0RUSapgFEtVpBEOT7fgjB5/NJkqQoCoBzzpIkAPquQxRFURQhxPO8IAjzfT+E4HK5lFK+bggh3/dpmgZAdV2HEM7nc5IkPM8DwGEYu64DgFarBQB4noft+wHAarViGAYArVZLKcUwDAchJJVKQRDk+z6KoqSU9n0/TdMsywLAOI5BEOT7PoqiNE3DMAzHcZIkURRFUQDm+z6E8Pl80jRN0/R936SUpmkIId/3RVEMwzCM4ziOQxAEz/2CMAzFcf1+P4QQBEEQBEEQRJIkj8fj4zhN08IwDMMwDOM4iqIoy7JcLpcxxtlsFkVRGIaRZVnXdV3XNE0TY4yx2+2iKMqybLlcPj09ffwBAFEURVEURVEURVEURVEURVEURVEURVEURVEU5X8BZj/LYuFPs18AAAAASUVORK5CYII=" alt="Internet Explorer"/>
       Internet Explorer
+    </li>
+    <li id="start-menu-network">
+      <img src=data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%223%22%20y=%226%22%20width=%2211%22%20height=%228%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%225%22%20y=%228%22%20width=%227%22%20height=%224%22%20fill=%22%23000080%22/%3E%3Crect%20x=%2218%22%20y=%226%22%20width=%2211%22%20height=%228%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%2220%22%20y=%228%22%20width=%227%22%20height=%224%22%20fill=%22%23000080%22/%3E%3Crect%20x=%2210%22%20y=%2220%22%20width=%2212%22%20height=%228%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%2212%22%20y=%2222%22%20width=%228%22%20height=%224%22%20fill=%22%23000080%22/%3E%3Cpath%20d=%22M9%2015h1v4h6v-4h1v4h7v-4h1v6H9z%22%20fill=%22%23ffff00%22/%3E%3Crect%20x=%223%22%20y=%226%22%20width=%2211%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2218%22%20y=%226%22%20width=%2211%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2210%22%20y=%2220%22%20width=%2212%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2213%22%20y=%226%22%20width=%221%22%20height=%228%22%20fill=%22%23000%22/%3E%3Crect%20x=%2228%22%20y=%226%22%20width=%221%22%20height=%228%22%20fill=%22%23000%22/%3E%3Crect%20x=%2221%22%20y=%2220%22%20width=%221%22%20height=%228%22%20fill=%22%23000%22/%3E%3C/svg%3E" alt="Network"/>
+      Network Neighborhood
+    </li>
+    <li id="start-menu-control-panel">
+      <img src=data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%225%22%20y=%227%22%20width=%2222%22%20height=%2218%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%226%22%20y=%228%22%20width=%2220%22%20height=%223%22%20fill=%22%23000080%22/%3E%3Crect%20x=%228%22%20y=%2214%22%20width=%225%22%20height=%225%22%20fill=%22%23ff0000%22/%3E%3Crect%20x=%2215%22%20y=%2214%22%20width=%225%22%20height=%225%22%20fill=%22%2300aa00%22/%3E%3Crect%20x=%2222%22%20y=%2214%22%20width=%223%22%20height=%225%22%20fill=%22%23ffff00%22/%3E%3Crect%20x=%228%22%20y=%2221%22%20width=%2217%22%20height=%222%22%20fill=%22%23808080%22/%3E%3Crect%20x=%225%22%20y=%227%22%20width=%2222%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%225%22%20y=%227%22%20width=%221%22%20height=%2218%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2226%22%20y=%227%22%20width=%221%22%20height=%2218%22%20fill=%22%23000%22/%3E%3Crect%20x=%225%22%20y=%2224%22%20width=%2222%22%20height=%221%22%20fill=%22%23000%22/%3E%3C/svg%3E" alt="Control Panel"/>
+      Control Panel
     </li>
     <li id="start-menu-minesweeper">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABaUlEQVR42mNgoBAwMjAwMDAw/j8iQgZkYICSzMzM/4zMzP8ZGBgYGSAx/j8i6mFkZASjgDj9//+fI57//x8EMjAwMDyA9GdgYAgE5PD/P4MwjCHy//8vQxADoYFhQJz//z8DNgAzgPj///+MoZ6BgQEIxM3AwBCsAOKG/yAE+P//hzyiAeIBTQC2YRgGEcDAwPD/9w8D6xQDYwYYQH///w9IYCgoSBCsAOKG+P//f7CRIaiFYQB2/P//PwO/gPj///8hJzAwMNwH4gZM/v//f1Yx3f//zyAkAQOIMiAGaGggV4AZgPj///9DJgYY/f//vwMTA/8B8f//HxMTA5KBAQgC/P//k+uAOLAA8f//H6gQxP///2dAAbD+//9/hnm+vj4E3AGxIAYQcDcI+P//J3eB+H8QYwA2AwPz/yAmAPG/IAwAAwMDrwHk/h+EAAIYMzAwhAMzAwQYAB70P2d+yM3JAAAAAElFTkSuQmCC" alt="Minesweeper"/>
@@ -626,7 +820,12 @@ document.addEventListener('DOMContentLoaded', () => {
     recycleBin: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACbklEQVRYR+2WTW/TQBCG/x0EQtjGvYcKCv4TqKgVLhUqBSs8aIeIeoQKlR6ohV6gKljRkFjZhg0dGztxYsdJPM25ds7dCStlZWy9L97s/O/MfM/sbI7+1f868X4DeG/bNjGbzbfj8djw+fO/KGr793VwuVwAgNVq9Xw2mw/HcTwsFovT6RSKx+O12+2N27bX1tYGgL9PABKJBJlMppdKpbNarWq12uFwmCRJpmmy3++LxWK5XC6dTocsyzAMw+VyQRAEt9uN4zjLsgyHQ7ZtU6lUANjtdofDYTqdlkqlPM9DEAQAXLfbRVE0Go3RaFSv12OxGEVRuN3uXC6Xoijb7TaKojgcDrquW63W4XDYdDodDoeiKEIIi8WiUqnweDzZbBbd93Ecj8cjTdM4jsuybLPZxHEsTdNarRbHcay5uRkAHDc2PoIgGI3GNE1BEARBEARB0HWdMAzLss7n80gkEgiCfr8fy7I8zwvDMIoiu90Oh8MAABqNhmVZjuMsy1qtFkVRdF0nCALbtmEYGIbx+/1839e2zXQ6jWEYx3EqlYo4jpPJJF3XxXGcpun3+3EcR9d1TdOI4/h8Pu/3+/V6Ha7r9XpdLpdRFMXzPJfLpdPpMAzzfD7neT5JEgRBjB/3EwD0ej2KoiRJgm3bNE17vd4kSYZhWJZlgiCopmlZlsPhEGzbruuezyelUiGKojgcDrquW61WjuPgcBimadZutzRNsyyz3W7xeBxFUYRQr9ebzcYwDPt8/vP79+vvf2yEw8Nf7z9/fv/+AwD4/f7xeBxFUbZtE4ZhmuYA0Ol0Wq0WAIqirFarSqXCYrEAACklSRJFUVEUVavVeDxOSkkcx0wmk0gkQggRBAFWq5VpmqSUruvdbvdut4vjmM/nQwhxXScIwul0ymQyOI6j6/rs7Ozw3+c/p371+N+M/wA+sVbQp9/gEAAAAABJRU5ErkJggg==`,
     minesweeper: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWklEQVRYR+3WW0/TQBgH8P+1UikUoIe1vYgHWJtYk+fMvEfxChrQKy8Cg0YjMS4Yw0w0TkyMycaYmMQYfA0Gg8Fw8SgYjR6j0fhQoxFjfOjESjw4L6m02h5aC5R+nZNkM/+T/2QnOan81/8z/3oB+A0h3Nzc/O7s7Bw+fvxrRtO+fz9lFosBAMYY5XJ5OplMnlqtZjabGY1GnU4n5XA41mq1oihmZ2dfAPw1AIAgyOFw+HK5HBYLBdM0wzDFcZxCoYDrukEQBAiCPI9pmkwmk0QiAa5rwzC8Xq9pmhFCURSRJAkAYRh2OBwqlUqlUsFyudoX53K5YrGYoihCCMdxhmHyPA/X9e7u7lwu5/P5vNlsOp0OAMYYx3GKoohpmgzDwDAMjuMQQsPh0LKsUqkkSRLbtnmedzgcLpdLgiDI5XIURUIIQRD0ej3HcdM0Tdd1GIZhGKaZphFCURSGYaZpkiQJhuE4jgBAuVy+uLj4Ynl5+eXFxa8fP/6z99vT0xPbtkIIiqKAIAgQBEEQRNE0zbIsTdNc1yVJgiAINpsNEAT5vp+mKV3XWZZFUQS2bfM8j2EYpmnbtkIIgiAIQpIkURQBAE3TGIY5nU6aplEUJZVKWZbFcRxFUcIwTKfTmKaB6/q9vT0Mw+fzeTQagWkax3GKoiiKoizLBEHYbDaCIAxD0+l0HMdd13u93kaj0el0HMdFUYQQ4vP59Hp9tVrtdDq9Xm+z2YQQpmmO4zRNE4Yhv9+P4zgAQBRFkiSRJAghxHGcMAxyuRyWZVmWGYax3+/Pzs4AQKvVstvt4XAY1u12h4cHAKQoipZlEUKKoohpmsdxkiTZbrcBILvdfgFg23ZZlr+cOeC/P/+9BHz25Qfhv18w/gf4xU+uI7Q1VwAAAABJRU5ErkJggg==`,
     error: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACHElEQVRYR+2WvWvUUBDHX4sgKILgYhexi0iwsbCwEBu7iC6ySGz+H2hlJ7G1sBMhAUEs1IoggoiNjdJCEGz8FE2zF/suuUnu8r3w3ss5M+/dO3fnDoH/6r8Pjk8AHggh/Hz+/PGFYfhhxDDG/h/R3188wHEcdgDgnHOx2exz13XxPM95nsdxbNu27/u+7yGEyWQygiBIJJJerxe9Xu92uxFCGIYBAFzXdbtd13XbtiGEpmkxxv1+H4bhcrm8vLxcLpeapr3ebjKZxHEcTdNBEKSUSqU6juO67rquz+eTJAkAsNlsNE2L43i5XNbr9SRJwjCMcVyWZZIkURSpVCoIIcuyz+djWdbtdgsh9Ho9TdNBEPzfz5lMJtd1Xdf5vp9SinMuwzCM44wxRVE0DMN2ux3HcV3XpmkIIdu2IYTjOMMwtm1jjKSUlFKUUoohxBhjjFlrjDEppZTSfr9/enrqezAYvP/t/cPDw3f/h/8OAIwxxhjbtgghzvl+vyGEyWQyHA5zXeeceZ4D4JxzxhiapgkhzvlzPAshJJfLQRCkUqk4jnMcx3Vdj8djjDFJkhBCGIY5nU4IIU3TgCzLMpksl8scx8VxPJfLhRDCMMwwDKSUMcZardZisZgkyXw+zzRNURRFUZRSCcdxvu8/PT29vLycSqWUSqUoijRNUywWQ0ohzjlJkhzHkZJSSts2xhjjwzDcbjcIgrAsC8MwfN8/Ho/X6/VyuRxj3Ol0gghBEKRp2jRNIYQsyzAMY5xOp/e/Pc+TUr799Yfx68fT4f+G/wChgVdK9hY2SAAAAABJRU5ErkJggg==`,
-    ie: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACh0lEQVRYR+1WwW7bMBDVPYqdpE0C5NgrJFcfsEPRpkWK1E0CpdgKxJATJHUs2Q+Q+y15goR02LHjyIZkyYoD2bFADsWKRImF2H8y8SQO8M/M7AziH4rgv/vzI/4HgKSUUspQKBQeSqXSW7lczuVy+RWAPM8rUqlUfrlcTudyuQghxHGcMAwzDMMQAtM0RUSapgFEtVpBEOT7fgjB5/NJkqQoCoBzzpIkAPquQxRFURQhxPO8IAjzfT+E4HK5lFK+bggh3/dpmgZAdV2HEM7nc5IkPM8DwGEYu64DgFarBQB4noft+wHAarViGAYArVZLKcUwDAchJJVKQRDk+z6KoqSU9n0/TdMsywLAOI5BEOT7PoqiNE3DMAzHcZIkURRFUQDm+z6E8Pl80jRN0/R936SUpmkIId/3RVEMwzCM4ziOQxAEz/PCMJRleTwehBCiKJLneZIkOI4B4DgOAHieURQhBCiKoigSQgDAarXieV6WZZIkYRgGAKIo0nU9TdMsy2EYxnHcNE2WZVmWlWVZgiBIJBIA8Hq9NE12XaeUgiB4PB6GYZIkURRFUZRSCcdxAJDneRzHNE2L43i9XgHAbreL4zjGcbquR4Lg8XjEcRwAwHEcx3EMaJpWFAVAtVpBEOT7/nA4jGEYhiGKoiiKoihKGIbZbDbGcXEc57p+PB4AwPM8iqLwPA/btgHAbrdBEOT7PoqiNE3TNE1IAJIkeTweURRBEARBkGUZAPquQwghCALTNIQQiqIEiKIoikEQBGmaDsOwbdsQghzHwTAMADBNE4bx+/2iKJLneTQagSiKtm2HEM7nc5IkpZSmaYiifN+v12tBEIRh2OVyURRBEARBkGXZarWGYRiGQRRFURRpmgzDqNVqiKIEiKIoimEYBoqiKIrSNI2iGIbhNE3DMAzDMAzDMAzDMAzDMAzD8A/4B/kLzPAzVpbaAAAAAElFTkSuQmCC`
+    ie: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACh0lEQVRYR+1WwW7bMBDVPYqdpE0C5NgrJFcfsEPRpkWK1E0CpdgKxJATJHUs2Q+Q+y15goR02LHjyIZkyYoD2bFADsWKRImF2H8y8SQO8M/M7AziH4rgv/vzI/4HgKSUUspQKBQeSqXSW7lczuVy+RWAPM8rUqlUfrlcTudyuQghxHGcMAwzDMMQAtM0RUSapgFEtVpBEOT7fgjB5/NJkqQoCoBzzpIkAPquQxRFURQhxPO8IAjzfT+E4HK5lFK+bggh3/dpmgZAdV2HEM7nc5IkPM8DwGEYu64DgFarBQB4noft+wHAarViGAYArVZLKcUwDAchJJVKQRDk+z6KoqSU9n0/TdMsywLAOI5BEOT7PoqiNE3DMAzHcZIkURRFUQDm+z6E8Pl80jRN0/R936SUpmkIId/3RVEMwzCM4ziOQxAEz/PCMJRleTwehBCiKJLneZIkOI4B4DgOAHieURQhBCiKoigSQgDAarXieV6WZZIkYRgGAKIo0nU9TdMsy2EYxnHcNE2WZVmWlWVZgiBIJBIA8Hq9NE12XaeUgiB4PB6GYZIkURRFUZRSCcdxAJDneRzHNE2L43i9XgHAbreL4zjGcbquR4Lg8XjEcRwAwHEcx3EMaJpWFAVAtVpBEOT7/nA4jGEYhiGKoiiKoihKGIbZbDbGcXEc57p+PB4AwPM8iqLwPA/btgHAbrdBEOT7PoqiNE3TNE1IAJIkeTweURRBEARBkGUZAPquQwghCALTNIQQiqIEiKIoikEQBGmaDsOwbdsQghzHwTAMADBNE4bx+/2iKJLneTQagSiKtm2HEM7nc5IkpZSmaYiifN+v12tBEIRh2OVyURRBEARBkGXZarWGYRiGQRRFURRpmgzDqNVqiKIEiKIoimEYBoqiKIrSNI2iGIbhNE3DMAzDMAzDMAzDMAzDMAzD8A/4B/kLzPAzVpbaAAAAAElFTkSuQmCC`,
+    rebel: `data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%224%22%20y=%225%22%20width=%2224%22%20height=%2218%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%225%22%20y=%226%22%20width=%2222%22%20height=%2215%22%20fill=%22%23000080%22/%3E%3Crect%20x=%227%22%20y=%228%22%20width=%2218%22%20height=%2211%22%20fill=%22%23081b4d%22/%3E%3Crect%20x=%228%22%20y=%2210%22%20width=%225%22%20height=%227%22%20fill=%22%23ffd966%22/%3E%3Crect%20x=%2214%22%20y=%2210%22%20width=%224%22%20height=%227%22%20fill=%22%23ff6666%22/%3E%3Crect%20x=%2219%22%20y=%2210%22%20width=%225%22%20height=%227%22%20fill=%22%2366ccff%22/%3E%3Crect%20x=%226%22%20y=%2222%22%20width=%2220%22%20height=%223%22%20fill=%22%23808080%22/%3E%3Crect%20x=%2211%22%20y=%2225%22%20width=%2210%22%20height=%222%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%228%22%20y=%2227%22%20width=%2216%22%20height=%222%22%20fill=%22%23808080%22/%3E%3Crect%20x=%224%22%20y=%225%22%20width=%2224%22%20height=%221%22%20fill=%22%23ffffff%22/%3E%3Crect%20x=%224%22%20y=%225%22%20width=%221%22%20height=%2218%22%20fill=%22%23ffffff%22/%3E%3Crect%20x=%2227%22%20y=%225%22%20width=%221%22%20height=%2218%22%20fill=%22%23000000%22/%3E%3Crect%20x=%224%22%20y=%2222%22%20width=%2224%22%20height=%221%22%20fill=%22%23000000%22/%3E%3C/svg%3E`,
+    network: `data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%223%22%20y=%226%22%20width=%2211%22%20height=%228%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%225%22%20y=%228%22%20width=%227%22%20height=%224%22%20fill=%22%23000080%22/%3E%3Crect%20x=%2218%22%20y=%226%22%20width=%2211%22%20height=%228%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%2220%22%20y=%228%22%20width=%227%22%20height=%224%22%20fill=%22%23000080%22/%3E%3Crect%20x=%2210%22%20y=%2220%22%20width=%2212%22%20height=%228%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%2212%22%20y=%2222%22%20width=%228%22%20height=%224%22%20fill=%22%23000080%22/%3E%3Cpath%20d=%22M9%2015h1v4h6v-4h1v4h7v-4h1v6H9z%22%20fill=%22%23ffff00%22/%3E%3Crect%20x=%223%22%20y=%226%22%20width=%2211%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2218%22%20y=%226%22%20width=%2211%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2210%22%20y=%2220%22%20width=%2212%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2213%22%20y=%226%22%20width=%221%22%20height=%228%22%20fill=%22%23000%22/%3E%3Crect%20x=%2228%22%20y=%226%22%20width=%221%22%20height=%228%22%20fill=%22%23000%22/%3E%3Crect%20x=%2221%22%20y=%2220%22%20width=%221%22%20height=%228%22%20fill=%22%23000%22/%3E%3C/svg%3E`,
+    control: `data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%225%22%20y=%227%22%20width=%2222%22%20height=%2218%22%20fill=%22%23c0c0c0%22/%3E%3Crect%20x=%226%22%20y=%228%22%20width=%2220%22%20height=%223%22%20fill=%22%23000080%22/%3E%3Crect%20x=%228%22%20y=%2214%22%20width=%225%22%20height=%225%22%20fill=%22%23ff0000%22/%3E%3Crect%20x=%2215%22%20y=%2214%22%20width=%225%22%20height=%225%22%20fill=%22%2300aa00%22/%3E%3Crect%20x=%2222%22%20y=%2214%22%20width=%223%22%20height=%225%22%20fill=%22%23ffff00%22/%3E%3Crect%20x=%228%22%20y=%2221%22%20width=%2217%22%20height=%222%22%20fill=%22%23808080%22/%3E%3Crect%20x=%225%22%20y=%227%22%20width=%2222%22%20height=%221%22%20fill=%22%23fff%22/%3E%3Crect%20x=%225%22%20y=%227%22%20width=%221%22%20height=%2218%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2226%22%20y=%227%22%20width=%221%22%20height=%2218%22%20fill=%22%23000%22/%3E%3Crect%20x=%225%22%20y=%2224%22%20width=%2222%22%20height=%221%22%20fill=%22%23000%22/%3E%3C/svg%3E`,
+    folder: `data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%224%22%20y=%229%22%20width=%2210%22%20height=%224%22%20fill=%22%23ffff80%22/%3E%3Crect%20x=%224%22%20y=%2212%22%20width=%2224%22%20height=%2215%22%20fill=%22%23ffd24d%22/%3E%3Crect%20x=%225%22%20y=%2213%22%20width=%2222%22%20height=%222%22%20fill=%22%23ffff99%22/%3E%3Crect%20x=%224%22%20y=%2226%22%20width=%2224%22%20height=%221%22%20fill=%22%23806000%22/%3E%3Crect%20x=%2227%22%20y=%2212%22%20width=%221%22%20height=%2215%22%20fill=%22%23806000%22/%3E%3C/svg%3E`,
+    globe: `data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2232%22%20height=%2232%22%20shape-rendering=%22crispEdges%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20fill=%22none%22/%3E%3Crect%20x=%229%22%20y=%225%22%20width=%2214%22%20height=%222%22%20fill=%22%2366ccff%22/%3E%3Crect%20x=%226%22%20y=%228%22%20width=%2220%22%20height=%224%22%20fill=%22%2366ccff%22/%3E%3Crect%20x=%225%22%20y=%2212%22%20width=%2222%22%20height=%228%22%20fill=%22%233399ff%22/%3E%3Crect%20x=%226%22%20y=%2220%22%20width=%2220%22%20height=%224%22%20fill=%22%230066cc%22/%3E%3Crect%20x=%229%22%20y=%2224%22%20width=%2214%22%20height=%222%22%20fill=%22%23003399%22/%3E%3Crect%20x=%2210%22%20y=%2210%22%20width=%225%22%20height=%223%22%20fill=%22%2300cc66%22/%3E%3Crect%20x=%2217%22%20y=%2214%22%20width=%227%22%20height=%223%22%20fill=%22%23ffff66%22/%3E%3Crect%20x=%229%22%20y=%2219%22%20width=%228%22%20height=%223%22%20fill=%22%2300cc66%22/%3E%3Crect%20x=%2215%22%20y=%226%22%20width=%222%22%20height=%2220%22%20fill=%22%23ffffff%22%20opacity=%22.8%22/%3E%3Crect%20x=%225%22%20y=%2215%22%20width=%2222%22%20height=%222%22%20fill=%22%23ffffff%22%20opacity=%22.7%22/%3E%3C/svg%3E`
   };
 
   // =============================
@@ -634,12 +833,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // You can add more icons by adding objects here.
   // =============================
   const DESKTOP_ICONS = [
-    { id:'my-computer-icon', label:'My Computer', icon:ICON.myComputer, windowId:'my-computer-window' },
-    { id:'recycle-bin-icon', label:'Recycle Bin', icon:ICON.recycleBin, windowId:'recycle-bin-window' },
+    { id:'rebel-library-icon', label:'The Rebel Library', icon:ICON.rebel, windowId:'rebel-library-window' },
+    { id:'ie-icon', label:'Internet Explorer', icon:ICON.ie, windowId:'ie-window' },
     { id:'minesweeper-icon', label:'Minesweeper', icon:ICON.minesweeper, windowId:'minesweeper-window' },
-    { id:'bsod-icon', label:'Critical Error', icon:ICON.error, action:'bsod' },
-    { id:'rebel-library-icon', label:'The Rebel Library', icon:ICON.myComputer, windowId:'rebel-library-window' },
-    { id:'ie-icon', label:'Internet Explorer', icon:ICON.ie, windowId:'ie-window' }
+    { id:'my-computer-icon', label:'My Computer', icon:ICON.myComputer, windowId:'my-computer-window' },
+    { id:'network-icon', label:'Network Neighborhood', icon:ICON.network, windowId:'network-window' },
+    { id:'control-panel-icon', label:'Control Panel', icon:ICON.control, windowId:'control-panel-window' },
+    { id:'recycle-bin-icon', label:'Recycle Bin', icon:ICON.recycleBin, windowId:'recycle-bin-window' },
+    { id:'bsod-icon', label:'Critical Error', icon:ICON.error, action:'bsod' }
   ];
 
   // Windows definitions
@@ -649,8 +850,36 @@ document.addEventListener('DOMContentLoaded', () => {
       title:'My Computer',
       icon:ICON.myComputer,
       style:{ top:60, left:160, width:360, height:220 },
-      body:`<p>This is a simulated 'My Computer' window.</p>
-            <p>Add shortcuts here like "Control Panel", "Network", etc.</p>`
+      body:`<div class="folder-view">
+              <div class="folder-shortcut"><img src="${ICON.rebel}" alt=""><span>The Rebel Library</span></div>
+              <div class="folder-shortcut"><img src="${ICON.ie}" alt=""><span>Internet Explorer</span></div>
+              <div class="folder-shortcut"><img src="${ICON.network}" alt=""><span>Network</span></div>
+              <div class="folder-shortcut"><img src="${ICON.control}" alt=""><span>Control Panel</span></div>
+            </div>`
+    },
+    {
+      id:'network-window',
+      title:'Network Neighborhood',
+      icon:ICON.network,
+      style:{ top:140, left:260, width:430, height:250 },
+      body:`<div class="folder-view">
+              <div class="folder-shortcut"><img src="${ICON.rebel}" alt=""><span>the-rebel-library.com</span></div>
+              <div class="folder-shortcut"><img src="${ICON.folder}" alt=""><span>Media Share</span></div>
+              <div class="folder-shortcut"><img src="${ICON.folder}" alt=""><span>Homelab Apps</span></div>
+            </div>
+            <p class="win98-note">Fake network view. The tiny LAN goblin is decorative.</p>`
+    },
+    {
+      id:'control-panel-window',
+      title:'Control Panel',
+      icon:ICON.control,
+      style:{ top:160, left:300, width:430, height:250 },
+      body:`<div class="folder-view">
+              <div class="folder-shortcut"><img src="${ICON.control}" alt=""><span>Display</span></div>
+              <div class="folder-shortcut"><img src="${ICON.globe}" alt=""><span>Internet Options</span></div>
+              <div class="folder-shortcut"><img src="${ICON.network}" alt=""><span>Network</span></div>
+            </div>
+            <p class="win98-note">Buttons are ornamental for now, but very official-looking.</p>`
     },
     {
       id:'recycle-bin-window',
@@ -677,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id:'rebel-library-window',
       title:'The Rebel Library',
-      icon:ICON.myComputer,
+      icon:ICON.rebel,
       style:{ top:70, left:180, width:760, height:520 },
       body:`
         <div class="browser-shell">
@@ -1041,6 +1270,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('start-menu-ie').addEventListener('click', () => {
     openWindow('ie-window');
     closeStartMenu();
+  });
+
+  document.getElementById('start-menu-network').addEventListener('click', () => {
+    openWindow('network-window');
+    startMenu.style.display = 'none';
+    startButton.classList.remove('active');
+  });
+
+  document.getElementById('start-menu-control-panel').addEventListener('click', () => {
+    openWindow('control-panel-window');
+    startMenu.style.display = 'none';
+    startButton.classList.remove('active');
   });
 
   document.getElementById('start-menu-minesweeper').addEventListener('click', () => {

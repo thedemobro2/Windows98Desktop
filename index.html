@@ -1,504 +1,1037 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Windows 98 Desktop</title>
+<title>The Rebel Library - Windows 98</title>
+
 <style>
-  :root{
-    --desktop-bg:#008080;
-    --win-face:#c0c0c0;
-    --win-shadow:#000;
-    --win-hilite:#fff;
-    --win-gray:#808080;
-    --win-blue1:#000080;
-    --win-blue2:#1084d0;
-    --taskbar-h:28px;
-    --icon-w:78px;
-    --icon-h:74px;
-    --grid:84px; /* snap size */
-  }
+:root{
+  --desktop:#008080;
+  --face:#c0c0c0;
+  --light:#ffffff;
+  --light2:#dfdfdf;
+  --shadow:#808080;
+  --dark:#000000;
+  --active1:#000080;
+  --active2:#1084d0;
+  --inactive1:#808080;
+  --inactive2:#b5b5b5;
+  --menu-blue:#000080;
+  --taskbar-h:30px;
+  --grid:82px;
+}
 
-  body{
-    font-family:"Tahoma","MS Sans Serif",sans-serif;
-    font-size:12px;
-    background-color:var(--desktop-bg);
-    margin:0;
-    padding:0;
-    overflow:hidden;
-    user-select:none;
-    opacity:1;
-    transition:opacity .8s ease-out;
-  }
-  body.fade-out{opacity:0;}
+*{box-sizing:border-box}
 
-  /* Desktop */
-  #desktop{
-    position:absolute;
-    inset:0 0 var(--taskbar-h) 0;
-  }
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+}
 
-  /* Desktop Icons */
-  .desktop-icon{
-    position:absolute;
-    width:var(--icon-w);
-    height:var(--icon-h);
-    text-align:center;
-    padding:4px;
-    cursor:default;
-    border:1px solid transparent;
-    border-radius:2px;
-  }
-  .desktop-icon:hover{border:1px dotted #fff;}
-  .desktop-icon.active{
-    background:rgba(0,0,128,.5);
-    border:1px dotted #fff;
-  }
-  .desktop-icon img{
-    width:32px;height:32px;
-    image-rendering:pixelated;
-  }
-  .desktop-icon span{
-    display:block;
-    color:#fff;
-    margin-top:5px;
-    text-shadow:1px 1px 2px #000;
-    line-height:1.1;
-  }
+body{
+  background:var(--desktop);
+  font-family:Tahoma,"MS Sans Serif",Arial,sans-serif;
+  font-size:11px;
+  color:#000;
+  user-select:none;
+}
 
-  /* Windows */
-  .window{
-    position:absolute;
-    background:var(--win-face);
-    border-top:2px solid var(--win-hilite);
-    border-left:2px solid var(--win-hilite);
-    border-right:2px solid var(--win-shadow);
-    border-bottom:2px solid var(--win-shadow);
-    box-shadow:2px 2px 5px rgba(0,0,0,.5);
-    min-width:220px;
-    min-height:160px;
-    display:none;
-  }
-  .window.focused{
-    outline:1px dotted rgba(0,0,0,.35);
-    outline-offset:-4px;
-  }
+/* =========================
+   GENERIC WINDOWS 98 BEVELS
+========================= */
+.outset{
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+}
 
-  .title-bar{
-    background:linear-gradient(to right,var(--win-blue1),var(--win-blue2));
-    color:#fff;
-    padding:3px 5px;
-    font-weight:bold;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    cursor:move;
-  }
-  .title-bar-text{
-    display:flex;
-    align-items:center;
-    gap:6px;
-  }
-  .title-bar-text img{width:16px;height:16px;image-rendering:pixelated;}
+.inset{
+  background:#fff;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+}
 
-  .title-bar-controls{display:flex;}
-  .title-bar-controls button{
-    width:16px;height:14px;
-    margin-left:2px;
-    background:var(--win-face);
-    border-top:1px solid var(--win-hilite);
-    border-left:1px solid var(--win-hilite);
-    border-right:1px solid var(--win-shadow);
-    border-bottom:1px solid var(--win-shadow);
-    font-family:"Marlett","Times New Roman";
-    font-size:10px;
-    line-height:10px;
-    padding:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-  }
-  .title-bar-controls button:active{
-    border-top:1px solid var(--win-shadow);
-    border-left:1px solid var(--win-shadow);
-    border-right:1px solid var(--win-hilite);
-    border-bottom:1px solid var(--win-hilite);
-  }
+.win98-button{
+  min-width:70px;
+  height:24px;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  padding:1px 8px;
+  font:11px Tahoma,"MS Sans Serif",sans-serif;
+}
 
-  .window-body{
-    padding:10px;
-    background:var(--win-face);
-    height:calc(100% - 42px);
-    box-sizing:border-box;
-  }
+.win98-button:active,
+.win98-button.pressed{
+  border-top:2px solid var(--dark);
+  border-left:2px solid var(--dark);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+  padding:2px 7px 0 9px;
+}
 
-  /* Taskbar */
-  #taskbar{
-    position:absolute;
-    bottom:0;left:0;right:0;
-    height:var(--taskbar-h);
-    background:var(--win-face);
-    border-top:2px solid var(--win-hilite);
-    display:flex;
-    align-items:center;
-    z-index:10000;
-  }
-  #start-button{
-    background:var(--win-face);
-    border-top:1px solid var(--win-hilite);
-    border-left:1px solid var(--win-hilite);
-    border-right:1px solid var(--win-shadow);
-    border-bottom:1px solid var(--win-shadow);
-    font-weight:bold;
-    padding:2px 8px;
-    display:flex;
-    align-items:center;
-    cursor:pointer;
-    margin-left:2px;
-  }
-  #start-button img{width:20px;height:20px;margin-right:4px;image-rendering:pixelated;}
-  #start-button.active{
-    border-top:1px solid var(--win-shadow);
-    border-left:1px solid var(--win-shadow);
-    border-right:1px solid var(--win-hilite);
-    border-bottom:1px solid var(--win-hilite);
-  }
+.hidden{display:none!important}
 
-  #task-buttons{
-    flex:1;
-    display:flex;
-    gap:4px;
-    padding:0 6px;
-    overflow:hidden;
-  }
-  .task-btn{
-    max-width:220px;
-    min-width:120px;
-    height:22px;
-    padding:0 6px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    cursor:pointer;
-    background:var(--win-face);
-    border-top:1px solid var(--win-hilite);
-    border-left:1px solid var(--win-hilite);
-    border-right:1px solid var(--win-shadow);
-    border-bottom:1px solid var(--win-shadow);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .task-btn.active{
-    border-top:1px solid var(--win-shadow);
-    border-left:1px solid var(--win-shadow);
-    border-right:1px solid var(--win-hilite);
-    border-bottom:1px solid var(--win-hilite);
-    font-weight:bold;
-  }
-  .task-btn img{width:16px;height:16px;image-rendering:pixelated;}
+/* =========================
+   BOOT / LOGIN / SHUTDOWN
+========================= */
+#bios-screen,
+#splash-screen,
+#login-screen,
+#shutdown-screen{
+  position:fixed;
+  inset:0;
+  z-index:100000;
+}
 
-  #system-tray{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    height:100%;
-    border-left:2px solid var(--win-gray);
-    padding:2px 8px;
-    box-sizing:border-box;
-  }
+#bios-screen{
+  background:#000;
+  color:#dcdcdc;
+  padding:24px 30px;
+  font-family:"Lucida Console","Courier New",monospace;
+  font-size:14px;
+  line-height:1.35;
+  white-space:pre-wrap;
+}
 
-  /* Start Menu */
-  #start-menu{
-    position:absolute;
-    bottom:var(--taskbar-h);
-    left:0;
-    width:180px;
-    background:var(--win-face);
-    border-top:2px solid var(--win-hilite);
-    border-left:2px solid var(--win-hilite);
-    border-right:2px solid var(--win-shadow);
-    border-bottom:2px solid var(--win-shadow);
-    display:none;
-    z-index:9999;
-  }
-  #start-menu .start-menu-sidebar{
-    background:var(--win-gray);
-    width:25px;
-    height:100%;
-    position:absolute;
-    color:#c0c0c0;
-    writing-mode:vertical-lr;
-    transform:rotate(180deg);
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-    padding:10px 0;
-  }
-  #start-menu .start-menu-sidebar span{display:inline-block;transform:rotate(180deg);}
-  #start-menu ul{
-    list-style:none;
-    margin:0;
-    padding:5px 0 5px 28px;
-  }
-  #start-menu li{
-    padding:5px 10px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  #start-menu li:hover{background:var(--win-blue1);color:#fff;}
-  #start-menu li img{width:22px;height:22px;image-rendering:pixelated;}
-  #start-menu .separator{
-    height:1px;
-    background:var(--win-gray);
-    border-bottom:1px solid #fff;
-    margin:4px 0;
-  }
+.blink{
+  animation:blink 1s steps(1,end) infinite;
+}
+@keyframes blink{50%{opacity:0}}
 
-  /* Minesweeper, BSOD, Screensaver (kept from you) */
-  #minesweeper-body{background:#c0c0c0;padding:5px}
-  #minesweeper-header{display:flex;justify-content:space-between;padding:5px;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;margin-bottom:5px}
-  .mine-counter,.smiley,.timer{background:#000;color:red;font-family:Courier New,Courier,monospace;padding:2px 4px;border:1px inset #808080;width:50px;text-align:center;font-size:16px}
-  .smiley{width:26px;height:26px;padding:0;font-size:20px;line-height:26px;border:2px outset #fff;cursor:pointer}
-  .smiley:active{border-style:inset}
-  #minefield{display:grid;grid-template-columns:repeat(10,20px);grid-template-rows:repeat(10,20px);border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff}
-  .cell{width:20px;height:20px;background:#c0c0c0;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #808080;border-bottom:2px solid #808080;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-  .cell.revealed{border:1px solid #808080}
-  .cell.c1{color:#0000ff}.cell.c2{color:#008000}.cell.c3{color:red}.cell.c4{color:#000080}.cell.c5{color:#800000}.cell.c6{color:#008080}.cell.c7{color:#000}.cell.c8{color:gray}
-  .cell.mine-hit{background-color:red}
+#splash-screen{
+  background:#000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+#splash-screen img{
+  width:min(640px,90vw);
+  max-height:90vh;
+  object-fit:contain;
+}
 
-  #bsod{position:fixed;top:0;left:0;width:100vw;height:100vh;background-color:#0000aa;color:#fff;font-family:Lucida Console,Courier New,monospace;z-index:99999;padding:20px;box-sizing:border-box;display:none}
-  #bsod h1{background-color:#aaa;color:#0000aa;display:inline-block;padding:0 10px;margin:0}
-  #bsod p{margin-top:2em}
+#login-screen{
+  display:none;
+  background:var(--desktop);
+  align-items:center;
+  justify-content:center;
+}
 
-  #screensaver-pipes.active{cursor:none}
+.login-window{
+  width:420px;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+}
 
-  #shutdown-screen{
-    position:fixed;inset:0;
-    background:#000;
-    color:#FFA500;
-    font-family:'Lucida Console',monospace;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    z-index:99998;
-  }
-  #splash-screen{
-    position:fixed;inset:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:99998;
-  }
-  #splash-screen img{width:400px;image-rendering:auto;}
+.login-body{padding:14px}
 
-  /* =============================
-     WINDOWS 98 LOGIN OVERLAY
-     This sits in front of the original desktop without replacing it.
-  ============================= */
-  #boot-screen{
-    position:fixed;
-    inset:0;
-    background:#000;
-    color:#fff;
-    z-index:100002;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    font-family:"Lucida Console","Courier New",monospace;
-  }
-  #boot-screen .boot-logo{
-    width:380px;
-    max-width:80vw;
-    border:0;
-  }
-  #boot-screen .boot-text{
-    margin-top:18px;
-    font-size:16px;
-    animation:loginBlink 1s step-end infinite;
-  }
-  @keyframes loginBlink{50%{opacity:0;}}
+.login-row{
+  display:grid;
+  grid-template-columns:72px 1fr;
+  gap:8px;
+  align-items:center;
+  margin:8px 0;
+}
 
-  #login-screen{
-    position:fixed;
-    inset:0;
-    background:var(--desktop-bg);
-    z-index:100001;
-    display:none;
-    align-items:center;
-    justify-content:center;
-  }
-  #login-screen.hidden,
-  #boot-screen.hidden{
-    display:none !important;
-  }
-  .login-window{
-    width:430px;
-    background:var(--win-face);
-    border-top:2px solid var(--win-hilite);
-    border-left:2px solid var(--win-hilite);
-    border-right:2px solid var(--win-shadow);
-    border-bottom:2px solid var(--win-shadow);
-    box-shadow:4px 4px 0 rgba(0,0,0,.45);
-  }
-  .login-body{
-    padding:18px;
-  }
-  .login-copy{
-    margin:0 0 14px;
-    line-height:1.35;
-  }
-  .login-main{
-    display:flex;
-    gap:16px;
-    align-items:flex-start;
-  }
-  .login-avatar{
-    width:64px;
-    height:64px;
-    background:#000080;
-    color:white;
-    border-top:2px solid var(--win-shadow);
-    border-left:2px solid var(--win-shadow);
-    border-right:2px solid var(--win-hilite);
-    border-bottom:2px solid var(--win-hilite);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:38px;
-  }
-  .login-fields{
-    flex:1;
-  }
-  .login-field{
-    display:grid;
-    grid-template-columns:82px 1fr;
-    align-items:center;
-    gap:8px;
-    margin-bottom:10px;
-  }
-  .login-field input{
-    width:100%;
-    height:22px;
-    font-family:"Tahoma","MS Sans Serif",sans-serif;
-    font-size:12px;
-    background:#fff;
-    border-top:2px solid var(--win-shadow);
-    border-left:2px solid var(--win-shadow);
-    border-right:2px solid var(--win-hilite);
-    border-bottom:2px solid var(--win-hilite);
-    padding:2px 4px;
-  }
-  #login-message{
-    min-height:18px;
-    margin:8px 0 0 80px;
-    color:#800000;
-  }
-  .login-buttons{
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:16px;
-  }
-  .win98-button{
-    min-width:76px;
-    height:24px;
-    background:var(--win-face);
-    border-top:2px solid var(--win-hilite);
-    border-left:2px solid var(--win-hilite);
-    border-right:2px solid var(--win-shadow);
-    border-bottom:2px solid var(--win-shadow);
-    font-family:"Tahoma","MS Sans Serif",sans-serif;
-    font-size:12px;
-    padding:2px 10px;
-    cursor:pointer;
-  }
-  .win98-button:active{
-    border-top:2px solid var(--win-shadow);
-    border-left:2px solid var(--win-shadow);
-    border-right:2px solid var(--win-hilite);
-    border-bottom:2px solid var(--win-hilite);
-  }
-  .browser-shell{
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-  }
-  .browser-toolbar{
-    display:flex;
-    gap:6px;
-    align-items:center;
-    border-top:1px solid var(--win-hilite);
-    border-left:1px solid var(--win-hilite);
-    border-right:1px solid var(--win-gray);
-    border-bottom:1px solid var(--win-gray);
-    padding:4px;
-  }
-  .browser-address{
-    flex:1;
-    height:20px;
-    border-top:2px solid var(--win-shadow);
-    border-left:2px solid var(--win-shadow);
-    border-right:2px solid var(--win-hilite);
-    border-bottom:2px solid var(--win-hilite);
-    background:#fff;
-    padding:2px 4px;
-    overflow:hidden;
-    white-space:nowrap;
-  }
-  .browser-shell iframe{
-    flex:1;
-    width:100%;
-    min-height:0;
-    border-top:2px solid var(--win-shadow);
-    border-left:2px solid var(--win-shadow);
-    border-right:2px solid var(--win-hilite);
-    border-bottom:2px solid var(--win-hilite);
-    background:#fff;
-  }
+.login-row input{
+  height:22px;
+  padding:2px 4px;
+  font:11px Tahoma,"MS Sans Serif",sans-serif;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+}
 
+.login-content{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+
+.login-icon{
+  width:48px;
+  height:48px;
+  image-rendering:pixelated;
+}
+
+.login-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:14px;
+}
+
+#shutdown-screen{
+  display:none;
+  background:#000;
+  color:#ff8c00;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-family:"Lucida Console","Courier New",monospace;
+  font-size:18px;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+#desktop{
+  position:absolute;
+  inset:0 0 var(--taskbar-h) 0;
+  background:var(--desktop);
+  overflow:hidden;
+}
+
+.desktop-icon{
+  position:absolute;
+  width:74px;
+  min-height:70px;
+  text-align:center;
+  padding:4px 2px;
+  cursor:default;
+}
+
+.desktop-icon .icon-image{
+  width:32px;
+  height:32px;
+  object-fit:contain;
+  image-rendering:pixelated;
+  pointer-events:none;
+}
+
+.desktop-icon .icon-label{
+  display:inline-block;
+  max-width:72px;
+  margin-top:4px;
+  color:#fff;
+  line-height:13px;
+  padding:1px 2px;
+  text-shadow:1px 1px #000;
+}
+
+.desktop-icon.selected .icon-label{
+  background:#000080;
+  outline:1px dotted #fff;
+}
+
+.desktop-icon.selected .icon-image{
+  filter:brightness(.75) saturate(.9);
+}
+
+/* =========================
+   WINDOWS
+========================= */
+.window{
+  position:absolute;
+  display:none;
+  background:var(--face);
+  min-width:220px;
+  min-height:140px;
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  padding:2px;
+}
+
+.title-bar{
+  height:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:linear-gradient(90deg,var(--inactive1),var(--inactive2));
+  color:#dcdcdc;
+  padding:2px 2px 2px 4px;
+  font-weight:bold;
+  cursor:default;
+}
+
+.window.active .title-bar{
+  background:linear-gradient(90deg,var(--active1),var(--active2));
+  color:#fff;
+}
+
+.title-left{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  overflow:hidden;
+}
+
+.title-left img{
+  width:16px;
+  height:16px;
+  object-fit:contain;
+  image-rendering:pixelated;
+  flex:0 0 auto;
+}
+
+.title-text{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.title-buttons{
+  display:flex;
+  gap:2px;
+}
+
+.title-button{
+  width:16px;
+  height:14px;
+  padding:0;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  font:10px/9px Arial,sans-serif;
+  position:relative;
+}
+
+.title-button:active{
+  border-top:2px solid var(--dark);
+  border-left:2px solid var(--dark);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+}
+
+.title-button.min::before{
+  content:"";
+  position:absolute;
+  left:3px;
+  bottom:2px;
+  width:7px;
+  height:2px;
+  background:#000;
+}
+
+.title-button.max::before{
+  content:"";
+  position:absolute;
+  left:2px;
+  top:2px;
+  width:8px;
+  height:7px;
+  border:1px solid #000;
+  border-top-width:2px;
+}
+
+.title-button.close::before,
+.title-button.close::after{
+  content:"";
+  position:absolute;
+  width:9px;
+  height:1px;
+  background:#000;
+  left:2px;
+  top:5px;
+  transform:rotate(45deg);
+}
+.title-button.close::after{transform:rotate(-45deg)}
+
+.window-menu{
+  display:flex;
+  gap:0;
+  height:20px;
+  padding:1px 3px;
+  align-items:center;
+  border-bottom:1px solid var(--shadow);
+}
+
+.window-menu span{
+  padding:2px 6px;
+}
+
+.window-menu span:hover{
+  background:#000080;
+  color:#fff;
+}
+
+.toolbar{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  min-height:31px;
+  padding:3px;
+  border-top:1px solid var(--light);
+  border-bottom:1px solid var(--shadow);
+}
+
+.toolbar-button{
+  height:24px;
+  min-width:28px;
+  background:var(--face);
+  border:1px solid transparent;
+  padding:2px 5px;
+  font:11px Tahoma,sans-serif;
+}
+
+.toolbar-button:hover{
+  border-top:1px solid var(--light);
+  border-left:1px solid var(--light);
+  border-right:1px solid var(--shadow);
+  border-bottom:1px solid var(--shadow);
+}
+
+.toolbar-sep{
+  width:2px;
+  height:23px;
+  border-left:1px solid var(--shadow);
+  border-right:1px solid var(--light);
+  margin:0 3px;
+}
+
+.address-row{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  height:25px;
+  padding:2px 4px;
+  border-top:1px solid var(--light);
+  border-bottom:1px solid var(--shadow);
+}
+
+.address-box{
+  flex:1;
+  height:20px;
+  background:#fff;
+  padding:2px 5px;
+  overflow:hidden;
+  white-space:nowrap;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+}
+
+.window-content{
+  position:absolute;
+  left:4px;
+  right:4px;
+  bottom:23px;
+  top:89px;
+  background:#fff;
+  overflow:auto;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+}
+
+.status-bar{
+  position:absolute;
+  left:4px;
+  right:4px;
+  bottom:4px;
+  height:18px;
+  display:flex;
+  align-items:center;
+  gap:3px;
+}
+
+.status-panel{
+  height:18px;
+  padding:2px 5px;
+  border-top:1px solid var(--shadow);
+  border-left:1px solid var(--shadow);
+  border-right:1px solid var(--light);
+  border-bottom:1px solid var(--light);
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+.status-panel.grow{flex:1}
+
+/* generic simple window */
+.simple-window .window-content{
+  top:24px;
+  bottom:4px;
+  background:var(--face);
+  border:0;
+  padding:10px;
+}
+.simple-window .status-bar,
+.simple-window .window-menu,
+.simple-window .toolbar,
+.simple-window .address-row{display:none}
+
+/* =========================
+   EXPLORER ICON VIEW
+========================= */
+.explorer-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+  align-content:start;
+  gap:12px;
+  padding:12px;
+}
+
+.explorer-item{
+  min-height:76px;
+  text-align:center;
+  padding:4px;
+}
+
+.explorer-item img{
+  width:32px;
+  height:32px;
+  image-rendering:pixelated;
+  object-fit:contain;
+}
+
+.explorer-item span{
+  display:block;
+  margin-top:4px;
+}
+
+.explorer-item:hover span{
+  background:#000080;
+  color:#fff;
+}
+
+/* =========================
+   REBEL LIBRARY / IE
+========================= */
+.browser-window .window-content{
+  padding:0;
+  overflow:hidden;
+}
+
+.browser-window iframe{
+  width:100%;
+  height:100%;
+  border:0;
+  background:#fff;
+}
+
+/* =========================
+   MINESWEEPER
+========================= */
+#minesweeper-window{
+  min-width:226px;
+  min-height:305px;
+}
+
+#minesweeper-window .window-content{
+  top:24px;
+  bottom:4px;
+  background:var(--face);
+  border:0;
+  padding:5px;
+  overflow:hidden;
+}
+
+#minesweeper-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:5px;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+  margin-bottom:5px;
+}
+
+.mine-counter,.timer{
+  width:48px;
+  background:#000;
+  color:#f00;
+  padding:2px;
+  text-align:center;
+  font:18px "Lucida Console","Courier New",monospace;
+}
+
+.smiley{
+  width:26px;
+  height:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#c0c0c0;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #808080;
+  border-bottom:2px solid #808080;
+  cursor:pointer;
+  font-size:17px;
+}
+
+#minefield{
+  display:grid;
+  grid-template-columns:repeat(10,20px);
+  grid-template-rows:repeat(10,20px);
+  width:204px;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+}
+
+.cell{
+  width:20px;
+  height:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#c0c0c0;
+  border-top:2px solid #fff;
+  border-left:2px solid #fff;
+  border-right:2px solid #808080;
+  border-bottom:2px solid #808080;
+  font-weight:bold;
+  font-size:13px;
+}
+
+.cell.revealed{border:1px solid #808080}
+.cell.c1{color:#0000ff}.cell.c2{color:#008000}.cell.c3{color:#ff0000}
+.cell.c4{color:#000080}.cell.c5{color:#800000}.cell.c6{color:#008080}
+.cell.mine-hit{background:#f00}
+
+/* =========================
+   TASKBAR
+========================= */
+#taskbar{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:var(--taskbar-h);
+  display:flex;
+  align-items:center;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  z-index:50000;
+  padding:2px;
+  gap:3px;
+}
+
+#start-button{
+  height:24px;
+  min-width:60px;
+  display:flex;
+  align-items:center;
+  gap:3px;
+  font-weight:bold;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  padding:1px 5px;
+}
+
+#start-button.pressed{
+  border-top:2px solid var(--dark);
+  border-left:2px solid var(--dark);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+  padding:2px 4px 0 6px;
+}
+
+#start-button img{
+  width:16px;
+  height:16px;
+  image-rendering:pixelated;
+}
+
+.taskbar-separator{
+  width:2px;
+  height:24px;
+  border-left:1px solid var(--shadow);
+  border-right:1px solid var(--light);
+}
+
+#quick-launch{
+  display:flex;
+  gap:1px;
+}
+
+.quick-button{
+  width:24px;
+  height:24px;
+  border:1px solid transparent;
+  background:transparent;
+  padding:3px;
+}
+.quick-button:hover{
+  border-top:1px solid var(--light);
+  border-left:1px solid var(--light);
+  border-right:1px solid var(--shadow);
+  border-bottom:1px solid var(--shadow);
+}
+.quick-button img{
+  width:16px;
+  height:16px;
+  image-rendering:pixelated;
+}
+
+#task-buttons{
+  flex:1;
+  display:flex;
+  min-width:0;
+  gap:3px;
+  overflow:hidden;
+}
+
+.task-button{
+  flex:0 1 180px;
+  max-width:180px;
+  min-width:70px;
+  height:24px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:1px 5px;
+  overflow:hidden;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+}
+
+.task-button.active{
+  border-top:2px solid var(--dark);
+  border-left:2px solid var(--dark);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+  background-image:repeating-linear-gradient(45deg,#c0c0c0,#c0c0c0 1px,#b6b6b6 1px,#b6b6b6 2px);
+  font-weight:bold;
+}
+
+.task-button img{
+  width:16px;
+  height:16px;
+  image-rendering:pixelated;
+  flex:0 0 auto;
+}
+.task-button span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+#tray{
+  min-width:92px;
+  height:24px;
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:5px;
+  padding:2px 5px;
+  border-top:1px solid var(--shadow);
+  border-left:1px solid var(--shadow);
+  border-right:1px solid var(--light);
+  border-bottom:1px solid var(--light);
+}
+
+.tray-icon{
+  width:16px;height:16px;
+  image-rendering:pixelated;
+}
+
+/* =========================
+   START MENU
+========================= */
+#start-menu{
+  position:absolute;
+  left:2px;
+  bottom:var(--taskbar-h);
+  width:212px;
+  min-height:260px;
+  display:none;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  z-index:49000;
+}
+
+.start-sidebar{
+  position:absolute;
+  left:2px;
+  top:2px;
+  bottom:2px;
+  width:26px;
+  background:linear-gradient(#000080,#1084d0);
+  color:#fff;
+  font-size:18px;
+  font-weight:bold;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  padding:6px 2px;
+}
+
+.start-list{
+  margin:2px 2px 2px 30px;
+  padding:0;
+  list-style:none;
+}
+
+.start-item{
+  position:relative;
+  height:34px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:3px 6px;
+}
+
+.start-item:hover,
+.start-item.open{
+  background:#000080;
+  color:#fff;
+}
+
+.start-item img{
+  width:24px;
+  height:24px;
+  object-fit:contain;
+  image-rendering:pixelated;
+}
+
+.start-item .arrow{
+  margin-left:auto;
+  font-size:12px;
+}
+
+.menu-separator{
+  height:2px;
+  margin:3px 5px;
+  border-top:1px solid var(--shadow);
+  border-bottom:1px solid var(--light);
+}
+
+/* submenus */
+.submenu{
+  position:absolute;
+  left:176px;
+  top:-2px;
+  min-width:180px;
+  display:none;
+  background:var(--face);
+  color:#000;
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  padding:2px;
+  z-index:49010;
+}
+
+.start-item:hover>.submenu{display:block}
+
+.submenu-item{
+  height:30px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:3px 6px;
+  white-space:nowrap;
+}
+
+.submenu-item:hover{
+  background:#000080;
+  color:#fff;
+}
+
+.submenu-item img{
+  width:20px;height:20px;
+}
+
+/* =========================
+   CONTEXT MENUS
+========================= */
+.context-menu{
+  position:fixed;
+  min-width:170px;
+  display:none;
+  background:var(--face);
+  border-top:2px solid var(--light);
+  border-left:2px solid var(--light);
+  border-right:2px solid var(--dark);
+  border-bottom:2px solid var(--dark);
+  padding:2px;
+  z-index:60000;
+}
+
+.context-item{
+  height:24px;
+  padding:4px 20px 4px 22px;
+  position:relative;
+  white-space:nowrap;
+}
+
+.context-item:hover{
+  background:#000080;
+  color:#fff;
+}
+
+.context-item.disabled{
+  color:#808080;
+}
+.context-item.disabled:hover{
+  background:transparent;
+  color:#808080;
+}
+
+.context-separator{
+  height:2px;
+  margin:2px 3px;
+  border-top:1px solid var(--shadow);
+  border-bottom:1px solid var(--light);
+}
+
+/* =========================
+   RUN DIALOG / SHUTDOWN DIALOG
+========================= */
+.dialog-copy{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.dialog-copy img{
+  width:32px;height:32px;image-rendering:pixelated;
+}
+
+.dialog-input{
+  width:100%;
+  height:22px;
+  padding:2px 4px;
+  margin-top:8px;
+  border-top:2px solid var(--shadow);
+  border-left:2px solid var(--shadow);
+  border-right:2px solid var(--light);
+  border-bottom:2px solid var(--light);
+  font:11px Tahoma,sans-serif;
+}
+
+.dialog-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:7px;
+  margin-top:12px;
+}
+
+/* =========================
+   BSOD
+========================= */
+#bsod{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:100500;
+  background:#0000aa;
+  color:#fff;
+  font:16px/1.45 "Lucida Console","Courier New",monospace;
+  padding:28px;
+  text-align:center;
+}
+
+#bsod .bsod-title{
+  display:inline-block;
+  background:#aaa;
+  color:#0000aa;
+  padding:0 8px;
+  margin-bottom:24px;
+}
+
+/* =========================
+   SCREENSAVER
+========================= */
+#screensaver-pipes{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  display:none;
+  background:#000;
+  z-index:90000;
+}
+
+#screensaver-pipes.active{cursor:none}
 </style>
 </head>
+
 <body>
 
+<!-- BIOS -->
+<div id="bios-screen">Award Modular BIOS v4.51PG, An Energy Star Ally
+Copyright (C) 1984-98, Award Software, Inc.
 
-<div id="boot-screen">
-  <img class="boot-logo" src="https://www.globalspec.com/ImageRepository/LearnMore/201211/Windows98SplashScreen48290f9c313247098e9cc22b826f5545.png" alt="Windows 98 Splash Screen"/>
-  <div class="boot-text">Starting Windows 98...</div>
+Pentium II-MMX CPU at 400MHz
+Memory Test : 65536K OK
+
+Award Plug and Play BIOS Extension v1.0A
+Detecting IDE Primary Master ... QUANTUM FIREBALL
+Detecting IDE Primary Slave  ... None
+Detecting IDE Secondary Master ... ATAPI CD-ROM
+Detecting IDE Secondary Slave  ... None
+
+Press DEL to enter SETUP
+
+<span class="blink">Starting Windows 98...</span></div>
+
+<!-- BOOT SPLASH -->
+<div id="splash-screen">
+  <img src="assets/windows98-splash.png"
+       onerror="this.src='https://www.globalspec.com/ImageRepository/LearnMore/201211/Windows98SplashScreen48290f9c313247098e9cc22b826f5545.png'"
+       alt="Microsoft Windows 98"/>
 </div>
 
-<div id="login-screen" aria-label="Windows 98 login screen">
+<!-- LOGIN -->
+<div id="login-screen">
   <div class="login-window">
-    <div class="title-bar">
-      <span class="title-bar-text">Log On to Windows</span>
-      <div class="title-bar-controls">
-        <button title="Close">X</button>
+    <div class="title-bar" style="background:linear-gradient(90deg,#000080,#1084d0);color:#fff">
+      <div class="title-left">
+        <span class="title-text">Log On to Windows</span>
+      </div>
+      <div class="title-buttons">
+        <button class="title-button close" id="login-close"></button>
       </div>
     </div>
+
     <div class="login-body">
-      <p class="login-copy">Type a user name and password to log on to The Rebel Library.</p>
-      <div class="login-main">
-        <div class="login-avatar">👤</div>
-        <div class="login-fields">
-          <div class="login-field">
-            <label for="login-username">User name:</label>
-            <input id="login-username" type="text" value="Andrew" autocomplete="username"/>
+      <div class="login-content">
+        <img class="login-icon" src="icons/key.png" onerror="this.src='icons/my-computer.png'" alt="">
+        <div style="flex:1">
+          <div>Type a user name and password to log on to Windows.</div>
+
+          <div class="login-row">
+            <label for="login-user">User name:</label>
+            <input id="login-user" value="Andrew">
           </div>
-          <div class="login-field">
-            <label for="login-password">Password:</label>
-            <input id="login-password" type="password" autocomplete="current-password"/>
+
+          <div class="login-row">
+            <label for="login-pass">Password:</label>
+            <input id="login-pass" type="password">
           </div>
         </div>
       </div>
-      <div id="login-message"></div>
-      <div class="login-buttons">
+
+      <div class="login-actions">
         <button class="win98-button" id="login-ok">OK</button>
         <button class="win98-button" id="login-cancel">Cancel</button>
       </div>
@@ -506,811 +1039,942 @@
   </div>
 </div>
 
-
+<!-- DESKTOP -->
 <div id="desktop"></div>
 
-<div id="taskbar">
-  <button id="start-button">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB30lEQVR42mL8//8/AyUYwEBAAEYyMjL+gYp34uPjFzI5OTlPVoApzM/PZzIyMh4owI9ycnKOd3Z2RoHqBFGgOAAECBAARfD4+LgMDAw8AUV+MjIyLqACfUFBwf8jIyP3z58/fwIK/AcCBAgQoAJuZ2dnZ2RkdAJKzIqKiv4HAgQIEKACvZycnBMMDQ39nZqa+g8ECBAgQAXYu7u7H8PDw4+jY98zMjL+BwIECBCgAqwoKMjAwMCQz8nJ+d/Z2fkfCBAgQIAKcGRk5IOoqKj/QcT8yMjI/wABAoQBKzAw8D8qKup/ZGTkYwYGBoYDBAgQIAIsKSn5nxQk/B8eHv4PBAgQIANs2tvbO4FFvgoKCv4HAgQIEAG2aGho+A+O/f+oqOh/QEAAHCAAAAAAAAAAAAAAAAIECBAgAAgQIECAACBAgAABAgQIECBAAAEChAErLCz8Pygo6H+cI8b/oqKi/wECBAgQARaZmVn+R4z5f3h4+D8QIECAALCIjIx8jIyM/A/8//8/AAMECAACLCAg4D8hQfg/MjLyPwYGBsYDBAgQARaQkJD/ISEh/y+uLP8/KioKKEAAAQIECBCgACBAgAABAgQIAAIECBCgACCAAwQYAGuTz/XfJcCAAAAAElFTkSuQmCC" alt="Start"/>
-    <span>Start</span>
-  </button>
-
-  <div id="task-buttons" aria-label="Task buttons"></div>
-
-  <div id="system-tray">
-    <span id="clock">10:55 AM</span>
-  </div>
-</div>
-
+<!-- START MENU -->
 <div id="start-menu">
-  <div class="start-menu-sidebar"><span>Windows</span><span>98</span></div>
-  <ul>
-    <li id="start-menu-rebel-library">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR+2WzWvTUBDHZ8UgYpJa23gplB78CgUFPXgRf4CCgqXgQUVv+/9vC0FBEfEiouBFtMBeBFs9eBEtLVgKGbVpMmnDDm1LfafXsETSNvHGl/DNYc7MvPN8M7uzC/yrv94/3gPAe45j+LzZp8Lh8L8o+v69kHw2GwIAUqlUUp7nF4xhmJ/sVqvP83wzDMOlUqnE09N/LpVKHRKJZCqVSq/X+y8A7q32+30KhcKxtrYGQRDfAbA8z7u6urolh8NjNBqNJJPJoihajUbjsVot8qJpGk3T/JbL5UAg8P39/Q8AFEVxOBx+v7i4eL1eLwDMdrtNQRC/ANjb7fZ/V6v1/UwmM32z3R10uVyeTqfFNG0A4Pf7A0AulwsA8fl8zGYzuq4fHh4+fXp6+vLp0xMAaJqGpmmO47Qsy61W6/W5XO7j+Twmk0kqlWq323Fdl9lsBgC+vr5+eXj46fX19Zc3n3/eD+J2G1s/3o8AQBMgCILf7w8AWJbFdR3Hca/X+zQaje/3+/v7+0gk0uVynM/nq6ur2WzW7/evrq5+vN/7AwC8/vHy838A2G63/UII0zSTySQA6LpOVVUREQshiqK5XO7+/v79/f0vAHd3dwgh+L4fhr8sY3wAIAjCdDp9s9mMpmkqlYo4jvP7/ZIkEQBpmobv+1arFQAUReG6bqVSGY1Gv99vWZb1ev2PAGzbtoIgfD6fD4fD3d3d3d3dDQB6vZ7runEcR5IkiqLcf+4A6LoOAHy+uFwumqZBCHVdJ5PJRqORpmnjOL5arc5ms1u9Xn+83w/4908vADjn2Lb9/vX1lSRJURRBEERd13med7vdXq1WpVIp13UhhEKhkClT7tU+VSoVURQ9+7u3t4dzDhEEAZBSqRQATdMsy5dKpbIsC8CyrA8A2O12vV4vCIKo61qtVhBCvu9fLpc2DMOyLEKI8/nck8mkz+czmUwIIQghYRhGCHVdt227xWJxOBw+n89BEARBCAC87nJ/3j+eP78A+Lf3N0/eP49x/APxJc1GkYJ+uAAAAABJRU5ErkJggg==" alt="The Rebel Library"/>
-      The Rebel Library
+  <div class="start-sidebar">Windows 98</div>
+  <ul class="start-list">
+
+    <li class="start-item">
+      <img src="icons/programs.png" onerror="this.src='icons/folder.png'">
+      <span><u>P</u>rograms</span>
+      <span class="arrow">▶</span>
+      <div class="submenu">
+        <div class="submenu-item" data-open="rebel-library-window">
+          <img src="icons/rebel-library.png" onerror="this.src='icons/my-computer.png'">
+          The Rebel Library
+        </div>
+        <div class="submenu-item" data-open="ie-window">
+          <img src="icons/internet-explorer.png" onerror="this.src='icons/my-computer.png'">
+          Internet Explorer
+        </div>
+        <div class="submenu-item" data-open="minesweeper-window">
+          <img src="icons/minesweeper.png" onerror="this.src='icons/my-computer.png'">
+          Minesweeper
+        </div>
+      </div>
     </li>
-    <li id="start-menu-ie">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACh0lEQVRYR+1WwW7bMBDVPYqdpE0C5NgrJFcfsEPRpkWK1E0CpdgKxJATJHUs2Q+Q+y15goR02LHjyIZkyYoD2bFADsWKRImF2H8y8SQO8M/M7AziH4rgv/vzI/4HgKSUUspQKBQeSqXSW7lczuVy+RWAPM8rUqlUfrlcTudyuQghxHGcMAwzDMMQAtM0RUSapgFEtVpBEOT7fgjB5/NJkqQoCoBzzpIkAPquQxRFURQhxPO8IAjzfT+E4HK5lFK+bggh3/dpmgZAdV2HEM7nc5IkPM8DwGEYu64DgFarBQB4noft+wHAarViGAYArVZLKcUwDAchJJVKQRDk+z6KoqSU9n0/TdMsywLAOI5BEOT7PoqiNE3DMAzHcZIkURRFUQDm+z6E8Pl80jRN0/R936SUpmkIId/3RVEMwzCM4ziOQxAEz/2CMAzFcf1+P4QQBEEQBEEQRJIkj8fj4zhN08IwDMMwDOM4iqIoy7JcLpcxxtlsFkVRGIaRZVnXdV3XNE0TY4yx2+2iKMqybLlcPj09ffwBAFEURVEURVEURVEURVEURVEURVEURVEURVEU5X8BZj/LYuFPs18AAAAASUVORK5CYII=" alt="Internet Explorer"/>
-      Internet Explorer
+
+    <li class="start-item">
+      <img src="icons/favorites.png" onerror="this.src='icons/folder.png'">
+      <span><u>F</u>avorites</span>
+      <span class="arrow">▶</span>
+      <div class="submenu">
+        <div class="submenu-item" data-open="rebel-library-window">
+          <img src="icons/rebel-library.png" onerror="this.src='icons/my-computer.png'">
+          The Rebel Library
+        </div>
+        <div class="submenu-item" data-open="ie-window">
+          <img src="icons/internet-explorer.png" onerror="this.src='icons/my-computer.png'">
+          Space Jam
+        </div>
+      </div>
     </li>
-    <li id="start-menu-minesweeper">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABaUlEQVR42mNgoBAwMjAwMDAw/j8iQgZkYICSzMzM/4zMzP8ZGBgYGSAx/j8i6mFkZASjgDj9//+fI57//x8EMjAwMDyA9GdgYAgE5PD/P4MwjCHy//8vQxADoYFhQJz//z8DNgAzgPj///+MoZ6BgQEIxM3AwBCsAOKG/yAE+P//hzyiAeIBTQC2YRgGEcDAwPD/9w8D6xQDYwYYQH///w9IYCgoSBCsAOKG+P//f7CRIaiFYQB2/P//PwO/gPj///8hJzAwMNwH4gZM/v//f1Yx3f//zyAkAQOIMiAGaGggV4AZgPj///9DJgYY/f//vwMTA/8B8f//HxMTA5KBAQgC/P//k+uAOLAA8f//H6gQxP///2dAAbD+//9/hnm+vj4E3AGxIAYQcDcI+P//J3eB+H8QYwA2AwPz/yAmAPG/IAwAAwMDrwHk/h+EAAIYMzAwhAMzAwQYAB70P2d+yM3JAAAAAElFTkSuQmCC" alt="Minesweeper"/>
-      Minesweeper
+
+    <li class="start-item">
+      <img src="icons/documents.png" onerror="this.src='icons/folder.png'">
+      <span><u>D</u>ocuments</span>
+      <span class="arrow">▶</span>
+      <div class="submenu">
+        <div class="submenu-item" data-open="documents-window">
+          <img src="icons/folder.png">
+          My Documents
+        </div>
+      </div>
     </li>
-    <li class="separator"></li>
-    <li id="start-menu-reboot">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAdUlEQVR42mNgGAWjYBSMglEwCkYBGUB8/v//PxMDAwPDf5CGAWQBsYAY/v//LwMIA8gCYgEx/P//X4YQBkAGxAMy/P//n0FYBswCYgEy/P//n8EIID4gBvAYkAUxAcYBMQEGkAUxAYcBMQDjGVD+CgAADEe1qRh5+uEAAAAASUVORK5CYII=" alt="Shutdown"/>
-      Shut Down...
+
+    <li class="start-item">
+      <img src="icons/settings.png" onerror="this.src='icons/control-panel.png'">
+      <span><u>S</u>ettings</span>
+      <span class="arrow">▶</span>
+      <div class="submenu">
+        <div class="submenu-item" data-open="control-panel-window">
+          <img src="icons/control-panel.png" onerror="this.src='icons/my-computer.png'">
+          Control Panel
+        </div>
+        <div class="submenu-item" data-open="printers-window">
+          <img src="icons/printer.png" onerror="this.src='icons/my-computer.png'">
+          Printers
+        </div>
+      </div>
+    </li>
+
+    <li class="start-item">
+      <img src="icons/find.png" onerror="this.src='icons/folder.png'">
+      <span><u>F</u>ind</span>
+      <span class="arrow">▶</span>
+      <div class="submenu">
+        <div class="submenu-item" data-open="find-window">
+          <img src="icons/find.png" onerror="this.src='icons/my-computer.png'">
+          Files or Folders...
+        </div>
+      </div>
+    </li>
+
+    <li class="start-item" data-open="help-window">
+      <img src="icons/help.png" onerror="this.src='icons/my-computer.png'">
+      <span><u>H</u>elp</span>
+    </li>
+
+    <li class="start-item" id="start-run">
+      <img src="icons/run.png" onerror="this.src='icons/my-computer.png'">
+      <span><u>R</u>un...</span>
+    </li>
+
+    <div class="menu-separator"></div>
+
+    <li class="start-item" id="start-logoff">
+      <img src="icons/logoff.png" onerror="this.src='icons/my-computer.png'">
+      <span>Log Off Andrew...</span>
+    </li>
+
+    <li class="start-item" id="start-shutdown">
+      <img src="icons/shutdown.png" onerror="this.src='icons/my-computer.png'">
+      <span>Sh<u>u</u>t Down...</span>
     </li>
   </ul>
 </div>
 
-<div id="bsod"></div>
-
-<div id="shutdown-screen" style="display:none;">
-  <p>It's now safe to turn off your computer.</p>
+<!-- DESKTOP CONTEXT MENU -->
+<div id="desktop-context" class="context-menu">
+  <div class="context-item">Active Desktop <span style="float:right">▶</span></div>
+  <div class="context-item">Arrange Icons <span style="float:right">▶</span></div>
+  <div class="context-item" id="ctx-lineup">Line Up Icons</div>
+  <div class="context-item" id="ctx-refresh">Refresh</div>
+  <div class="context-separator"></div>
+  <div class="context-item disabled">Paste</div>
+  <div class="context-item disabled">Paste Shortcut</div>
+  <div class="context-separator"></div>
+  <div class="context-item">New <span style="float:right">▶</span></div>
+  <div class="context-separator"></div>
+  <div class="context-item" id="ctx-properties">Properties</div>
 </div>
 
-<div id="splash-screen" style="display:none;">
-  <img src="https://www.globalspec.com/ImageRepository/LearnMore/201211/Windows98SplashScreen48290f9c313247098e9cc22b826f5545.png" alt="Windows 98 Splash Screen"/>
+<!-- TASKBAR -->
+<div id="taskbar">
+  <button id="start-button">
+    <img src="icons/start.png" onerror="this.src='icons/windows.png'" alt="">
+    <span>Start</span>
+  </button>
+
+  <div class="taskbar-separator"></div>
+
+  <div id="quick-launch">
+    <button class="quick-button" title="Internet Explorer" data-open="ie-window">
+      <img src="icons/internet-explorer.png" onerror="this.src='icons/my-computer.png'">
+    </button>
+    <button class="quick-button" title="The Rebel Library" data-open="rebel-library-window">
+      <img src="icons/rebel-library.png" onerror="this.src='icons/my-computer.png'">
+    </button>
+  </div>
+
+  <div class="taskbar-separator"></div>
+
+  <div id="task-buttons"></div>
+
+  <div id="tray">
+    <img class="tray-icon" src="icons/volume.png" onerror="this.style.display='none'">
+    <span id="clock"></span>
+  </div>
 </div>
 
-<canvas id="screensaver-pipes" style="display:none; position:fixed; inset:0; width:100vw; height:100vh; z-index:9999; background:black;"></canvas>
+<!-- BSOD -->
+<div id="bsod">
+  <div class="bsod-title">Windows</div>
+  <div>
+    A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.
+    <br><br>
+    The current application will be terminated.
+    <br><br>
+    * Press any key to terminate the current application.<br>
+    * Press CTRL+ALT+DEL again to restart your computer.
+    <br><br>
+    Press any key to continue _
+  </div>
+</div>
+
+<!-- SHUTDOWN SCREEN -->
+<div id="shutdown-screen">
+  <div>It's now safe to turn off<br>your computer.</div>
+</div>
+
+<!-- SCREENSAVER -->
+<canvas id="screensaver-pipes"></canvas>
+
+<audio id="snd-startup" preload="auto" src="sounds/windows98-startup.wav"></audio>
+<audio id="snd-shutdown" preload="auto" src="sounds/windows98-shutdown.wav"></audio>
+<audio id="snd-error" preload="auto" src="sounds/windows98-error.wav"></audio>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const desktop = document.getElementById('desktop');
-  const taskButtons = document.getElementById('task-buttons');
-  const startButton = document.getElementById('start-button');
-  const startMenu = document.getElementById('start-menu');
-  const bsod = document.getElementById('bsod');
+document.addEventListener("DOMContentLoaded", () => {
 
-  // ---------- Fake Windows 98 Login ----------
-  const bootScreen = document.getElementById('boot-screen');
-  const loginScreen = document.getElementById('login-screen');
-  const loginUser = document.getElementById('login-username');
-  const loginPassword = document.getElementById('login-password');
-  const loginOk = document.getElementById('login-ok');
-  const loginCancel = document.getElementById('login-cancel');
-  const loginMessage = document.getElementById('login-message');
-
-  function showLogin(){
-    bootScreen.classList.add('hidden');
-    loginScreen.style.display = 'flex';
-    setTimeout(() => loginPassword.focus(), 50);
-  }
-
-  function enterDesktop(){
-    loginMessage.style.color = 'green';
-    loginMessage.textContent = 'Loading personal settings...';
-    setTimeout(() => {
-      loginScreen.classList.add('hidden');
-      resetScreensaverTimer();
-    }, 900);
-  }
-
-  function tryLogin(){
-    const userOk = loginUser.value.trim().toLowerCase() === 'andrew';
-    const passOk = loginPassword.value === 'homelab' || loginPassword.value === '';
-    if (userOk && passOk){
-      enterDesktop();
-    } else {
-      loginMessage.style.color = '#800000';
-      loginMessage.textContent = 'The password is incorrect. Please try again.';
-      loginPassword.select();
-    }
-  }
-
-  loginOk.addEventListener('click', tryLogin);
-  loginPassword.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') tryLogin();
-  });
-  loginCancel.addEventListener('click', () => {
-    loginPassword.value = '';
-    loginMessage.textContent = 'Logon cancelled. Click OK to try again.';
-  });
-
-  setTimeout(showLogin, 2200);
-
-
-  let highestZIndex = 100;
-  let activeIconEl = null;
-  let focusedWindowId = null;
-
-  // =============================
-  // ICON SOURCES (easy swap!)
-  // Replace with: "icons/mycomputer.png" etc when you upload images.
-  // =============================
+  /* =========================================================
+     ASSET MAP
+     Put these in /icons. If files are missing, the page still runs.
+  ========================================================= */
   const ICON = {
-    myComputer: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI1IiB5PSI0IiB3aWR0aD0iMjIiIGhlaWdodD0iMTciIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI3IiB5PSI2IiB3aWR0aD0iMTgiIGhlaWdodD0iMTEiIGZpbGw9IiMwMDAwODAiLz48cmVjdCB4PSI5IiB5PSI4IiB3aWR0aD0iMTQiIGhlaWdodD0iNyIgZmlsbD0iIzFiNmNmZiIvPjxyZWN0IHg9IjUiIHk9IjQiIHdpZHRoPSIyMiIgaGVpZ2h0PSIxIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iNSIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMTciIGZpbGw9IiNmZmYiLz48cmVjdCB4PSIyNiIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMTciIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI1IiB5PSIyMCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIxMiIgeT0iMjEiIHdpZHRoPSI4IiBoZWlnaHQ9IjQiIGZpbGw9IiM4MDgwODAiLz48cmVjdCB4PSI5IiB5PSIyNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjMiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI4IiB5PSIyOCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjIiIGZpbGw9IiM4MDgwODAiLz48cmVjdCB4PSIxMCIgeT0iOSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiIGZpbGw9IiM4ZWU4ZmYiLz48L3N2Zz4=`,
-    rebel: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI0IiB5PSI0IiB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjAiIGhlaWdodD0iMTMiIGZpbGw9IiMwMDFhNWYiLz48cmVjdCB4PSI4IiB5PSI4IiB3aWR0aD0iNCIgaGVpZ2h0PSI5IiBmaWxsPSIjZmZkOTY2Ii8+PHJlY3QgeD0iMTMiIHk9IjgiIHdpZHRoPSI1IiBoZWlnaHQ9IjkiIGZpbGw9IiNmZjU1NTUiLz48cmVjdCB4PSIxOSIgeT0iOCIgd2lkdGg9IjUiIGhlaWdodD0iOSIgZmlsbD0iIzY2Y2NmZiIvPjxyZWN0IHg9IjciIHk9IjE4IiB3aWR0aD0iMTgiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDA4MCIvPjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMTgiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSIyNyIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMTgiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0IiB5PSIyMSIgd2lkdGg9IjI0IiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIxMiIgeT0iMjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjMiIGZpbGw9IiM4MDgwODAiLz48cmVjdCB4PSI4IiB5PSIyNSIgd2lkdGg9IjE2IiBoZWlnaHQ9IjMiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI2IiB5PSIyOCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIiIGZpbGw9IiM4MDgwODAiLz48cmVjdCB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzcwMzBhMCIvPjxyZWN0IHg9IjI0IiB5PSIyMCIgd2lkdGg9IjUiIGhlaWdodD0iOCIgZmlsbD0iIzAwODA4MCIvPjwvc3ZnPg==`,
-    ie: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI4IiB5PSI2IiB3aWR0aD0iMTciIGhlaWdodD0iMyIgZmlsbD0iIzY2Y2NmZiIvPjxyZWN0IHg9IjUiIHk9IjkiIHdpZHRoPSIyMiIgaGVpZ2h0PSI1IiBmaWxsPSIjMzM5OWZmIi8+PHJlY3QgeD0iNCIgeT0iMTQiIHdpZHRoPSIyMyIgaGVpZ2h0PSI3IiBmaWxsPSIjMDA2NmNjIi8+PHJlY3QgeD0iNyIgeT0iMjEiIHdpZHRoPSIxNyIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAzMzk5Ii8+PHJlY3QgeD0iOSIgeT0iMTEiIHdpZHRoPSI1IiBoZWlnaHQ9IjMiIGZpbGw9IiMwMGNjNjYiLz48cmVjdCB4PSIxNyIgeT0iMTUiIHdpZHRoPSI3IiBoZWlnaHQ9IjMiIGZpbGw9IiNmZmZmNjYiLz48cmVjdCB4PSI5IiB5PSIxOSIgd2lkdGg9IjgiIGhlaWdodD0iMyIgZmlsbD0iIzAwY2M2NiIvPjxyZWN0IHg9IjE0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIxOSIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjQiIHk9IjE1IiB3aWR0aD0iMjMiIGhlaWdodD0iMiIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjUiIHk9IjI1IiB3aWR0aD0iMTgiIGhlaWdodD0iMyIgZmlsbD0iI2MwYzBjMCIvPjxyZWN0IHg9IjIxIiB5PSIyMyIgd2lkdGg9IjUiIGhlaWdodD0iMiIgZmlsbD0iIzgwODA4MCIvPjwvc3ZnPg==`,
-    minesweeper: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjAiIGhlaWdodD0iMSIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjUiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iNiIgeT0iMjUiIHdpZHRoPSIyMCIgaGVpZ2h0PSIxIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iOSIgeT0iOSIgd2lkdGg9IjQiIGhlaWdodD0iNCIgZmlsbD0iIzgwODA4MCIvPjxyZWN0IHg9IjE0IiB5PSI5IiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMTkiIHk9IjkiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiM4MDgwODAiLz48cmVjdCB4PSI5IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iNCIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjE0IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iNCIgZmlsbD0iI2ZmMDAwMCIvPjxyZWN0IHg9IjE5IiB5PSIxNCIgd2lkdGg9IjQiIGhlaWdodD0iNCIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjkiIHk9IjE5IiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjODA4MDgwIi8+PHJlY3QgeD0iMTQiIHk9IjE5IiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMTkiIHk9IjE5IiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjODA4MDgwIi8+PHJlY3QgeD0iMTUiIHk9IjE1IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+`,
-    recycleBin: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSIxMCIgeT0iOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjMiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI4IiB5PSIxMSIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjZThmZmZmIi8+PHJlY3QgeD0iOSIgeT0iMTIiIHdpZHRoPSIxNCIgaGVpZ2h0PSIxIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjMiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxNiIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjgiIHk9IjI2IiB3aWR0aD0iMTYiIGhlaWdodD0iMSIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjExIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMTAiIGZpbGw9IiM4MGMwYzAiLz48cmVjdCB4PSIxNSIgeT0iMTQiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwIiBmaWxsPSIjODBjMGMwIi8+PHJlY3QgeD0iMTkiIHk9IjE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgZmlsbD0iIzgwYzBjMCIvPjwvc3ZnPg==`,
-    error: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI4IiB5PSI1IiB3aWR0aD0iMTYiIGhlaWdodD0iMjIiIGZpbGw9IiNmZjAwMDAiLz48cmVjdCB4PSI5IiB5PSI2IiB3aWR0aD0iMTQiIGhlaWdodD0iMjAiIGZpbGw9IiNmZmZmMDAiLz48cmVjdCB4PSIxNSIgeT0iMTAiIHdpZHRoPSIyIiBoZWlnaHQ9IjkiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIxNSIgeT0iMjIiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI4IiB5PSI1IiB3aWR0aD0iMTYiIGhlaWdodD0iMSIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjgiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjIyIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjMiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjIyIiBmaWxsPSIjMDAwIi8+PC9zdmc+`,
-    network: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSIzIiB5PSI2IiB3aWR0aD0iMTEiIGhlaWdodD0iOCIgZmlsbD0iI2MwYzBjMCIvPjxyZWN0IHg9IjUiIHk9IjgiIHdpZHRoPSI3IiBoZWlnaHQ9IjQiIGZpbGw9IiMwMDAwODAiLz48cmVjdCB4PSIxOCIgeT0iNiIgd2lkdGg9IjExIiBoZWlnaHQ9IjgiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSIyMCIgeT0iOCIgd2lkdGg9IjciIGhlaWdodD0iNCIgZmlsbD0iIzAwMDA4MCIvPjxyZWN0IHg9IjEwIiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSIxMiIgeT0iMjIiIHdpZHRoPSI4IiBoZWlnaHQ9IjQiIGZpbGw9IiMwMDAwODAiLz48cmVjdCB4PSI5IiB5PSIxNiIgd2lkdGg9IjEiIGhlaWdodD0iNCIgZmlsbD0iI2ZmZmYwMCIvPjxyZWN0IHg9IjIzIiB5PSIxNiIgd2lkdGg9IjEiIGhlaWdodD0iNCIgZmlsbD0iI2ZmZmYwMCIvPjxyZWN0IHg9IjkiIHk9IjE5IiB3aWR0aD0iMTUiIGhlaWdodD0iMiIgZmlsbD0iI2ZmZmYwMCIvPjwvc3ZnPg==`,
-    control: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI1IiB5PSI3IiB3aWR0aD0iMjIiIGhlaWdodD0iMTgiIGZpbGw9IiNjMGMwYzAiLz48cmVjdCB4PSI2IiB5PSI4IiB3aWR0aD0iMjAiIGhlaWdodD0iMyIgZmlsbD0iIzAwMDA4MCIvPjxyZWN0IHg9IjgiIHk9IjE0IiB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmYwMDAwIi8+PHJlY3QgeD0iMTUiIHk9IjE0IiB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMDBhYTAwIi8+PHJlY3QgeD0iMjIiIHk9IjE0IiB3aWR0aD0iMyIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmZjAwIi8+PHJlY3QgeD0iOCIgeT0iMjEiIHdpZHRoPSIxNyIgaGVpZ2h0PSIyIiBmaWxsPSIjODA4MDgwIi8+PHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjIyIiBoZWlnaHQ9IjEiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI1IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxOCIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjI2IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxOCIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==`,
-    folder: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI0IiB5PSI5IiB3aWR0aD0iMTAiIGhlaWdodD0iNCIgZmlsbD0iI2ZmZmY4MCIvPjxyZWN0IHg9IjQiIHk9IjEyIiB3aWR0aD0iMjQiIGhlaWdodD0iMTUiIGZpbGw9IiNmZmQyNGQiLz48cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmZmOTkiLz48cmVjdCB4PSI0IiB5PSIyNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjEiIGZpbGw9IiM4MDYwMDAiLz48cmVjdCB4PSIyNyIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjE1IiBmaWxsPSIjODA2MDAwIi8+PC9zdmc+`,
-    globe: `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgc2hhcGUtcmVuZGVyaW5nPSJjcmlzcEVkZ2VzIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI4IiB5PSI2IiB3aWR0aD0iMTciIGhlaWdodD0iMyIgZmlsbD0iIzY2Y2NmZiIvPjxyZWN0IHg9IjUiIHk9IjkiIHdpZHRoPSIyMiIgaGVpZ2h0PSI1IiBmaWxsPSIjMzM5OWZmIi8+PHJlY3QgeD0iNCIgeT0iMTQiIHdpZHRoPSIyMyIgaGVpZ2h0PSI3IiBmaWxsPSIjMDA2NmNjIi8+PHJlY3QgeD0iNyIgeT0iMjEiIHdpZHRoPSIxNyIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAzMzk5Ii8+PHJlY3QgeD0iOSIgeT0iMTEiIHdpZHRoPSI1IiBoZWlnaHQ9IjMiIGZpbGw9IiMwMGNjNjYiLz48cmVjdCB4PSIxNyIgeT0iMTUiIHdpZHRoPSI3IiBoZWlnaHQ9IjMiIGZpbGw9IiNmZmZmNjYiLz48cmVjdCB4PSI5IiB5PSIxOSIgd2lkdGg9IjgiIGhlaWdodD0iMyIgZmlsbD0iIzAwY2M2NiIvPjxyZWN0IHg9IjE0IiB5PSI2IiB3aWR0aD0iMiIgaGVpZ2h0PSIxOSIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjQiIHk9IjE1IiB3aWR0aD0iMjMiIGhlaWdodD0iMiIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjUiIHk9IjI1IiB3aWR0aD0iMTgiIGhlaWdodD0iMyIgZmlsbD0iI2MwYzBjMCIvPjxyZWN0IHg9IjIxIiB5PSIyMyIgd2lkdGg9IjUiIGhlaWdodD0iMiIgZmlsbD0iIzgwODA4MCIvPjwvc3ZnPg==`
+    myComputer:"icons/my-computer.png",
+    recycle:"icons/recycle-bin.png",
+    network:"icons/network-neighborhood.png",
+    ie:"icons/internet-explorer.png",
+    rebel:"icons/rebel-library.png",
+    minesweeper:"icons/minesweeper.png",
+    error:"icons/error.png",
+    folder:"icons/folder.png",
+    drive:"icons/hard-drive.png",
+    floppy:"icons/floppy.png",
+    cdrom:"icons/cdrom.png",
+    control:"icons/control-panel.png",
+    printer:"icons/printer.png",
+    dialup:"icons/dial-up-networking.png",
+    document:"icons/document.png",
+    help:"icons/help.png",
+    run:"icons/run.png",
+    shutdown:"icons/shutdown.png"
   };
 
-  // =============================
-  // DESKTOP ICONS (data-driven)
-  // You can add more icons by adding objects here.
-  // =============================
-  const DESKTOP_ICONS = [
-    { id:'my-computer-icon', label:'My Computer', icon:ICON.myComputer, windowId:'my-computer-window' },
-    { id:'recycle-bin-icon', label:'Recycle Bin', icon:ICON.recycleBin, windowId:'recycle-bin-window' },
-    { id:'minesweeper-icon', label:'Minesweeper', icon:ICON.minesweeper, windowId:'minesweeper-window' },
-    { id:'bsod-icon', label:'Critical Error', icon:ICON.error, action:'bsod' },
-    { id:'rebel-library-icon', label:'The Rebel Library', icon:ICON.rebel, windowId:'rebel-library-window' },
-    { id:'ie-icon', label:'Internet Explorer', icon:ICON.ie, windowId:'ie-window' }
-  ];
+  const desktop = document.getElementById("desktop");
+  const taskButtons = document.getElementById("task-buttons");
+  const startButton = document.getElementById("start-button");
+  const startMenu = document.getElementById("start-menu");
+  const desktopContext = document.getElementById("desktop-context");
 
-  // Windows definitions
-  const WINDOWS = [
-    {
-      id:'my-computer-window',
-      title:'My Computer',
-      icon:ICON.myComputer,
-      style:{ top:60, left:160, width:360, height:220 },
-      body:`<p>This is a simulated 'My Computer' window.</p>
-            <p>Add shortcuts here like "Control Panel", "Network", etc.</p>`
-    },
-    {
-      id:'recycle-bin-window',
-      title:'Recycle Bin',
-      icon:ICON.recycleBin,
-      style:{ top:120, left:210, width:320, height:220 },
-      body:`<p>The Recycle Bin is empty. (As it should be.)</p>`
-    },
-    {
-      id:'minesweeper-window',
-      title:'Minesweeper',
-      icon:ICON.minesweeper,
-      style:{ top:130, left:280, width:260, height:330 },
-      body:`
-        <div id="minesweeper-body">
-          <div id="minesweeper-header">
-            <div class="mine-counter">010</div>
-            <div class="smiley">🙂</div>
-            <div class="timer">000</div>
-          </div>
-          <div id="minefield"></div>
-        </div>`
-    },
-    {
-      id:'rebel-library-window',
-      title:'The Rebel Library',
-      icon:ICON.myComputer,
-      style:{ top:70, left:180, width:760, height:520 },
-      body:`
-        <div class="browser-shell">
-          <div class="browser-toolbar">
-            <button class="win98-button" onclick="document.getElementById('rebel-library-frame').contentWindow.history.back()">Back</button>
-            <button class="win98-button" onclick="document.getElementById('rebel-library-frame').contentWindow.location.reload()">Refresh</button>
-            <span>Address</span>
-            <div class="browser-address">https://truenas.the-rebel-library.com</div>
-          </div>
-          <iframe id="rebel-library-frame" src="https://truenas.the-rebel-library.com"></iframe>
-        </div>`
-    },
-    {
-      id:'ie-window',
-      title:'Internet Explorer - Space Jam',
-      icon:ICON.ie,
-      style:{ top:70, left:200, width:760, height:520 },
-      body:`
-        <div class="browser-shell">
-          <div class="browser-toolbar">
-            <button class="win98-button" onclick="document.getElementById('spacejam-frame').contentWindow.history.back()">Back</button>
-            <button class="win98-button" onclick="document.getElementById('spacejam-frame').contentWindow.location.reload()">Refresh</button>
-            <span>Address</span>
-            <div class="browser-address">https://www.spacejam.com/1996/</div>
-          </div>
-          <iframe id="spacejam-frame" src="https://www.spacejam.com/1996/"></iframe>
-        </div>`
-    }
-  ];
+  let highestZ = 100;
+  let selectedIcon = null;
+  let activeWindowId = null;
 
-  // ---------- Clock ----------
-  const clockElement = document.getElementById('clock');
+  /* =========================================================
+     BOOT SEQUENCE
+     Cosmetic only. This is NOT authentication.
+  ========================================================= */
+  const bios = document.getElementById("bios-screen");
+  const splash = document.getElementById("splash-screen");
+  const login = document.getElementById("login-screen");
+  const loginUser = document.getElementById("login-user");
+  const loginPass = document.getElementById("login-pass");
+
+  function safePlay(id){
+    const a = document.getElementById(id);
+    if(!a) return;
+    a.currentTime = 0;
+    a.play().catch(()=>{});
+  }
+
+  setTimeout(() => {
+    bios.style.display = "none";
+    splash.style.display = "flex";
+  }, 1800);
+
+  setTimeout(() => {
+    splash.style.display = "none";
+    login.style.display = "flex";
+    loginPass.focus();
+  }, 4200);
+
+  function enterDesktop(){
+    login.style.display = "none";
+    safePlay("snd-startup");
+    resetScreensaverTimer();
+  }
+
+  document.getElementById("login-ok").addEventListener("click", enterDesktop);
+  loginPass.addEventListener("keydown", e => {
+    if(e.key === "Enter") enterDesktop();
+  });
+  document.getElementById("login-cancel").addEventListener("click", () => {
+    loginPass.value = "";
+    loginPass.focus();
+  });
+  document.getElementById("login-close").addEventListener("click", () => {
+    loginPass.value = "";
+  });
+
+  /* =========================================================
+     CLOCK
+  ========================================================= */
+  const clock = document.getElementById("clock");
   function updateClock(){
     const d = new Date();
     let h = d.getHours();
-    const m = String(d.getMinutes()).padStart(2,'0');
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12; h = h || 12;
-    clockElement.textContent = `${h}:${m} ${ampm}`;
+    const m = String(d.getMinutes()).padStart(2,"0");
+    const ap = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    clock.textContent = `${h}:${m} ${ap}`;
   }
-  setInterval(updateClock, 1000);
   updateClock();
+  setInterval(updateClock,1000);
 
-  // ---------- Build Desktop ----------
-  function snap(n){ return Math.round(n / parseInt(getComputedStyle(document.documentElement).getPropertyValue('--grid'))) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--grid')); }
+  /* =========================================================
+     DESKTOP ICONS
+  ========================================================= */
+  const DESKTOP_ICONS = [
+    {id:"my-computer-icon", label:"My Computer", icon:ICON.myComputer, open:"my-computer-window"},
+    {id:"network-icon", label:"Network Neighborhood", icon:ICON.network, open:"network-window"},
+    {id:"ie-icon", label:"Internet Explorer", icon:ICON.ie, open:"ie-window"},
+    {id:"rebel-icon", label:"The Rebel Library", icon:ICON.rebel, open:"rebel-library-window"},
+    {id:"minesweeper-icon", label:"Minesweeper", icon:ICON.minesweeper, open:"minesweeper-window"},
+    {id:"error-icon", label:"Critical Error", icon:ICON.error, action:"bsod"},
+    {id:"recycle-icon", label:"Recycle Bin", icon:ICON.recycle, open:"recycle-window"}
+  ];
 
-  function placeIconsInGrid(){
-    const grid = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--grid'));
-    const padding = 18;
-    let x = padding, y = padding;
-    const maxY = desktop.clientHeight - 90;
+  function createDesktopIcon(item){
+    const el = document.createElement("div");
+    el.className = "desktop-icon";
+    el.id = item.id;
+    el.dataset.open = item.open || "";
+    el.dataset.action = item.action || "";
 
-    document.querySelectorAll('.desktop-icon').forEach(icon => {
-      if (!icon.style.left && !icon.style.top){
-        icon.style.left = `${x}px`;
-        icon.style.top  = `${y}px`;
-        y += grid;
-        if (y > maxY){ y = padding; x += grid; }
+    el.innerHTML = `
+      <img class="icon-image" src="${item.icon}" onerror="this.style.visibility='hidden'" alt="">
+      <span class="icon-label">${item.label}</span>
+    `;
+
+    el.addEventListener("mousedown", ev => {
+      if(ev.button !== 0) return;
+      ev.stopPropagation();
+      selectDesktopIcon(el);
+    });
+
+    el.addEventListener("dblclick", ev => {
+      ev.stopPropagation();
+      activateDesktopIcon(el);
+    });
+
+    makeIconDraggable(el);
+    desktop.appendChild(el);
+  }
+
+  DESKTOP_ICONS.forEach(createDesktopIcon);
+
+  function layoutIcons(){
+    const icons = [...document.querySelectorAll(".desktop-icon")];
+    let x = 12;
+    let y = 10;
+    const step = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--grid"));
+    const maxY = desktop.clientHeight - 78;
+
+    icons.forEach(icon => {
+      icon.style.left = x + "px";
+      icon.style.top = y + "px";
+      y += step;
+      if(y > maxY){
+        y = 10;
+        x += step;
       }
     });
   }
 
-  function createIcon({id,label,icon,windowId,action,href}){
-    const el = document.createElement('div');
-    el.className = 'desktop-icon';
-    el.id = id;
-    if (windowId) el.dataset.windowId = windowId;
-    if (action) el.dataset.action = action;
-    if (href) el.dataset.href = href;
+  layoutIcons();
 
-    el.innerHTML = `<img src="${icon}" alt="${label}"><span>${label}</span>`;
-    desktop.appendChild(el);
-
-    // click selects
-    el.addEventListener('mousedown', (ev) => {
-      ev.stopPropagation();
-      setActiveIcon(el);
-    });
-
-    // double click opens
-    el.addEventListener('dblclick', (ev) => {
-      ev.stopPropagation();
-      openIcon(el);
-    });
-
-    // drag icon
-    makeIconDraggable(el);
-
-    return el;
+  function selectDesktopIcon(el){
+    if(selectedIcon) selectedIcon.classList.remove("selected");
+    selectedIcon = el;
+    selectedIcon.classList.add("selected");
   }
 
-  DESKTOP_ICONS.forEach(createIcon);
-  placeIconsInGrid();
-
-  // ---------- Build Windows ----------
-  function windowTemplate({id,title,icon,style,body}){
-    const w = document.createElement('div');
-    w.className = 'window';
-    w.id = id;
-    w.style.top = (style?.top ?? 80) + 'px';
-    w.style.left = (style?.left ?? 120) + 'px';
-    if (style?.width) w.style.width = style.width + 'px';
-    if (style?.height) w.style.height = style.height + 'px';
-
-    w.innerHTML = `
-      <div class="title-bar">
-        <span class="title-bar-text">
-          <img src="${icon}" alt="">
-          ${title}
-        </span>
-        <div class="title-bar-controls">
-          <button class="minimize" title="Minimize">_</button>
-          <button class="maximize" title="Maximize">&#10065;</button>
-          <button class="close-button" title="Close">X</button>
-        </div>
-      </div>
-      <div class="window-body">${body}</div>
-    `;
-    desktop.appendChild(w);
-    return w;
-  }
-
-  WINDOWS.forEach(def => {
-    const w = windowTemplate(def);
-    makeDraggable(w);
-    wireWindowControls(w, def);
-    w.addEventListener('mousedown', () => focusWindow(w), true);
-  });
-
-  // ---------- Selection ----------
-  function setActiveIcon(el){
-    if (activeIconEl) activeIconEl.classList.remove('active');
-    activeIconEl = el;
-    activeIconEl.classList.add('active');
-  }
-  desktop.addEventListener('mousedown', () => {
-    if (activeIconEl){
-      activeIconEl.classList.remove('active');
-      activeIconEl = null;
-    }
-  });
-
-  // ---------- Open icon ----------
-  function openIcon(iconEl){
-    const action = iconEl.dataset.action;
-    if (action === 'bsod'){
+  function activateDesktopIcon(el){
+    if(el.dataset.action === "bsod"){
       showBsod();
       return;
     }
-    if (action === 'link'){
-      document.body.classList.add('fade-out');
-      setTimeout(() => window.location.href = iconEl.dataset.href, 800);
-      return;
-    }
-    const windowId = iconEl.dataset.windowId;
-    if (!windowId) return;
-    openWindow(windowId);
+    if(el.dataset.open) openWindow(el.dataset.open);
   }
 
-  // Keyboard: Enter opens selected icon, Esc closes start menu
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && activeIconEl){
-      openIcon(activeIconEl);
-    }
-    if (e.key === 'Escape'){
-      if (startMenu.style.display === 'block'){
-        startMenu.style.display = 'none';
-        startButton.classList.remove('active');
-      }
+  desktop.addEventListener("mousedown", ev => {
+    if(ev.target === desktop){
+      if(selectedIcon) selectedIcon.classList.remove("selected");
+      selectedIcon = null;
     }
   });
 
-  // ---------- Windows focus + taskbar ----------
-  function focusWindow(win){
-    document.querySelectorAll('.window').forEach(w => w.classList.remove('focused'));
-    win.classList.add('focused');
-    win.style.zIndex = ++highestZIndex;
-    focusedWindowId = win.id;
+  document.addEventListener("keydown", e => {
+    if(e.key === "Enter" && selectedIcon){
+      activateDesktopIcon(selectedIcon);
+    }
+    if(e.key === "Escape"){
+      hideMenus();
+    }
+  });
 
-    // mark task button active
-    document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.querySelector(`.task-btn[data-window-id="${win.id}"]`);
-    if (btn) btn.classList.add('active');
+  function makeIconDraggable(icon){
+    let dragging = false;
+    let moved = false;
+    let sx=0, sy=0, ox=0, oy=0;
+
+    icon.addEventListener("mousedown", ev => {
+      if(ev.button !== 0) return;
+      dragging = true;
+      moved = false;
+      sx = ev.clientX;
+      sy = ev.clientY;
+      ox = icon.offsetLeft;
+      oy = icon.offsetTop;
+
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+    });
+
+    function move(ev){
+      if(!dragging) return;
+      const dx = ev.clientX - sx;
+      const dy = ev.clientY - sy;
+      if(Math.abs(dx)+Math.abs(dy)>4) moved = true;
+
+      const maxX = Math.max(0, desktop.clientWidth-icon.offsetWidth);
+      const maxY = Math.max(0, desktop.clientHeight-icon.offsetHeight);
+
+      icon.style.left = Math.max(0,Math.min(maxX,ox+dx))+"px";
+      icon.style.top = Math.max(0,Math.min(maxY,oy+dy))+"px";
+    }
+
+    function up(){
+      dragging = false;
+      document.removeEventListener("mousemove",move);
+      document.removeEventListener("mouseup",up);
+    }
+  }
+
+  /* =========================================================
+     WINDOW DEFINITIONS
+  ========================================================= */
+  const WINDOWS = [
+    {
+      id:"my-computer-window",
+      title:"My Computer",
+      icon:ICON.myComputer,
+      type:"explorer",
+      style:{left:150,top:55,width:560,height:390},
+      address:"My Computer",
+      status:"5 object(s)",
+      content:`
+        <div class="explorer-grid">
+          <div class="explorer-item"><img src="${ICON.floppy}"><span>3½ Floppy (A:)</span></div>
+          <div class="explorer-item"><img src="${ICON.drive}"><span>Local Disk (C:)</span></div>
+          <div class="explorer-item"><img src="${ICON.cdrom}"><span>CD-ROM (D:)</span></div>
+          <div class="explorer-item" data-open="control-panel-window"><img src="${ICON.control}"><span>Control Panel</span></div>
+          <div class="explorer-item" data-open="printers-window"><img src="${ICON.printer}"><span>Printers</span></div>
+          <div class="explorer-item"><img src="${ICON.dialup}"><span>Dial-Up Networking</span></div>
+        </div>`
+    },
+    {
+      id:"network-window",
+      title:"Network Neighborhood",
+      icon:ICON.network,
+      type:"explorer",
+      style:{left:200,top:85,width:520,height:350},
+      address:"Network Neighborhood",
+      status:"3 object(s)",
+      content:`
+        <div class="explorer-grid">
+          <div class="explorer-item"><img src="${ICON.myComputer}"><span>TRUENAS</span></div>
+          <div class="explorer-item"><img src="${ICON.myComputer}"><span>R720-SERVER</span></div>
+          <div class="explorer-item"><img src="${ICON.myComputer}"><span>R430-GATEWAY</span></div>
+        </div>`
+    },
+    {
+      id:"recycle-window",
+      title:"Recycle Bin",
+      icon:ICON.recycle,
+      type:"explorer",
+      style:{left:250,top:110,width:470,height:320},
+      address:"Recycle Bin",
+      status:"3 object(s)",
+      content:`
+        <div class="explorer-grid">
+          <div class="explorer-item"><img src="${ICON.document}"><span>definitely-not-important.txt</span></div>
+          <div class="explorer-item"><img src="${ICON.document}"><span>old_server_plan.doc</span></div>
+          <div class="explorer-item"><img src="${ICON.folder}"><span>Netscape Cache</span></div>
+        </div>`
+    },
+    {
+      id:"documents-window",
+      title:"My Documents",
+      icon:ICON.folder,
+      type:"explorer",
+      style:{left:230,top:95,width:480,height:330},
+      address:"C:\\My Documents",
+      status:"4 object(s)",
+      content:`
+        <div class="explorer-grid">
+          <div class="explorer-item"><img src="${ICON.folder}"><span>Media Lists</span></div>
+          <div class="explorer-item"><img src="${ICON.folder}"><span>Server Notes</span></div>
+          <div class="explorer-item"><img src="${ICON.document}"><span>README.TXT</span></div>
+          <div class="explorer-item"><img src="${ICON.document}"><span>todo.txt</span></div>
+        </div>`
+    },
+    {
+      id:"control-panel-window",
+      title:"Control Panel",
+      icon:ICON.control,
+      type:"explorer",
+      style:{left:270,top:125,width:500,height:350},
+      address:"My Computer\\Control Panel",
+      status:"6 object(s)",
+      content:`
+        <div class="explorer-grid">
+          <div class="explorer-item"><img src="icons/display.png"><span>Display</span></div>
+          <div class="explorer-item"><img src="icons/mouse.png"><span>Mouse</span></div>
+          <div class="explorer-item"><img src="icons/keyboard.png"><span>Keyboard</span></div>
+          <div class="explorer-item"><img src="icons/network.png"><span>Network</span></div>
+          <div class="explorer-item"><img src="icons/sounds.png"><span>Sounds</span></div>
+          <div class="explorer-item"><img src="icons/system.png"><span>System</span></div>
+        </div>`
+    },
+    {
+      id:"printers-window",
+      title:"Printers",
+      icon:ICON.printer,
+      type:"explorer",
+      style:{left:310,top:140,width:430,height:280},
+      address:"My Computer\\Printers",
+      status:"1 object(s)",
+      content:`
+        <div class="explorer-grid">
+          <div class="explorer-item"><img src="${ICON.printer}"><span>Add Printer</span></div>
+        </div>`
+    },
+    {
+      id:"rebel-library-window",
+      title:"The Rebel Library",
+      icon:ICON.rebel,
+      type:"browser",
+      style:{left:170,top:55,width:820,height:560},
+      address:"https://truenas.the-rebel-library.com",
+      status:"Internet zone",
+      iframe:"https://truenas.the-rebel-library.com"
+    },
+    {
+      id:"ie-window",
+      title:"Internet Explorer - Space Jam",
+      icon:ICON.ie,
+      type:"browser",
+      style:{left:190,top:70,width:820,height:560},
+      address:"https://www.spacejam.com/1996/",
+      status:"Internet zone",
+      iframe:"https://www.spacejam.com/1996/"
+    },
+    {
+      id:"minesweeper-window",
+      title:"Minesweeper",
+      icon:ICON.minesweeper,
+      type:"simple",
+      style:{left:290,top:120,width:226,height:305},
+      content:`
+        <div id="minesweeper-header">
+          <div class="mine-counter">010</div>
+          <div class="smiley">☺</div>
+          <div class="timer">000</div>
+        </div>
+        <div id="minefield"></div>`
+    },
+    {
+      id:"help-window",
+      title:"Windows Help",
+      icon:ICON.help,
+      type:"simple",
+      style:{left:260,top:100,width:430,height:300},
+      content:`
+        <h3 style="margin:0 0 10px">Welcome to Windows 98 Help</h3>
+        <p>Click a desktop icon or use the Start menu to explore The Rebel Library.</p>
+        <p>Tip: Right-click the desktop for more options.</p>`
+    },
+    {
+      id:"find-window",
+      title:"Find: All Files",
+      icon:"icons/find.png",
+      type:"simple",
+      style:{left:250,top:120,width:470,height:260},
+      content:`
+        <div class="login-row"><label>Named:</label><input class="dialog-input" style="margin:0"></div>
+        <div class="login-row"><label>Look in:</label><input class="dialog-input" style="margin:0" value="My Computer"></div>
+        <div class="dialog-actions"><button class="win98-button">Find Now</button><button class="win98-button close-from-body">Stop</button></div>`
+    },
+    {
+      id:"run-window",
+      title:"Run",
+      icon:ICON.run,
+      type:"simple",
+      style:{left:320,top:185,width:410,height:185},
+      content:`
+        <div class="dialog-copy">
+          <img src="${ICON.run}">
+          <div>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</div>
+        </div>
+        <input id="run-command" class="dialog-input" value="">
+        <div class="dialog-actions">
+          <button class="win98-button" id="run-ok">OK</button>
+          <button class="win98-button close-from-body">Cancel</button>
+          <button class="win98-button">Browse...</button>
+        </div>`
+    },
+    {
+      id:"shutdown-dialog",
+      title:"Shut Down Windows",
+      icon:ICON.shutdown,
+      type:"simple",
+      style:{left:320,top:170,width:420,height:235},
+      content:`
+        <div style="display:flex;gap:12px">
+          <img src="${ICON.shutdown}" style="width:40px;height:40px">
+          <div style="flex:1">
+            <b>What do you want the computer to do?</b>
+            <label style="display:block;margin-top:12px"><input type="radio" name="shutdown-choice" value="shutdown" checked> Shut down</label>
+            <label style="display:block;margin-top:8px"><input type="radio" name="shutdown-choice" value="restart"> Restart</label>
+            <label style="display:block;margin-top:8px"><input type="radio" name="shutdown-choice" value="logoff"> Log off Andrew</label>
+          </div>
+        </div>
+        <div class="dialog-actions">
+          <button class="win98-button" id="shutdown-yes">Yes</button>
+          <button class="win98-button close-from-body">No</button>
+          <button class="win98-button">Help</button>
+        </div>`
+    },
+    {
+      id:"display-properties",
+      title:"Display Properties",
+      icon:"icons/display.png",
+      type:"simple",
+      style:{left:300,top:120,width:440,height:300},
+      content:`
+        <div style="border-bottom:1px solid #808080;padding-bottom:4px;margin-bottom:12px">
+          <button class="win98-button pressed">Background</button>
+          <button class="win98-button">Screen Saver</button>
+          <button class="win98-button">Appearance</button>
+          <button class="win98-button">Settings</button>
+        </div>
+        <p><b>Wallpaper:</b> (None)</p>
+        <p>The classic teal desktop is currently selected.</p>
+        <div class="dialog-actions" style="position:absolute;bottom:10px;right:10px">
+          <button class="win98-button">OK</button>
+          <button class="win98-button close-from-body">Cancel</button>
+          <button class="win98-button">Apply</button>
+        </div>`
+    }
+  ];
+
+  function buildWindow(def){
+    const win = document.createElement("div");
+    win.id = def.id;
+    win.className = "window";
+    if(def.type === "browser") win.classList.add("browser-window");
+    if(def.type === "simple") win.classList.add("simple-window");
+
+    win.style.left = def.style.left+"px";
+    win.style.top = def.style.top+"px";
+    win.style.width = def.style.width+"px";
+    win.style.height = def.style.height+"px";
+
+    let html = `
+      <div class="title-bar">
+        <div class="title-left">
+          <img src="${def.icon || ICON.myComputer}" onerror="this.style.visibility='hidden'" alt="">
+          <span class="title-text">${def.title}</span>
+        </div>
+        <div class="title-buttons">
+          <button class="title-button min" title="Minimize"></button>
+          <button class="title-button max" title="Maximize"></button>
+          <button class="title-button close" title="Close"></button>
+        </div>
+      </div>`;
+
+    if(def.type === "explorer" || def.type === "browser"){
+      html += `
+        <div class="window-menu">
+          <span><u>F</u>ile</span>
+          <span><u>E</u>dit</span>
+          <span><u>V</u>iew</span>
+          <span><u>G</u>o</span>
+          <span>F<u>a</u>vorites</span>
+          <span><u>H</u>elp</span>
+        </div>
+
+        <div class="toolbar">
+          <button class="toolbar-button">◀ Back</button>
+          <button class="toolbar-button">▶</button>
+          <div class="toolbar-sep"></div>
+          <button class="toolbar-button">Up</button>
+          <button class="toolbar-button">Cut</button>
+          <button class="toolbar-button">Copy</button>
+          <button class="toolbar-button">Paste</button>
+        </div>
+
+        <div class="address-row">
+          <span>Address</span>
+          <div class="address-box">${def.address || ""}</div>
+        </div>
+
+        <div class="window-content">
+          ${def.iframe ? `<iframe src="${def.iframe}" referrerpolicy="no-referrer"></iframe>` : def.content}
+        </div>
+
+        <div class="status-bar">
+          <div class="status-panel grow">${def.status || ""}</div>
+          <div class="status-panel">My Computer</div>
+        </div>`;
+    }else{
+      html += `<div class="window-content">${def.content}</div>`;
+    }
+
+    win.innerHTML = html;
+    desktop.appendChild(win);
+    wireWindow(win);
+  }
+
+  WINDOWS.forEach(buildWindow);
+
+  document.querySelectorAll("[data-open]").forEach(el => {
+    el.addEventListener("dblclick", e => {
+      if(el.classList.contains("explorer-item")){
+        openWindow(el.dataset.open);
+      }
+    });
+    if(!el.classList.contains("desktop-icon")){
+      el.addEventListener("click", e => {
+        if(el.closest(".submenu") || el.closest("#start-menu") || el.classList.contains("quick-button")){
+          openWindow(el.dataset.open);
+          hideMenus();
+        }
+      });
+    }
+  });
+
+  /* =========================================================
+     WINDOW BEHAVIOR
+  ========================================================= */
+  function focusWindow(win){
+    document.querySelectorAll(".window").forEach(w => w.classList.remove("active"));
+    document.querySelectorAll(".task-button").forEach(b => b.classList.remove("active"));
+
+    win.classList.add("active");
+    win.style.zIndex = ++highestZ;
+    activeWindowId = win.id;
+
+    const tb = document.querySelector(`.task-button[data-window="${win.id}"]`);
+    if(tb) tb.classList.add("active");
   }
 
   function openWindow(id){
     const win = document.getElementById(id);
-    if (!win) return;
-    win.style.display = 'block';
+    if(!win) return;
+    win.style.display = "block";
+    ensureTaskButton(win);
     focusWindow(win);
-    ensureTaskButtonForWindow(id);
   }
 
-  function closeWindow(id){
-    const win = document.getElementById(id);
-    if (!win) return;
-    win.style.display = 'none';
-    removeTaskButton(id);
-    if (focusedWindowId === id) focusedWindowId = null;
+  function closeWindow(win){
+    win.style.display = "none";
+    const task = document.querySelector(`.task-button[data-window="${win.id}"]`);
+    if(task) task.remove();
+    if(activeWindowId === win.id) activeWindowId = null;
   }
 
-  function minimizeWindow(id){
-    const win = document.getElementById(id);
-    if (!win) return;
-    win.style.display = 'none';
-    // keep task button (that’s the point)
-    document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
-    focusedWindowId = null;
+  function minimizeWindow(win){
+    win.style.display = "none";
+    const task = document.querySelector(`.task-button[data-window="${win.id}"]`);
+    if(task) task.classList.remove("active");
+    if(activeWindowId === win.id) activeWindowId = null;
   }
 
-  function ensureTaskButtonForWindow(windowId){
-    if (taskButtons.querySelector(`.task-btn[data-window-id="${windowId}"]`)) return;
+  function ensureTaskButton(win){
+    let btn = document.querySelector(`.task-button[data-window="${win.id}"]`);
+    if(btn) return btn;
 
-    const win = document.getElementById(windowId);
-    const title = win.querySelector('.title-bar-text')?.textContent?.trim() || windowId;
-    const iconSrc = win.querySelector('.title-bar-text img')?.getAttribute('src') || '';
+    btn = document.createElement("button");
+    btn.className = "task-button";
+    btn.dataset.window = win.id;
+    const title = win.querySelector(".title-text").textContent;
+    const icon = win.querySelector(".title-left img").src;
 
-    const btn = document.createElement('div');
-    btn.className = 'task-btn';
-    btn.dataset.windowId = windowId;
-    btn.innerHTML = `<img src="${iconSrc}" alt=""><span>${title}</span>`;
+    btn.innerHTML = `<img src="${icon}"><span>${title}</span>`;
 
-    btn.addEventListener('click', () => {
-      const w = document.getElementById(windowId);
-      const isHidden = getComputedStyle(w).display === 'none';
-      if (isHidden){
-        w.style.display = 'block';
-        focusWindow(w);
-      } else {
-        // clicking active button minimizes (classic-ish)
-        minimizeWindow(windowId);
+    btn.addEventListener("click", () => {
+      const visible = getComputedStyle(win).display !== "none";
+      if(!visible){
+        win.style.display = "block";
+        focusWindow(win);
+      }else if(activeWindowId === win.id){
+        minimizeWindow(win);
+      }else{
+        focusWindow(win);
       }
     });
 
     taskButtons.appendChild(btn);
+    return btn;
   }
 
-  function removeTaskButton(windowId){
-    const btn = taskButtons.querySelector(`.task-btn[data-window-id="${windowId}"]`);
-    if (btn) btn.remove();
-  }
+  function wireWindow(win){
+    const title = win.querySelector(".title-bar");
+    const min = win.querySelector(".title-button.min");
+    const max = win.querySelector(".title-button.max");
+    const close = win.querySelector(".title-button.close");
 
-  function wireWindowControls(win, def){
-    win.querySelector('.close-button').addEventListener('click', () => closeWindow(win.id));
-    win.querySelector('.minimize').addEventListener('click', () => minimizeWindow(win.id));
+    win.addEventListener("mousedown", () => focusWindow(win), true);
 
-    // Simple maximize toggle
-    let restored = null;
-    win.querySelector('.maximize').addEventListener('click', () => {
-      if (!restored){
-        restored = {
-          top: win.style.top,
-          left: win.style.left,
-          width: win.style.width,
-          height: win.style.height
+    min.addEventListener("click", e => {
+      e.stopPropagation();
+      minimizeWindow(win);
+    });
+
+    close.addEventListener("click", e => {
+      e.stopPropagation();
+      closeWindow(win);
+    });
+
+    let restore = null;
+    function toggleMax(){
+      if(!restore){
+        restore = {
+          left:win.style.left,
+          top:win.style.top,
+          width:win.style.width,
+          height:win.style.height
         };
-        win.style.top = '10px';
-        win.style.left = '10px';
-        win.style.width = (window.innerWidth - 20) + 'px';
-        win.style.height = (window.innerHeight - 20 - parseInt(getComputedStyle(document.documentElement).getPropertyValue('--taskbar-h'))) + 'px';
-        focusWindow(win);
-      } else {
-        win.style.top = restored.top;
-        win.style.left = restored.left;
-        win.style.width = restored.width;
-        win.style.height = restored.height;
-        restored = null;
-        focusWindow(win);
-      }
-    });
-  }
-
-  // ---------- Dragging windows (fixed) ----------
-  function makeDraggable(win){
-    const titleBar = win.querySelector('.title-bar');
-    let offsetX = 0, offsetY = 0;
-    let dragging = false;
-
-    function onMove(ev){
-      if (!dragging) return;
-      win.style.left = `${ev.clientX - offsetX}px`;
-      win.style.top = `${ev.clientY - offsetY}px`;
-    }
-    function onUp(){
-      dragging = false;
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-    }
-
-    titleBar.addEventListener('mousedown', (ev) => {
-      if (ev.target.tagName === 'BUTTON') return;
-      dragging = true;
-      focusWindow(win);
-      offsetX = ev.clientX - win.offsetLeft;
-      offsetY = ev.clientY - win.offsetTop;
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
-  }
-
-  // ---------- Dragging icons + snap ----------
-  function makeIconDraggable(icon){
-    let dragging = false;
-    let startX=0, startY=0, origX=0, origY=0;
-
-    function onMove(ev){
-      if (!dragging) return;
-      icon.style.left = `${origX + (ev.clientX - startX)}px`;
-      icon.style.top  = `${origY + (ev.clientY - startY)}px`;
-    }
-    function onUp(){
-      if (!dragging) return;
-      dragging = false;
-      // snap
-      const x = parseInt(icon.style.left,10);
-      const y = parseInt(icon.style.top,10);
-      icon.style.left = `${snap(x)}px`;
-      icon.style.top  = `${snap(y)}px`;
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-    }
-
-    icon.addEventListener('mousedown', (ev) => {
-      // left button only
-      if (ev.button !== 0) return;
-      dragging = true;
-      startX = ev.clientX;
-      startY = ev.clientY;
-      origX = icon.offsetLeft;
-      origY = icon.offsetTop;
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
-  }
-
-  // ---------- Start Menu ----------
-  startButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const open = (startMenu.style.display === 'block');
-    startMenu.style.display = open ? 'none' : 'block';
-    startButton.classList.toggle('active', !open);
-  });
-  document.addEventListener('mousedown', () => {
-    if (startMenu.style.display === 'block'){
-      startMenu.style.display = 'none';
-      startButton.classList.remove('active');
-    }
-  });
-  startMenu.addEventListener('mousedown', (e) => e.stopPropagation());
-
-  function closeStartMenu(){
-    startMenu.style.display = 'none';
-    startButton.classList.remove('active');
-  }
-
-  document.getElementById('start-menu-rebel-library').addEventListener('click', () => {
-    openWindow('rebel-library-window');
-    closeStartMenu();
-  });
-
-  document.getElementById('start-menu-ie').addEventListener('click', () => {
-    openWindow('ie-window');
-    closeStartMenu();
-  });
-
-  document.getElementById('start-menu-minesweeper').addEventListener('click', () => {
-    openWindow('minesweeper-window');
-    closeStartMenu();
-  });
-
-  // ---------- BSOD ----------
-  function showBsod(){
-    bsod.style.display = 'block';
-    bsod.innerHTML = `
-      <h1>Windows</h1>
-      <p>A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
-      <p>Press any key to restart your computer. You will lose any unsaved information in all applications.</p>
-    `;
-    window.addEventListener('keydown', () => window.location.reload(), { once:true });
-  }
-
-  // ---------- Reboot Sequence ----------
-  const shutdownScreen = document.getElementById('shutdown-screen');
-  const splashScreen = document.getElementById('splash-screen');
-
-  function rebootSystem(){
-    document.querySelectorAll('.window').forEach(win => win.style.display = 'none');
-    startMenu.style.display = 'none';
-    startButton.classList.remove('active');
-    desktop.style.display = 'none';
-    document.getElementById('taskbar').style.display = 'none';
-
-    shutdownScreen.style.display = 'flex';
-
-    setTimeout(() => {
-      shutdownScreen.style.display = 'none';
-      splashScreen.style.display = 'flex';
-    }, 3000);
-
-    setTimeout(() => window.location.reload(), 7000);
-  }
-  document.getElementById('start-menu-reboot').addEventListener('click', rebootSystem);
-
-  // ---------- Minesweeper ----------
-  function initMinesweeper(){
-    const minefield = document.getElementById('minefield');
-    const mineCounter = document.querySelector('.mine-counter');
-    const timerDisplay = document.querySelector('.timer');
-    const smiley = document.querySelector('.smiley');
-    if (!minefield || !mineCounter || !timerDisplay || !smiley) return;
-
-    const ROWS=10, COLS=10, MINES=10;
-    let board=[], timerInterval=null, time=0, gameOver=false;
-
-    function build(){
-      gameOver=false; time=0; board=[];
-      minefield.innerHTML='';
-      mineCounter.textContent=String(MINES).padStart(3,'0');
-      timerDisplay.textContent='000';
-      smiley.textContent='🙂';
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval=null;
-
-      for(let r=0;r<ROWS;r++){
-        board[r]=[];
-        for(let c=0;c<COLS;c++){
-          board[r][c]={isMine:false,isRevealed:false,isFlagged:false,adjacentMines:0};
-        }
-      }
-      let placed=0;
-      while(placed<MINES){
-        const r=Math.floor(Math.random()*ROWS);
-        const c=Math.floor(Math.random()*COLS);
-        if(!board[r][c].isMine){ board[r][c].isMine=true; placed++; }
-      }
-      for(let r=0;r<ROWS;r++){
-        for(let c=0;c<COLS;c++){
-          if(board[r][c].isMine) continue;
-          let count=0;
-          for(let dr=-1;dr<=1;dr++){
-            for(let dc=-1;dc<=1;dc++){
-              const nr=r+dr, nc=c+dc;
-              if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&board[nr][nc].isMine) count++;
-            }
-          }
-          board[r][c].adjacentMines=count;
-        }
-      }
-      for(let r=0;r<ROWS;r++){
-        for(let c=0;c<COLS;c++){
-          const cell=document.createElement('div');
-          cell.className='cell';
-          cell.dataset.r=r; cell.dataset.c=c;
-          cell.addEventListener('click', onLeft);
-          cell.addEventListener('contextmenu', onRight);
-          minefield.appendChild(cell);
-        }
-      }
-    }
-
-    function startTimer(){
-      if(timerInterval) return;
-      timerInterval=setInterval(()=>{
-        time++;
-        timerDisplay.textContent=String(time).padStart(3,'0');
-      },1000);
-    }
-
-    function revealCell(r,c){
-      if(r<0||r>=ROWS||c<0||c>=COLS) return;
-      const data=board[r][c];
-      if(data.isRevealed) return;
-      const el=minefield.children[r*COLS+c];
-
-      data.isRevealed=true;
-      el.classList.add('revealed');
-      if(data.isFlagged){ data.isFlagged=false; el.textContent=''; }
-
-      if(data.adjacentMines>0){
-        el.textContent=data.adjacentMines;
-        el.classList.add(`c${data.adjacentMines}`);
+        win.style.left = "0px";
+        win.style.top = "0px";
+        win.style.width = desktop.clientWidth+"px";
+        win.style.height = desktop.clientHeight+"px";
       }else{
-        for(let dr=-1;dr<=1;dr++){
-          for(let dc=-1;dc<=1;dc++){
-            if(dr===0 && dc===0) continue;
-            revealCell(r+dr,c+dc);
-          }
-        }
+        Object.assign(win.style,restore);
+        restore = null;
       }
+      focusWindow(win);
     }
 
-    function revealAllMines(hitR, hitC){
-      for(let r=0;r<ROWS;r++){
-        for(let c=0;c<COLS;c++){
-          if(board[r][c].isMine){
-            const el=minefield.children[r*COLS+c];
-            el.classList.add('revealed');
-            el.textContent='💣';
-            if(r===hitR && c===hitC) el.classList.add('mine-hit');
-          }
-        }
-      }
-    }
-
-    function checkWin(){
-      const revealed=board.flat().filter(x=>x.isRevealed).length;
-      if(revealed===ROWS*COLS-MINES){
-        smiley.textContent='😎';
-        gameOver=true;
-        if(timerInterval) clearInterval(timerInterval);
-        mineCounter.textContent='000';
-      }
-    }
-
-    function onLeft(ev){
-      if(gameOver) return;
-      startTimer();
-      const el=ev.target;
-      const r=+el.dataset.r, c=+el.dataset.c;
-      const data=board[r][c];
-      if(data.isRevealed || data.isFlagged) return;
-
-      if(data.isMine){
-        revealAllMines(r,c);
-        smiley.textContent='😵';
-        gameOver=true;
-        if(timerInterval) clearInterval(timerInterval);
-        return;
-      }
-      revealCell(r,c);
-      checkWin();
-    }
-
-    function onRight(ev){
-      ev.preventDefault();
-      if(gameOver) return;
-      const el=ev.target;
-      const r=+el.dataset.r, c=+el.dataset.c;
-      const data=board[r][c];
-      if(data.isRevealed) return;
-      data.isFlagged=!data.isFlagged;
-      el.textContent=data.isFlagged ? '🚩' : '';
-      const flags=board.flat().filter(x=>x.isFlagged).length;
-      mineCounter.textContent=String(MINES - flags).padStart(3,'0');
-    }
-
-    smiley.addEventListener('click', build);
-    build();
-  }
-  initMinesweeper();
-
-  // ---------- Screensaver pipes (yours, intact) ----------
-  const SCREENSAVER_TIMEOUT=3e4;
-  let screensaverTimer, screensaverActive=false;
-  const pipesCanvas=document.getElementById("screensaver-pipes");
-  const ctx=pipesCanvas.getContext("2d");
-  const PIPE_SIZE=20;
-  const COLORS=["#00FFFF","#FF00FF","#FFFF00","#00FF00","#FF0000","#FFFFFF","#FFA500","#0080FF","#FF8000"];
-  const DIRS=[{dx:1,dy:0},{dx:0,dy:1},{dx:-1,dy:0},{dx:0,dy:-1}];
-  let grid=[], pipes=[];
-
-  function createPipe(){
-    return {x:Math.floor(Math.random()*(pipesCanvas.width/PIPE_SIZE)),
-            y:Math.floor(Math.random()*(pipesCanvas.height/PIPE_SIZE)),
-            dir:Math.floor(4*Math.random()),
-            color:COLORS[Math.floor(Math.random()*COLORS.length)]};
-  }
-  function resetPipes(){
-    ctx.fillStyle="black";
-    ctx.fillRect(0,0,pipesCanvas.width,pipesCanvas.height);
-    const cols=Math.floor(pipesCanvas.width/PIPE_SIZE);
-    const rows=Math.floor(pipesCanvas.height/PIPE_SIZE);
-    grid=Array(cols).fill(null).map(()=>Array(rows).fill(false));
-    pipes=[createPipe()];
-  }
-  function resizePipesCanvas(){
-    pipesCanvas.width=window.innerWidth;
-    pipesCanvas.height=window.innerHeight;
-    resetPipes();
-  }
-  window.addEventListener("resize", resizePipesCanvas);
-
-  function drawPipes(){
-    if(!screensaverActive) return;
-    pipes.forEach(p=>{
-      if(grid[p.x] && grid[p.x][p.y]){
-        Object.assign(p, createPipe());
-        return;
-      }
-      grid[p.x][p.y]=true;
-      ctx.fillStyle=p.color;
-      ctx.fillRect(p.x*PIPE_SIZE, p.y*PIPE_SIZE, PIPE_SIZE, PIPE_SIZE);
-
-      if(Math.random()>.7){
-        p.dir = (p.dir + (Math.random()<.5 ? 1 : 3)) % 4;
-        p.color = COLORS[Math.floor(Math.random()*COLORS.length)];
-      }
-      p.x += DIRS[p.dir].dx;
-      p.y += DIRS[p.dir].dy;
-      if(p.x<0||p.y<0||p.x>=grid.length||p.y>=grid[0].length){
-        Object.assign(p, createPipe());
-      }
+    max.addEventListener("click", e => {
+      e.stopPropagation();
+      toggleMax();
     });
-    requestAnimationFrame(drawPipes);
+
+    title.addEventListener("dblclick", e => {
+      if(e.target.closest(".title-buttons")) return;
+      toggleMax();
+    });
+
+    makeWindowDraggable(win, title, () => restore);
+
+    win.querySelectorAll(".close-from-body").forEach(btn => {
+      btn.addEventListener("click", () => closeWindow(win));
+    });
   }
 
-  function showPipesScreensaver(){
-    screensaverActive=true;
-    pipesCanvas.style.display="block";
-    pipesCanvas.classList.add("active");
-    resizePipesCanvas();
-    drawPipes();
+  function makeWindowDraggable(win,titleBar,getRestore){
+    let dragging=false,ox=0,oy=0;
+
+    titleBar.addEventListener("mousedown", e => {
+      if(e.button!==0 || e.target.closest(".title-buttons")) return;
+      if(getRestore()) return;
+      dragging=true;
+      focusWindow(win);
+      ox=e.clientX-win.offsetLeft;
+      oy=e.clientY-win.offsetTop;
+      document.addEventListener("mousemove",move);
+      document.addEventListener("mouseup",up);
+    });
+
+    function move(e){
+      if(!dragging) return;
+
+      const minVisible = 80;
+      const maxLeft = desktop.clientWidth-minVisible;
+      const maxTop = desktop.clientHeight-20;
+
+      let left=e.clientX-ox;
+      let top=e.clientY-oy;
+
+      left=Math.max(-(win.offsetWidth-minVisible),Math.min(maxLeft,left));
+      top=Math.max(0,Math.min(maxTop,top));
+
+      win.style.left=left+"px";
+      win.style.top=top+"px";
+    }
+
+    function up(){
+      dragging=false;
+      document.removeEventListener("mousemove",move);
+      document.removeEventListener("mouseup",up);
+    }
   }
-  function hidePipesScreensaver(){
-    screensaverActive=false;
-    pipesCanvas.style.display="none";
-    pipesCanvas.classList.remove("active");
+
+  /* =========================================================
+     START MENU
+  ========================================================= */
+  function hideMenus(){
+    startMenu.style.display="none";
+    startButton.classList.remove("pressed");
+    desktopContext.style.display="none";
   }
-  function resetScreensaverTimer(){
-    clearTimeout(screensaverTimer);
-    if(screensaverActive) hidePipesScreensaver();
-    screensaverTimer=setTimeout(showPipesScreensaver, SCREENSAVER_TIMEOUT);
-  }
-  ["mousemove","mousedown","keydown","touchstart"].forEach(evt=>{
-    document.addEventListener(evt, resetScreensaverTimer, true);
+
+  startButton.addEventListener("click", e => {
+    e.stopPropagation();
+    const open = getComputedStyle(startMenu).display !== "none";
+    startMenu.style.display = open ? "none" : "block";
+    startButton.classList.toggle("pressed",!open);
+    desktopContext.style.display="none";
   });
-  resetScreensaverTimer();
-});
-</script>
-</body>
-</html>
+
+  document.addEventListener("mousedown", e => {
+    if(!e.target.closest("#start-menu") && !e.target.closest("#start-button")){
+      startMenu.style.display="none";
+      startButton.classList.remove("pressed");
+    }
+    if(!e.target.closest(".context-menu")){
+      desktopContext.style.display="none";
+    }
+  });
+
+  document.getElementById("start-run").addEventListener("click", () => {
+    openWindow("run-window");
+    hideMenus();
+  });
+
+  document.getElementById("start-shutdown").addEventListener("click", () => {
+    openWindow("shutdown-dialog");
+    hideMenus();
+  });
+
+  document.getElementById("start-logoff").addEventListener("click", () => {
+    hideMenus();
+    document.querySelectorAll(".window").forEach(w=>w.style.display="none");
+    taskButtons.innerHTML="";
+    login.style.display="flex";
+    loginPass.value="";
+    loginPass.focus();
+  });
+
+  /* =========================================================
+     DESKTOP RIGHT CLICK
+  ========================================================= */
+  desktop.addEventListener("contextmenu", e => {
+    if(e.target.closest(".desktop-icon") || e.target.closest(".window")) return;
+    e.preventDefault();
+    hideMenus();
+
+    const menuW=180, menuH=240;
+    const x=Math.min(e.clientX,window.innerWidth-menuW);
+    const y=Math.min(e.clientY,window.innerHeight-menuH);
+
+    desktopContext.style.left=x+"px";
+    desktopContext.style.top=y+"px";
+    desktopContext.style.display="block";
+  });
+
+  document.getElementById("ctx-lineup").addEventListener("click",()=>{
+    layoutIcons();
+    desktopContext.style.display="none";
+  });
+
+  document.getElementById("ctx-refresh").addEventListener("click",()=>{
+    desktop.style.visibility
